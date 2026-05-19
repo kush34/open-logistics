@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    "strict": true,
+    "declaration": true,
+
+    "outDir": "dist",
+
+    "baseUrl": "./",
+
+    "paths": {
+      "@src/*": ["src/*"]
+    },
+
+    "types": ["node", "vitest/globals"]
+  },
+
+  "include": ["src", "tests"]
+}

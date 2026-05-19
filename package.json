@@ -1,0 +1,31 @@
+{
+  "name": "shiprocket-sdk",
+  "version": "0.1.0",
+  "description": "Community SDK for Shiprocket APIs",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": [
+    "shiprocket",
+    "sdk",
+    "shipping",
+    "ecommerce",
+    "india"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "dotenv": "^17.4.2",
+    "tsup": "^8.0.0",
+    "tsx": "^4.22.3",
+    "typescript": "^5.0.0",
+    "vitest": "^1.6.1"
+  }
+}
