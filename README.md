@@ -1,12 +1,11 @@
-# shiprocket-sdk
+# open-logistics
 
 Community TypeScript SDK for the [Shiprocket API](https://apidocs.shiprocket.in/).
 
 ## Install
 
-soon on NPM 
 ```bash
-npm install open-sdk
+npm install open-logistics
 ```
 
 ## Usage
