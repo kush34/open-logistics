@@ -1,14 +1,4 @@
-# open-logistics
-
-Open-Logistics is the package name, but the current implementation in this repository is a TypeScript SDK for the Shiprocket API.
-
-## Install
-
-```bash
-npm install open-logistics
-```
-
-## Minimal usage
+# Example: create an order
 
 ```ts
 import { Shiprocket } from "open-logistics";
@@ -40,21 +30,5 @@ const order = await sdk.orders.create({
   weight: 0.5,
 });
 
-const tracking = await sdk.tracking.byAWB("1234567890");
+console.log(order);
 ```
-
-## Public surface
-
-| Export | Description |
-|---|---|
-| `Shiprocket` | Main client facade |
-| `ShiprocketAPIError` | Normalized API error |
-| Types from `src/types/index.ts` | Request and response shapes |
-
-## Documentation
-
-The full docs live in `docs/`.
-
-## Notes
-
-This codebase does not currently implement multi-vendor provider routing, fallback orchestration, or webhook helpers. The docs describe the actual API exposed by the repository today.
