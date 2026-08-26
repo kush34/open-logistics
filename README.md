@@ -1,6 +1,6 @@
 # open-logistics
 
-Open-Logistics is the package name, but the current implementation in this repository is a TypeScript SDK for the Shiprocket API.
+Open-Logistics is the package name for a TypeScript SDK that currently ships Shiprocket and Delhivery client APIs.
 
 ## Install
 
@@ -11,45 +11,41 @@ npm install open-logistics
 ## Minimal usage
 
 ```ts
-import { Shiprocket } from "open-logistics";
+import { ShiprocketClient, DelhiveryClient } from "open-logistics";
 
-const sdk = new Shiprocket({
+const shiprocket = new ShiprocketClient({
   email: process.env.SHIPROCKET_EMAIL!,
   password: process.env.SHIPROCKET_PASSWORD!,
 });
 
-const order = await sdk.orders.create({
-  order_id: "ORD-001",
-  order_date: "2026-01-01 10:00",
-  pickup_location: "Primary",
-  billing_customer_name: "John",
-  billing_address: "123 Street",
-  billing_city: "Mumbai",
-  billing_pincode: "400001",
-  billing_state: "Maharashtra",
-  billing_country: "India",
-  billing_email: "john@example.com",
-  billing_phone: "9999999999",
-  shipping_is_billing: true,
-  order_items: [{ name: "Item", sku: "SKU1", units: 1, selling_price: 500 }],
-  payment_method: "prepaid",
-  sub_total: 500,
-  length: 10,
-  breadth: 10,
-  height: 10,
-  weight: 0.5,
+const delhivery = new DelhiveryClient({
+  token: process.env.DELHIVERY_TOKEN!,
+  clientName: process.env.DELHIVERY_CLIENT_NAME!,
 });
 
-const tracking = await sdk.tracking.byAWB("1234567890");
+const order = await delhivery.createOrder({
+  order_id: "ORD-001",
+  pickup_location: { name: "Primary Warehouse" },
+  package_type: "Pre-paid",
+  name: "John Doe",
+  add: "123 Street",
+  phone: "9999999999",
+  pin: "400001",
+});
 ```
 
 ## Public surface
 
 | Export | Description |
 |---|---|
-| `Shiprocket` | Main client facade |
+| `ShiprocketClient` | Shiprocket client API |
+| `DelhiveryClient` | Delhivery B2C client API |
+| `Shiprocket` | Compatibility alias for ShiprocketClient |
+| `Delhivery` | Compatibility alias for DelhiveryClient |
 | `ShiprocketAPIError` | Normalized API error |
+| `DelhiveryAPIError` | Normalized Delhivery API error |
 | Types from `src/types/index.ts` | Request and response shapes |
+| Types from `src/delhivery/types/index.ts` | Delhivery request and response shapes |
 
 ## Documentation
 
@@ -57,4 +53,4 @@ The full docs live in `docs/`.
 
 ## Notes
 
-This codebase does not currently implement multi-vendor provider routing, fallback orchestration, or webhook helpers. The docs describe the actual API exposed by the repository today.
+This codebase does not currently implement provider routing or fallback orchestration. The package exposes explicit provider clients instead.

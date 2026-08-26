@@ -5,18 +5,21 @@ titleTemplate: Open-Logistics
 hero:
   name: Open-Logistics
   text: Developer documentation for the Open-Logistics SDK
-  tagline: One unified API for logistics integrations, currently implemented for Shiprocket.
+  tagline: One unified API for logistics integrations, currently implemented for Shiprocket and Delhivery.
   actions:
     - theme: brand
       text: Getting Started
-      link: /getting-started/installation
+      link: /shiprocket/
     - theme: alt
       text: API Reference
-      link: /api/client
+      link: /shiprocket/api/client
 features:
   - icon: 🚚
     title: Shiprocket
-    details: The only logistics provider implemented in this repository today.
+    details: Existing Shiprocket integration with orders, shipments, tracking, courier, and rates.
+  - icon: 📦
+    title: Delhivery
+    details: B2C integration with order creation, tracking, serviceability, rates, labels, pickup requests, and waybills.
   - icon: ⚙️
     title: Typed SDK surface
     details: Orders, shipments, tracking, courier, rates, and normalized API errors.
@@ -27,7 +30,7 @@ features:
 
 ## Open-Logistics
 
-One unified API for logistics integrations, currently implemented for Shiprocket.
+One unified API for logistics integrations, currently implemented for Shiprocket and Delhivery.
 
 The repository ships a real TypeScript SDK and a developer-facing documentation site. Start with installation and authentication, then move into the API reference and examples.
 
@@ -40,28 +43,31 @@ npm install open-logistics
 ### Minimal working example
 
 ```ts
-import { Shiprocket } from "open-logistics";
+import { ShiprocketClient } from "open-logistics";
 
-const sdk = new Shiprocket({
+const sdk = new ShiprocketClient({
   email: process.env.SHIPROCKET_EMAIL!,
   password: process.env.SHIPROCKET_PASSWORD!,
 });
 
-const tracking = await sdk.tracking.byAWB("1234567890");
+const tracking = await sdk.trackByAWB("1234567890");
 ```
 
 ### Core capabilities
 
-- `Shiprocket` client facade
-- `orders`, `shipments`, `tracking`, `courier`, and `rates` resources
-- Automatic token refresh on `401`
+- `ShiprocketClient` direct methods
+- `DelhiveryClient` direct methods
+- Automatic token refresh on `401` for Shiprocket
+- Static token auth for Delhivery
 - Normalized `ShiprocketAPIError` for API failures
+- Normalized `DelhiveryAPIError` for API failures
 
 ### Provider support
 
 - Shiprocket
+- Delhivery
 
 ### Start here
 
-- [Getting Started](/getting-started/installation)
-- [API Reference](/api/client)
+- [Shiprocket docs](/shiprocket/)
+- [Delhivery docs](/delhivery/)

@@ -1,17 +1,26 @@
 # Architecture
 
-Open-Logistics is the package name, but the current repository architecture is a single-provider Shiprocket SDK.
+Open-Logistics is the package name. The current repository architecture exposes provider-specific facades for Shiprocket and Delhivery.
 
 ## Structure
 
-- `Shiprocket` is the public facade
-- `ShiprocketClient` handles authentication and HTTP requests
+- `Shiprocket` is the public facade for Shiprocket
+- `Delhivery` is the public facade for Delhivery B2C
+- `ShiprocketClient` handles authentication and HTTP requests for Shiprocket
+- `DelhiveryClient` handles static-token HTTP requests for Delhivery
 - Resource classes wrap Shiprocket endpoints:
   - `orders`
   - `shipments`
   - `courier`
   - `tracking`
   - `rates`
+- Resource classes wrap Delhivery endpoints:
+  - `orders`
+  - `shipments`
+  - `tracking`
+  - `rates`
+  - `serviceability`
+  - `waybills`
 
 ## Request flow
 
@@ -23,12 +32,19 @@ Shiprocket.orders.create()
   -> call Shiprocket API
   -> parse JSON
   -> return typed response or throw ShiprocketAPIError
+
+Delhivery.orders.create()
+  -> DelhiveryClient.request()
+  -> add static Token header
+  -> call Delhivery API
+  -> parse JSON or text
+  -> return typed response or throw DelhiveryAPIError
 ```
 
 ## Important behavior
 
-- Authentication is cached in memory
-- The client retries once after a `401`
+- Authentication is cached in memory for Shiprocket
+- Delhivery uses a static token, so there is no login or token refresh flow
 - Responses are generally returned as Shiprocket payloads without deep normalization
 
 ## Not implemented

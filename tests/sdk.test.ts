@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { Shiprocket } from "../src/index.js";
+import { ShiprocketClient } from "../src/index.js";
 
 // Mock fetch globally
 const mockFetch = vi.fn();
@@ -15,7 +15,7 @@ function mockAuth() {
   });
 }
 
-describe("Shiprocket SDK", () => {
+describe("ShiprocketClient", () => {
   beforeEach(() => {
     mockFetch.mockClear();
   });
@@ -28,8 +28,8 @@ describe("Shiprocket SDK", () => {
       json: async () => ({ order_id: 123, shipment_id: 456, status: "NEW" }),
     });
 
-    const sdk = new Shiprocket(credentials);
-    const order = await sdk.orders.create({
+    const client = new ShiprocketClient(credentials);
+    const order = await client.createOrder({
       order_id: "ORD-001",
       order_date: "2026-01-01 10:00",
       pickup_location: "Primary",
@@ -63,8 +63,8 @@ describe("Shiprocket SDK", () => {
       json: async () => ({ tracking_data: { track_status: 1 } }),
     });
 
-    const sdk = new Shiprocket(credentials);
-    const result = await sdk.tracking.byAWB("1234567890");
+    const client = new ShiprocketClient(credentials);
+    const result = await client.trackByAWB("1234567890");
     expect(result.tracking_data.track_status).toBe(1);
   });
 
@@ -76,7 +76,7 @@ describe("Shiprocket SDK", () => {
       json: async () => ({ message: "Validation failed", errors: {} }),
     });
 
-    const sdk = new Shiprocket(credentials);
-    await expect(sdk.orders.list()).rejects.toThrow("Validation failed");
+    const client = new ShiprocketClient(credentials);
+    await expect(client.listOrders()).rejects.toThrow("Validation failed");
   });
 });
