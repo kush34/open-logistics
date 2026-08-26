@@ -36,21 +36,21 @@ const order = await delhivery.createOrder({
 
 ## Public surface
 
-| Export | Description |
-|---|---|
-| `ShiprocketClient` | Shiprocket client API |
-| `DelhiveryClient` | Delhivery B2C client API |
-| `Shiprocket` | Compatibility alias for ShiprocketClient |
-| `Delhivery` | Compatibility alias for DelhiveryClient |
-| `ShiprocketAPIError` | Normalized API error |
-| `DelhiveryAPIError` | Normalized Delhivery API error |
-| Types from `src/types/index.ts` | Request and response shapes |
-| Types from `src/delhivery/types/index.ts` | Delhivery request and response shapes |
+| Export                                    | Description                              |
+| ----------------------------------------- | ---------------------------------------- |
+| `ShiprocketClient`                        | Shiprocket client API                    |
+| `DelhiveryClient`                         | Delhivery B2C client API                 |
+| `Shiprocket`                              | Compatibility alias for ShiprocketClient |
+| `Delhivery`                               | Compatibility alias for DelhiveryClient  |
+| `ShiprocketAPIError`                      | Normalized API error                     |
+| `DelhiveryAPIError`                       | Normalized Delhivery API error           |
+| Types from `src/types/index.ts`           | Request and response shapes              |
+| Types from `src/delhivery/types/index.ts` | Delhivery request and response shapes    |
 
 ## Documentation
 
-The full docs live in `docs/`.
+The full documentation is available at:
 
-## Notes
+https://open-logistics.vercel.app/
 
-This codebase does not currently implement provider routing or fallback orchestration. The package exposes explicit provider clients instead.
+You can find the documentation source in the `docs/` directory.
