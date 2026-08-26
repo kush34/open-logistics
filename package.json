@@ -1,6 +1,6 @@
 {
   "name": "open-logistics",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Community SDK for Shiprocket APIs",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
