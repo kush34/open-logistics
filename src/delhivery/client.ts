@@ -2,7 +2,6 @@ import type {
   DelhiveryApiErrorBody,
   DelhiveryCancelOrderResponse,
   DelhiveryCredentials,
-  DelhiveryCreateOrderRequest,
   DelhiveryOrderCreateResponse,
   DelhiveryOrderUpdatePayload,
   DelhiveryOrderUpdateResponse,
@@ -41,7 +40,7 @@ export class DelhiveryClient {
   }
 
   createOrder(
-    payload: DelhiveryShipmentPayload
+    payload: DelhiveryShipmentPayload,
   ): Promise<DelhiveryOrderCreateResponse> {
     const shipment = this.normalizeShipmentPayload(payload);
     const body = new URLSearchParams({
@@ -50,15 +49,15 @@ export class DelhiveryClient {
     });
 
     return this.request<unknown>("POST", "/api/cmu/create.json", { body }).then(
-      (response) => this.mapCreateResponse(response)
+      (response) => this.mapCreateResponse(response),
     );
   }
 
   updateOrder(
-    payload: DelhiveryOrderUpdatePayload
+    payload: DelhiveryOrderUpdatePayload,
   ): Promise<DelhiveryOrderUpdateResponse> {
     return this.request<unknown>("POST", "/api/p/edit", { body: payload }).then(
-      (response) => this.mapUpdateResponse(response)
+      (response) => this.mapUpdateResponse(response),
     );
   }
 
@@ -83,14 +82,19 @@ export class DelhiveryClient {
   trackByWaybills(waybills: string[]): Promise<DelhiveryTrackingResponse> {
     return this.request<unknown>("GET", "/api/v1/packages/json/", {
       query: { waybill: waybills.join(",") },
-    }).then((response) => this.mapTrackingResponse(response, waybills.join(",")));
+    }).then((response) =>
+      this.mapTrackingResponse(response, waybills.join(",")),
+    );
   }
 
   checkServiceability(
-    params: DelhiveryServiceabilityQuery
+    params: DelhiveryServiceabilityQuery,
   ): Promise<DelhiveryServiceabilityResponse> {
     return this.request<unknown>("GET", "/c/api/pin-codes/json/", {
-      query: params as Record<string, string | number | boolean | undefined | null>,
+      query: params as Record<
+        string,
+        string | number | boolean | undefined | null
+      >,
     }).then((response) => this.mapServiceabilityResponse(response));
   }
 
@@ -109,7 +113,7 @@ export class DelhiveryClient {
 
   generateLabel(
     waybill: string,
-    pdf = false
+    pdf = false,
   ): Promise<DelhiveryPackingSlipResponse> {
     return this.request<unknown>("GET", "/api/p/packing_slip", {
       query: {
@@ -120,7 +124,7 @@ export class DelhiveryClient {
   }
 
   createPickupRequest(
-    payload: DelhiveryPickupRequestPayload
+    payload: DelhiveryPickupRequestPayload,
   ): Promise<DelhiveryPickupRequestResponse> {
     return this.request<unknown>("POST", "/fm/request/new/", {
       body: payload,
@@ -138,7 +142,7 @@ export class DelhiveryClient {
   }
 
   fetchWaybills(
-    params: DelhiveryWaybillFetchQuery
+    params: DelhiveryWaybillFetchQuery,
   ): Promise<DelhiveryBulkWaybillResponse> {
     const query = {
       cl: this.clientName,
@@ -161,7 +165,7 @@ export class DelhiveryClient {
       query?: Record<string, string | number | boolean | undefined | null>;
       body?: BodyInit | object | null;
       headers?: Record<string, string>;
-    } = {}
+    } = {},
   ): Promise<T> {
     const url = this.buildUrl(path, options.query);
     const headers = new Headers(options.headers);
@@ -179,7 +183,7 @@ export class DelhiveryClient {
         if (!headers.has("Content-Type")) {
           headers.set(
             "Content-Type",
-            "application/x-www-form-urlencoded;charset=UTF-8"
+            "application/x-www-form-urlencoded;charset=UTF-8",
           );
         }
       } else {
@@ -208,7 +212,7 @@ export class DelhiveryClient {
 
   private buildUrl(
     path: string,
-    query?: Record<string, string | number | boolean | undefined | null>
+    query?: Record<string, string | number | boolean | undefined | null>,
   ): string {
     const url = new URL(path, `${this.baseUrl}/`);
     if (query) {
@@ -234,25 +238,17 @@ export class DelhiveryClient {
     }
   }
 
-  private extractErrorMessage(
-    body: unknown,
-    fallback: string
-  ): string {
+  private extractErrorMessage(body: unknown, fallback: string): string {
     if (typeof body === "string" && body.trim()) return body;
     if (body && typeof body === "object") {
       const error = body as DelhiveryApiErrorBody;
-      return (
-        error.message ??
-        error.error ??
-        error.detail ??
-        fallback
-      );
+      return error.message ?? error.error ?? error.detail ?? fallback;
     }
     return fallback;
   }
 
   private normalizeShipmentPayload(
-    payload: DelhiveryShipmentPayload
+    payload: DelhiveryShipmentPayload,
   ): DelhiveryShipmentPayload {
     const normalized: DelhiveryShipmentPayload = {
       ...payload,
@@ -288,9 +284,7 @@ export class DelhiveryClient {
     return normalized;
   }
 
-  private mapCreateResponse(
-    response: unknown
-  ): DelhiveryOrderCreateResponse {
+  private mapCreateResponse(response: unknown): DelhiveryOrderCreateResponse {
     const obj = this.toObject(response);
     return {
       success: this.isSuccess(obj),
@@ -303,9 +297,7 @@ export class DelhiveryClient {
     };
   }
 
-  private mapUpdateResponse(
-    response: unknown
-  ): DelhiveryOrderUpdateResponse {
+  private mapUpdateResponse(response: unknown): DelhiveryOrderUpdateResponse {
     const obj = this.toObject(response);
     return {
       success: this.isSuccess(obj),
@@ -317,20 +309,21 @@ export class DelhiveryClient {
 
   private mapCancelResponse(
     response: unknown,
-    waybill: string
+    waybill: string,
   ): DelhiveryCancelOrderResponse {
     const obj = this.toObject(response);
     return {
       success: this.isSuccess(obj),
       message: this.pickString(obj, ["message", "status", "remarks", "detail"]),
-      waybill: this.pickString(obj, ["waybill", "awb", "awb_code", "wbn"]) ?? waybill,
+      waybill:
+        this.pickString(obj, ["waybill", "awb", "awb_code", "wbn"]) ?? waybill,
       raw: response,
     };
   }
 
   private mapTrackingResponse(
     response: unknown,
-    fallbackWaybill: string
+    fallbackWaybill: string,
   ): DelhiveryTrackingResponse {
     const obj = this.toObject(response);
     const shipment = this.extractShipment(obj);
@@ -352,7 +345,7 @@ export class DelhiveryClient {
   }
 
   private mapServiceabilityResponse(
-    response: unknown
+    response: unknown,
   ): DelhiveryServiceabilityResponse {
     const obj = this.toObject(response);
     const deliveryCodes = this.extractDeliveryCodes(obj);
@@ -372,7 +365,12 @@ export class DelhiveryClient {
   private mapRateResponse(response: unknown): DelhiveryRateResponse {
     const obj = this.toObject(response);
     return {
-      totalAmount: this.pickNumber(obj, ["total_amount", "totalAmount", "amount", "total"]),
+      totalAmount: this.pickNumber(obj, [
+        "total_amount",
+        "totalAmount",
+        "amount",
+        "total",
+      ]),
       grossAmount: this.pickNumber(obj, ["gross_amount", "grossAmount"]),
       taxAmount: this.pickNumber(obj, ["tax_amount", "taxAmount", "tax"]),
       currency: "INR",
@@ -382,7 +380,7 @@ export class DelhiveryClient {
 
   private mapLabelResponse(
     response: unknown,
-    fallbackWaybill: string
+    fallbackWaybill: string,
   ): DelhiveryPackingSlipResponse {
     const obj = this.toObject(response);
     return {
@@ -394,9 +392,7 @@ export class DelhiveryClient {
     };
   }
 
-  private mapPickupResponse(
-    response: unknown
-  ): DelhiveryPickupRequestResponse {
+  private mapPickupResponse(response: unknown): DelhiveryPickupRequestResponse {
     const obj = this.toObject(response);
     return {
       pickup_id: this.pickString(obj, ["pickup_id", "pickupId", "id"]),
@@ -413,9 +409,7 @@ export class DelhiveryClient {
     };
   }
 
-  private mapBulkWaybills(
-    response: unknown
-  ): DelhiveryBulkWaybillResponse {
+  private mapBulkWaybills(response: unknown): DelhiveryBulkWaybillResponse {
     const obj = this.toObject(response);
     const candidates = [obj.waybills, obj.waybill, obj.data, obj.results];
     for (const candidate of candidates) {
@@ -446,26 +440,29 @@ export class DelhiveryClient {
     if (typeof status === "boolean") return status;
     if (typeof status === "number") return status >= 200 && status < 300;
     if (typeof status === "string") {
-      return ["ok", "success", "created", "updated"].includes(status.toLowerCase());
+      return ["ok", "success", "created", "updated"].includes(
+        status.toLowerCase(),
+      );
     }
     return true;
   }
 
   private pickString(
     obj: Record<string, unknown>,
-    keys: string[]
+    keys: string[],
   ): string | null {
     for (const key of keys) {
       const value = obj[key];
       if (typeof value === "string" && value.trim()) return value;
-      if (typeof value === "number" && Number.isFinite(value)) return String(value);
+      if (typeof value === "number" && Number.isFinite(value))
+        return String(value);
     }
     return null;
   }
 
   private pickNumber(
     obj: Record<string, unknown>,
-    keys: string[]
+    keys: string[],
   ): number | null {
     for (const key of keys) {
       const value = obj[key];
@@ -481,7 +478,10 @@ export class DelhiveryClient {
     return null;
   }
 
-  private pickArray(obj: Record<string, unknown>, keys: string[]): unknown[] | null {
+  private pickArray(
+    obj: Record<string, unknown>,
+    keys: string[],
+  ): unknown[] | null {
     for (const key of keys) {
       const value = obj[key];
       if (Array.isArray(value)) return value;
@@ -489,7 +489,9 @@ export class DelhiveryClient {
     return null;
   }
 
-  private extractShipment(obj: Record<string, unknown>): Record<string, unknown> {
+  private extractShipment(
+    obj: Record<string, unknown>,
+  ): Record<string, unknown> {
     const candidates = [
       this.toObject(obj.tracking_data),
       this.toObject(obj.data),
@@ -506,7 +508,7 @@ export class DelhiveryClient {
 
   private extractScans(
     obj: Record<string, unknown>,
-    shipment: Record<string, unknown>
+    shipment: Record<string, unknown>,
   ): Array<Record<string, unknown>> {
     const candidateArrays = [
       obj.scans,
@@ -531,7 +533,7 @@ export class DelhiveryClient {
 
   private extractWaybills(
     obj: Record<string, unknown>,
-    fallbackWaybill: string
+    fallbackWaybill: string,
   ): string[] {
     const candidateArrays = [obj.waybills, obj.waybill, obj.ref_nos];
     for (const candidate of candidateArrays) {
@@ -553,26 +555,26 @@ export class DelhiveryClient {
       : [];
   }
 
-  private extractDeliveryCodes(
-    obj: Record<string, unknown>
-  ): Array<{ postal_code: {
-    city?: string;
-    cod?: string;
-    inc?: string;
-    district?: string;
-    pin?: number;
-    max_amount?: number;
-    pre_paid?: string;
-    cash?: string;
-    state_code?: string;
-    max_weight?: number;
-    pickup?: string;
-    repl?: string;
-    covid_zone?: string | null;
-    country_code?: string;
-    is_oda?: string;
-    remarks?: string;
-  } }> {
+  private extractDeliveryCodes(obj: Record<string, unknown>): Array<{
+    postal_code: {
+      city?: string;
+      cod?: string;
+      inc?: string;
+      district?: string;
+      pin?: number;
+      max_amount?: number;
+      pre_paid?: string;
+      cash?: string;
+      state_code?: string;
+      max_weight?: number;
+      pickup?: string;
+      repl?: string;
+      covid_zone?: string | null;
+      country_code?: string;
+      is_oda?: string;
+      remarks?: string;
+    };
+  }> {
     const deliveryCodes = obj.delivery_codes;
     if (!Array.isArray(deliveryCodes)) {
       return [];
@@ -581,7 +583,7 @@ export class DelhiveryClient {
     return deliveryCodes.flatMap((item) => {
       if (!item || typeof item !== "object") return [];
       const postalCode = this.toPostalCodeObject(
-        (item as Record<string, unknown>).postal_code
+        (item as Record<string, unknown>).postal_code,
       );
       return postalCode ? [{ postal_code: postalCode }] : [];
     });
@@ -603,9 +605,7 @@ export class DelhiveryClient {
     return typeof value === "string" && value.toUpperCase() === "Y";
   }
 
-  private toPostalCodeObject(
-    value: unknown
-  ): {
+  private toPostalCodeObject(value: unknown): {
     city?: string;
     cod?: string;
     inc?: string;
@@ -652,7 +652,7 @@ export class DelhiveryAPIError extends Error {
   constructor(
     message: string,
     public statusCode: number,
-    public body?: unknown
+    public body?: unknown,
   ) {
     super(message);
     this.name = "DelhiveryAPIError";
