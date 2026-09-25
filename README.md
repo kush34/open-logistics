@@ -38,13 +38,13 @@ const order = await delhivery.createOrder({
 
 | Export                                    | Description                              |
 | ----------------------------------------- | ---------------------------------------- |
-| `ShiprocketClient`                        | Shiprocket client API                    |
-| `DelhiveryClient`                         | Delhivery B2C client API                 |
-| `Shiprocket`                              | Compatibility alias for ShiprocketClient |
-| `Delhivery`                               | Compatibility alias for DelhiveryClient  |
+| `ShiprocketClient`                        | Shiprocket client API (auth + direct methods) |
+| `DelhiveryClient`                         | Delhivery B2C client API (direct methods)     |
+| `Shiprocket`                              | Shiprocket facade owning `orders`, `shipments`, `courier`, `tracking`, `rates` resources |
+| `Delhivery`                               | Delhivery facade owning `orders`, `shipments`, `tracking`, `rates`, `serviceability`, `waybills` resources |
 | `ShiprocketAPIError`                      | Normalized API error                     |
 | `DelhiveryAPIError`                       | Normalized Delhivery API error           |
-| Types from `src/types/index.ts`           | Request and response shapes              |
+| Types from `src/shiprocket/types/index.ts` | Shiprocket request and response shapes  |
 | Types from `src/delhivery/types/index.ts` | Delhivery request and response shapes    |
 
 ## Documentation

@@ -4,9 +4,9 @@
 
 ## Methods
 
-- `byAWB(awbCode)`
-- `byShipmentId(shipmentId)`
-- `byOrderId(orderId)`
+- `trackByAWB(awbCode)`
+- `trackByShipmentId(shipmentId)`
+- `trackByOrderId(orderId)`
 
 ## Example
 

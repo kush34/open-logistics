@@ -16,5 +16,4 @@ npm install open-logistics
 ## Package metadata
 
 - Package name: `open-logistics`
-- Current version: `0.1.0`
 - Repository: `https://github.com/kush34/open-logistics`

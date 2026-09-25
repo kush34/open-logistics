@@ -1,6 +1,6 @@
 # Shiprocket rates
 
-## `ShiprocketClient#checkServiceability(params)`
+## `ShiprocketClient#calculateRates(params)`
 
 Checks serviceability and rate-related data for a route.
 

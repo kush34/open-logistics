@@ -35,6 +35,24 @@ interface AuthCredentials {
 - `assignAWB(payload)`
 - `listCouriers()`
 
+## Resource facades
+
+The same operations are also available through the `Shiprocket` facade, which owns one client and groups methods into resources:
+
+- `orders`: `create`, `list`, `get`, `cancel`
+- `shipments`: `generatePickup`, `generateLabel`, `generateManifest`, `printManifest`
+- `courier`: `serviceability`, `assignAWB`, `list`
+- `tracking`: `byAWB`, `byShipmentId`, `byOrderId`
+- `rates`: `check`
+
+```ts
+import { Shiprocket } from "open-logistics";
+
+const sdk = new Shiprocket({ email: "...", password: "..." });
+const order = await sdk.orders.create({ ... });
+const tracking = await sdk.tracking.byAWB("1234567890");
+```
+
 ## Example
 
 ```ts

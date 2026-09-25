@@ -28,7 +28,6 @@ Those endpoints exist in Delhivery’s ecosystem, but they are not part of the c
 
 1. Check serviceability
 2. Create or fetch a waybill
-3. Manifest the shipment
-4. Generate the label
-5. Create a pickup request
-6. Track the shipment
+3. Generate the label
+4. Create a pickup request
+5. Track the shipment
