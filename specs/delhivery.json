@@ -1,0 +1,1038 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Open Logistics — Delhivery",
+    "version": "0.2.2",
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/kush34/open-logistics/blob/main/LICENSE"
+    },
+    "description": "OpenAPI description of the Delhivery B2C endpoints wrapped by\n`open-logistics`.\n\nSource of truth for generated Python and Rust clients. Operation IDs and\nschema field names are intentionally snake_case so every language exposes\nthe same names.\n\nDelhivery overloads `POST /api/p/edit` for update and cancel, and\n`GET /api/v1/packages/json/` for single, order, and bulk tracking. OpenAPI\npermits one operation per path + method, so this spec exposes\n`orders_edit` and `tracking_fetch`; language facades may alias them as\n`update`, `cancel`, `by_waybill`, `by_order_id`, and `by_waybills`.\n"
+  },
+  "servers": [
+    {
+      "url": "https://track.delhivery.com",
+      "description": "Production"
+    },
+    {
+      "url": "https://staging-express.delhivery.com",
+      "description": "Staging"
+    }
+  ],
+  "security": [
+    {
+      "delhiveryToken": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Orders"
+    },
+    {
+      "name": "Shipments"
+    },
+    {
+      "name": "Tracking"
+    },
+    {
+      "name": "Serviceability"
+    },
+    {
+      "name": "Rates"
+    },
+    {
+      "name": "Waybills"
+    },
+    {
+      "name": "PickupRequests"
+    }
+  ],
+  "paths": {
+    "/api/cmu/create.json": {
+      "post": {
+        "operationId": "orders_create",
+        "summary": "Create a shipment/order",
+        "description": "Form-encoded endpoint. `data` is a JSON string of the form\n`{\"shipments\": [DelhiveryShipmentPayload]}`.\n",
+        "tags": [
+          "Orders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "format",
+                  "data"
+                ],
+                "properties": {
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "json"
+                    ],
+                    "default": "json"
+                  },
+                  "data": {
+                    "type": "string",
+                    "description": "JSON-encoded object with a `shipments` array.",
+                    "x-data-schema": {
+                      "$ref": "#/components/schemas/DelhiveryShipmentPayload"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelhiveryOrderCreateResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/api/p/edit": {
+      "post": {
+        "operationId": "orders_edit",
+        "summary": "Update or cancel a shipment",
+        "description": "Send an update payload to change shipment details, or\n`{waybill, cancellation: true}` to cancel.\n",
+        "tags": [
+          "Orders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DelhiveryOrderEditPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Edit result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelhiveryOrderEditResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/api/v1/packages/json/": {
+      "get": {
+        "operationId": "tracking_fetch",
+        "summary": "Fetch tracking by waybill or order reference",
+        "tags": [
+          "Tracking"
+        ],
+        "parameters": [
+          {
+            "name": "waybill",
+            "in": "query",
+            "description": "One waybill, or a comma-separated list.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ref_nos",
+            "in": "query",
+            "description": "Order reference number.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tracking data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelhiveryTrackingResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/c/api/pin-codes/json/": {
+      "get": {
+        "operationId": "serviceability_check",
+        "summary": "Check pincode serviceability",
+        "tags": [
+          "Serviceability"
+        ],
+        "parameters": [
+          {
+            "name": "filter_codes",
+            "in": "query",
+            "description": "Comma-separated pincode filter.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dt",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "st",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Serviceability result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelhiveryServiceabilityResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/api/kinko/v1/invoice/charges/.json": {
+      "get": {
+        "operationId": "rates_calculate",
+        "summary": "Calculate shipping charges",
+        "tags": [
+          "Rates"
+        ],
+        "parameters": [
+          {
+            "name": "md",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "E",
+                "S"
+              ]
+            }
+          },
+          {
+            "name": "cgm",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "o_pin",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "d_pin",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ss",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Delivered",
+                "RTO",
+                "DTO"
+              ]
+            }
+          },
+          {
+            "name": "pt",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Pre-paid",
+                "COD"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Charges",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelhiveryRateResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/api/p/packing_slip": {
+      "get": {
+        "operationId": "shipments_label",
+        "summary": "Generate a packing slip / label",
+        "tags": [
+          "Shipments"
+        ],
+        "parameters": [
+          {
+            "name": "wbns",
+            "in": "query",
+            "required": true,
+            "description": "Waybill number(s).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pdf",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "True"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Packing slip",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelhiveryPackingSlipResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/fm/request/new/": {
+      "post": {
+        "operationId": "pickup_requests_create",
+        "summary": "Create a pickup request",
+        "tags": [
+          "PickupRequests"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DelhiveryPickupRequestPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pickup request result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelhiveryPickupRequestResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/waybill/api/fetch/json/": {
+      "get": {
+        "operationId": "waybills_fetch",
+        "summary": "Fetch a single waybill",
+        "tags": [
+          "Waybills"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ClientCode"
+          },
+          {
+            "$ref": "#/components/parameters/ClientName"
+          },
+          {
+            "$ref": "#/components/parameters/TokenQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Waybill",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelhiveryWaybillResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/waybill/api/bulk/json/": {
+      "get": {
+        "operationId": "waybills_fetch_bulk",
+        "summary": "Fetch waybills in bulk",
+        "tags": [
+          "Waybills"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ClientCode"
+          },
+          {
+            "$ref": "#/components/parameters/ClientName"
+          },
+          {
+            "$ref": "#/components/parameters/TokenQuery"
+          },
+          {
+            "name": "action",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "next",
+                "fetch"
+              ],
+              "default": "next"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "wbn",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Waybills",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DelhiveryBulkWaybillResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "delhiveryToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Send `Token <token>` in the Authorization header."
+      }
+    },
+    "parameters": {
+      "ClientCode": {
+        "name": "cl",
+        "in": "query",
+        "description": "Client code. Pass explicitly; generated clients do not read it from credentials.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "ClientName": {
+        "name": "client_name",
+        "in": "query",
+        "description": "Client name. Pass explicitly; generated clients do not read it from credentials.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "TokenQuery": {
+        "name": "token",
+        "in": "query",
+        "description": "API token. Pass explicitly; generated clients do not read it from credentials.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "Error": {
+        "description": "Provider error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DelhiveryApiErrorBody"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "FreeFormObject": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "DelhiveryApiErrorBody": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "status_code": {
+            "type": "integer"
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "DelhiveryPickupLocation": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "DelhiveryShipmentItem": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "hsn_code": {
+            "type": "string"
+          }
+        }
+      },
+      "DelhiveryShipmentPayload": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "order_id",
+          "pickup_location",
+          "package_type",
+          "name",
+          "phone",
+          "pin"
+        ],
+        "properties": {
+          "order_id": {
+            "type": "string"
+          },
+          "waybill": {
+            "type": "string"
+          },
+          "order_date": {
+            "type": "string"
+          },
+          "client": {
+            "type": "string"
+          },
+          "pickup_location": {
+            "$ref": "#/components/schemas/DelhiveryPickupLocation"
+          },
+          "package_type": {
+            "type": "string",
+            "enum": [
+              "COD",
+              "Pre-paid",
+              "Pickup"
+            ]
+          },
+          "payment_mode": {
+            "type": "string",
+            "enum": [
+              "COD",
+              "Pre-paid",
+              "Pickup"
+            ]
+          },
+          "cod_amount": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "add": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "pin": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "products_desc": {
+            "type": "string"
+          },
+          "product_details": {
+            "type": "string"
+          },
+          "shipment_length": {
+            "type": "number"
+          },
+          "shipment_width": {
+            "type": "number"
+          },
+          "shipment_height": {
+            "type": "number"
+          },
+          "gm": {
+            "type": "number"
+          },
+          "weight": {
+            "type": "number"
+          },
+          "fragile_shipment": {
+            "type": "boolean"
+          },
+          "ewaybill": {
+            "type": "string"
+          },
+          "seller_gst_tin": {
+            "type": "string"
+          },
+          "client_gst_tin": {
+            "type": "string"
+          },
+          "consignee_gst_tin": {
+            "type": "string"
+          },
+          "hsn_code": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "invoice_reference": {
+            "type": "string"
+          },
+          "qc": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "shipment": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DelhiveryShipmentItem"
+            }
+          }
+        }
+      },
+      "DelhiveryOrderEditPayload": {
+        "type": "object",
+        "required": [
+          "waybill"
+        ],
+        "properties": {
+          "waybill": {
+            "type": "string"
+          },
+          "cancellation": {
+            "type": "boolean",
+            "description": "Set to true to cancel the shipment."
+          },
+          "shipment_length": {
+            "type": "number"
+          },
+          "shipment_width": {
+            "type": "number"
+          },
+          "shipment_height": {
+            "type": "number"
+          },
+          "cod": {
+            "type": "number"
+          },
+          "gm": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "add": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "product_details": {
+            "type": "string"
+          },
+          "pt": {
+            "type": "string",
+            "enum": [
+              "COD",
+              "Pre-paid",
+              "Pickup"
+            ]
+          }
+        }
+      },
+      "DelhiveryOrderCreateResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Raw `POST /api/cmu/create.json` response.",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "rmk": {
+            "type": "string"
+          },
+          "upload_wbn": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "order_id": {
+            "type": "string"
+          },
+          "waybill": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "shipment_id": {
+            "type": "string"
+          },
+          "packages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FreeFormObject"
+            }
+          }
+        }
+      },
+      "DelhiveryOrderEditResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Raw `POST /api/p/edit` response.",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "waybill": {
+            "type": "string"
+          }
+        }
+      },
+      "DelhiveryTrackingResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Raw `GET /api/v1/packages/json/` response. `ShipmentData` is\nprovider-shaped and is exposed as-is; there is no client-side\nnormalization.\n",
+        "properties": {
+          "ShipmentData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FreeFormObject"
+            }
+          }
+        }
+      },
+      "DelhiveryPostalCodeServiceability": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "city": {
+            "type": "string"
+          },
+          "cod": {
+            "type": "string"
+          },
+          "inc": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "pin": {
+            "type": "integer"
+          },
+          "max_amount": {
+            "type": "number"
+          },
+          "pre_paid": {
+            "type": "string"
+          },
+          "cash": {
+            "type": "string"
+          },
+          "state_code": {
+            "type": "string"
+          },
+          "max_weight": {
+            "type": "number"
+          },
+          "pickup": {
+            "type": "string"
+          },
+          "repl": {
+            "type": "string"
+          },
+          "covid_zone": {
+            "type": "string",
+            "nullable": true
+          },
+          "country_code": {
+            "type": "string"
+          },
+          "is_oda": {
+            "type": "string"
+          },
+          "remarks": {
+            "type": "string"
+          }
+        }
+      },
+      "DelhiveryServiceabilityResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Raw `GET /c/api/pin-codes/json/` response.",
+        "properties": {
+          "delivery_codes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "postal_code": {
+                  "$ref": "#/components/schemas/DelhiveryPostalCodeServiceability"
+                }
+              }
+            }
+          }
+        }
+      },
+      "DelhiveryRateResponse": {
+        "type": "array",
+        "description": "Raw `GET /api/kinko/v1/invoice/charges/.json` response: an array of\ncharge estimates.\n",
+        "items": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "total_amount": {
+              "type": "number"
+            },
+            "gross_amount": {
+              "type": "number"
+            },
+            "zone": {
+              "type": "string"
+            },
+            "charged_weight": {
+              "type": "number"
+            },
+            "tax_data": {
+              "$ref": "#/components/schemas/FreeFormObject"
+            }
+          }
+        }
+      },
+      "DelhiveryWaybillResponse": {
+        "type": "string",
+        "description": "Raw `GET /waybill/api/fetch/json/` response, a waybill number string."
+      },
+      "DelhiveryBulkWaybillResponse": {
+        "type": "string",
+        "description": "Raw `GET /waybill/api/bulk/json/` response, a waybill number string."
+      },
+      "DelhiveryPickupRequestPayload": {
+        "type": "object",
+        "required": [
+          "pickup_time",
+          "pickup_date",
+          "pickup_location",
+          "expected_package_count"
+        ],
+        "properties": {
+          "pickup_time": {
+            "type": "string"
+          },
+          "pickup_date": {
+            "type": "string"
+          },
+          "pickup_location": {
+            "type": "string"
+          },
+          "expected_package_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "DelhiveryPickupRequestResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Raw `POST /fm/request/new/` response.",
+        "properties": {
+          "pickup_id": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "DelhiveryPackingSlipResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Raw `GET /api/p/packing_slip` response.",
+        "properties": {
+          "waybill": {
+            "type": "string"
+          },
+          "pdf_url": {
+            "type": "string"
+          },
+          "packages_found": {
+            "type": "integer"
+          },
+          "packages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FreeFormObject"
+            }
+          }
+        }
+      }
+    }
+  }
+}

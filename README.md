@@ -54,3 +54,17 @@ The full documentation is available at:
 https://open-logistics.vercel.app/
 
 You can find the documentation source in the `docs/` directory.
+
+## Other languages
+
+Python and Rust clients are generated from the OpenAPI specs in `specs/`. Method
+names come from `operationId`, so they match across languages (`orders_create`,
+`tracking_by_awb`, …); see `packages/README.md` for usage.
+
+```bash
+./scripts/gen.sh          # regenerate specs/*.json + both clients
+./scripts/gen.sh --check  # verify checked-in output matches the specs
+```
+
+Do not edit `packages/` by hand. Change `specs/*.yaml` and regenerate.
+

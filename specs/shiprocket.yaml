@@ -1,0 +1,780 @@
+openapi: 3.0.3
+info:
+  title: Open Logistics — Shiprocket
+  version: 0.2.2
+  license:
+    name: MIT
+    url: https://github.com/kush34/open-logistics/blob/main/LICENSE
+  description: |
+    OpenAPI description of the Shiprocket endpoints wrapped by `open-logistics`.
+
+    Source of truth for generated Python and Rust clients. Operation IDs and
+    schema field names are intentionally snake_case so every language exposes
+    the same names.
+
+    Two TypeScript methods (`checkServiceability` and `calculateRates`) call
+    `GET /courier/serviceability`; OpenAPI permits one operation per
+    path + method, so this spec exposes a single `courier_serviceability`
+    operation. Language facades may alias it as `calculate_rates`.
+servers:
+  - url: https://apiv2.shiprocket.in/v1/external
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+  - name: Orders
+  - name: Shipments
+  - name: Courier
+  - name: Tracking
+  - name: Rates
+
+paths:
+  /auth/login:
+    post:
+      operationId: auth_login
+      summary: Authenticate and obtain a bearer token
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthCredentials'
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /orders/create/adhoc:
+    post:
+      operationId: orders_create
+      summary: Create a single ad-hoc order
+      tags: [Orders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderPayload'
+      responses:
+        '200':
+          description: Order created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /orders:
+    get:
+      operationId: orders_list
+      summary: List orders
+      tags: [Orders]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: per_page
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Paginated orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrders'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /orders/show/{orderId}:
+    get:
+      operationId: orders_get
+      summary: Get one order
+      tags: [Orders]
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: Order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /orders/cancel:
+    post:
+      operationId: orders_cancel
+      summary: Cancel orders
+      tags: [Orders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelOrdersPayload'
+      responses:
+        '200':
+          description: Cancellation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /courier/generate/pickup:
+    post:
+      operationId: shipments_generate_pickup
+      summary: Generate a pickup request
+      tags: [Shipments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeneratePickupPayload'
+      responses:
+        '200':
+          description: Pickup generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneratePickupResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /courier/generate/label:
+    post:
+      operationId: shipments_generate_label
+      summary: Generate labels
+      tags: [Shipments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateLabelPayload'
+      responses:
+        '200':
+          description: Label generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateLabelResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /manifests/generate:
+    post:
+      operationId: shipments_generate_manifest
+      summary: Generate a manifest
+      tags: [Shipments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateManifestPayload'
+      responses:
+        '200':
+          description: Manifest generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManifestResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /manifests/print:
+    post:
+      operationId: shipments_print_manifest
+      summary: Print a manifest for one order
+      tags: [Shipments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrintManifestPayload'
+      responses:
+        '200':
+          description: Manifest URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ManifestResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /courier/assign/awb:
+    post:
+      operationId: courier_assign_awb
+      summary: Assign an AWB to a shipment
+      tags: [Courier]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignAWBPayload'
+      responses:
+        '200':
+          description: AWB assigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignAWBResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /courier/courierListWithCounts:
+    get:
+      operationId: courier_list
+      summary: List couriers with counts
+      tags: [Courier]
+      responses:
+        '200':
+          description: Courier list (provider-defined shape)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FreeFormObject'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /courier/serviceability:
+    get:
+      operationId: courier_serviceability
+      summary: Check serviceability (also used for rate calculation)
+      tags: [Courier, Rates]
+      parameters:
+        - name: pickup_postcode
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: delivery_postcode
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: weight
+          in: query
+          required: true
+          schema:
+            type: number
+        - name: cod
+          in: query
+          schema:
+            type: integer
+            enum: [0, 1]
+        - name: order_id
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Serviceability result (provider-defined shape)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FreeFormObject'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /courier/track/awb/{awb}:
+    get:
+      operationId: tracking_by_awb
+      summary: Track by AWB code
+      tags: [Tracking]
+      parameters:
+        - name: awb
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tracking data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackByAWBResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /courier/track/shipment/{shipmentId}:
+    get:
+      operationId: tracking_by_shipment
+      summary: Track by shipment ID
+      tags: [Tracking]
+      parameters:
+        - name: shipmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tracking data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackByAWBResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /orders/track/{orderId}:
+    get:
+      operationId: tracking_by_order
+      summary: Track by order ID
+      tags: [Tracking]
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tracking data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackByAWBResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+  parameters:
+    OrderId:
+      name: orderId
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  responses:
+    Error:
+      description: Provider error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ShiprocketError'
+
+  schemas:
+    FreeFormObject:
+      type: object
+      additionalProperties: true
+
+    ShiprocketError:
+      type: object
+      required: [status_code, message]
+      properties:
+        status_code:
+          type: integer
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+
+    AuthCredentials:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    AuthResponse:
+      type: object
+      required: [token, email, first_name, last_name, company_id]
+      properties:
+        token:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        company_id:
+          type: integer
+
+    OrderItem:
+      type: object
+      required: [name, sku, units, selling_price]
+      properties:
+        name:
+          type: string
+        sku:
+          type: string
+        units:
+          type: integer
+        selling_price:
+          type: number
+        discount:
+          type: number
+        tax:
+          type: number
+        hsn:
+          type: string
+
+    CreateOrderPayload:
+      type: object
+      required:
+        - order_id
+        - order_date
+        - pickup_location
+        - billing_customer_name
+        - billing_address
+        - billing_city
+        - billing_pincode
+        - billing_state
+        - billing_country
+        - billing_email
+        - billing_phone
+        - shipping_is_billing
+        - order_items
+        - payment_method
+        - sub_total
+        - length
+        - breadth
+        - height
+        - weight
+      properties:
+        order_id:
+          type: string
+        order_date:
+          type: string
+          description: 'YYYY-MM-DD HH:mm'
+        pickup_location:
+          type: string
+        billing_customer_name:
+          type: string
+        billing_last_name:
+          type: string
+        billing_address:
+          type: string
+        billing_city:
+          type: string
+        billing_pincode:
+          type: string
+        billing_state:
+          type: string
+        billing_country:
+          type: string
+        billing_email:
+          type: string
+        billing_phone:
+          type: string
+        shipping_is_billing:
+          type: boolean
+        order_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        payment_method:
+          type: string
+          enum: [prepaid, COD]
+        sub_total:
+          type: number
+        length:
+          type: number
+        breadth:
+          type: number
+        height:
+          type: number
+        weight:
+          type: number
+
+    OrderResponse:
+      type: object
+      required:
+        - order_id
+        - shipment_id
+        - status
+        - status_code
+        - onboarding_completed_now
+      properties:
+        order_id:
+          type: integer
+        shipment_id:
+          type: integer
+        status:
+          type: string
+        status_code:
+          type: integer
+        onboarding_completed_now:
+          type: boolean
+        awb_code:
+          type: string
+          nullable: true
+        courier_company_id:
+          type: integer
+          nullable: true
+        courier_name:
+          type: string
+          nullable: true
+
+    Pagination:
+      type: object
+      required: [total, count, per_page, current_page, total_pages]
+      properties:
+        total:
+          type: integer
+        count:
+          type: integer
+        per_page:
+          type: integer
+        current_page:
+          type: integer
+        total_pages:
+          type: integer
+
+    PaginatedOrders:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderResponse'
+        meta:
+          type: object
+          required: [pagination]
+          properties:
+            pagination:
+              $ref: '#/components/schemas/Pagination'
+
+    CancelOrdersPayload:
+      type: object
+      required: [ids]
+      properties:
+        ids:
+          type: array
+          items:
+            type: integer
+
+    MessageResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+
+    GeneratePickupPayload:
+      type: object
+      required: [shipment_id]
+      properties:
+        shipment_id:
+          type: array
+          items:
+            type: integer
+
+    GenerateLabelPayload:
+      type: object
+      required: [shipment_id]
+      properties:
+        shipment_id:
+          type: array
+          items:
+            type: integer
+
+    GenerateManifestPayload:
+      type: object
+      required: [shipment_id]
+      properties:
+        shipment_id:
+          type: array
+          items:
+            type: integer
+
+    PrintManifestPayload:
+      type: object
+      required: [order_ids]
+      properties:
+        order_ids:
+          type: array
+          items:
+            type: integer
+
+    GeneratePickupResponse:
+      type: object
+      required: [pickup_status, response]
+      properties:
+        pickup_status:
+          type: integer
+        response:
+          type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              required: [appointment_delivery_date]
+              properties:
+                appointment_delivery_date:
+                  type: string
+
+    GenerateLabelResponse:
+      type: object
+      required: [label_created, url]
+      properties:
+        label_created:
+          type: integer
+        url:
+          type: string
+
+    ManifestResponse:
+      type: object
+      required: [manifest_url]
+      properties:
+        manifest_url:
+          type: string
+
+    AssignAWBPayload:
+      type: object
+      required: [shipment_id, courier_id]
+      properties:
+        shipment_id:
+          type: string
+        courier_id:
+          type: string
+
+    AssignAWBResponse:
+      type: object
+      required: [awb_assign_status, response]
+      properties:
+        awb_assign_status:
+          type: integer
+        response:
+          type: object
+          required: [data]
+          properties:
+            data:
+              type: object
+              required: [awb_code, courier_name]
+              properties:
+                awb_code:
+                  type: string
+                courier_name:
+                  type: string
+
+    TrackActivity:
+      type: object
+      required: [date, activity, location, sr-status, sr-status-label]
+      properties:
+        date:
+          type: string
+        activity:
+          type: string
+        location:
+          type: string
+        sr-status:
+          type: string
+        sr-status-label:
+          type: string
+
+    TrackEvent:
+      type: object
+      required:
+        - id
+        - awb_code
+        - courier_company_id
+        - shipment_id
+        - order_id
+        - weight
+        - packages
+        - current_status
+        - delivered_to
+        - destination
+        - consignee_name
+        - origin
+      properties:
+        id:
+          type: integer
+        awb_code:
+          type: string
+        courier_company_id:
+          type: integer
+        shipment_id:
+          type: integer
+        order_id:
+          type: integer
+        pickup_date:
+          type: string
+          nullable: true
+        delivered_date:
+          type: string
+          nullable: true
+        weight:
+          type: string
+        packages:
+          type: integer
+        current_status:
+          type: string
+        delivered_to:
+          type: string
+        destination:
+          type: string
+        consignee_name:
+          type: string
+        origin:
+          type: string
+        courier_agent_details:
+          type: string
+          nullable: true
+
+    TrackByAWBResponse:
+      type: object
+      required: [tracking_data]
+      properties:
+        tracking_data:
+          type: object
+          required:
+            - track_status
+            - shipment_status
+            - shipment_track
+            - shipment_track_activities
+            - track_url
+          properties:
+            track_status:
+              type: integer
+            shipment_status:
+              type: integer
+            shipment_track:
+              type: array
+              items:
+                $ref: '#/components/schemas/TrackEvent'
+            shipment_track_activities:
+              type: array
+              items:
+                $ref: '#/components/schemas/TrackActivity'
+            track_url:
+              type: string
