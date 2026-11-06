@@ -21,7 +21,7 @@ json = "{}"
 # create an instance of DelhiveryPackingSlipResponse from a JSON string
 delhivery_packing_slip_response_instance = DelhiveryPackingSlipResponse.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryPackingSlipResponse.to_json())
+print(delhivery_packing_slip_response_instance.to_json())
 
 # convert the object into a dict
 delhivery_packing_slip_response_dict = delhivery_packing_slip_response_instance.to_dict()

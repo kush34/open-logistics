@@ -18,7 +18,7 @@ json = "{}"
 # create an instance of GeneratePickupResponse from a JSON string
 generate_pickup_response_instance = GeneratePickupResponse.from_json(json)
 # print the JSON string representation of the object
-print(GeneratePickupResponse.to_json())
+print(generate_pickup_response_instance.to_json())
 
 # convert the object into a dict
 generate_pickup_response_dict = generate_pickup_response_instance.to_dict()

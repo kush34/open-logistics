@@ -32,7 +32,7 @@ json = "{}"
 # create an instance of DelhiveryPostalCodeServiceability from a JSON string
 delhivery_postal_code_serviceability_instance = DelhiveryPostalCodeServiceability.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryPostalCodeServiceability.to_json())
+print(delhivery_postal_code_serviceability_instance.to_json())
 
 # convert the object into a dict
 delhivery_postal_code_serviceability_dict = delhivery_postal_code_serviceability_instance.to_dict()

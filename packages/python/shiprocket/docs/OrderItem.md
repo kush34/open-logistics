@@ -23,7 +23,7 @@ json = "{}"
 # create an instance of OrderItem from a JSON string
 order_item_instance = OrderItem.from_json(json)
 # print the JSON string representation of the object
-print(OrderItem.to_json())
+print(order_item_instance.to_json())
 
 # convert the object into a dict
 order_item_dict = order_item_instance.to_dict()

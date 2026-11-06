@@ -48,6 +48,7 @@ for provider in "${providers[@]}"; do
     -e "s|https://github.com/GIT_USER_ID/GIT_REPO_ID|${repo_url}|" \
     -e "s|{name = \"OpenAPI Generator Community\",email = \"team@openapitools.org\"}|{name = \"${author}\"}|" \
     "$work/packages/python/${provider}/pyproject.toml"
+  python3 "$root/scripts/python_docs.py" "$work/packages/python/${provider}"
 
   generate \
     -i "$root/specs/${provider}.yaml" \

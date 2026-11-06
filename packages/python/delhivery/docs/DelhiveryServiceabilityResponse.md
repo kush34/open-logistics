@@ -18,7 +18,7 @@ json = "{}"
 # create an instance of DelhiveryServiceabilityResponse from a JSON string
 delhivery_serviceability_response_instance = DelhiveryServiceabilityResponse.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryServiceabilityResponse.to_json())
+print(delhivery_serviceability_response_instance.to_json())
 
 # convert the object into a dict
 delhivery_serviceability_response_dict = delhivery_serviceability_response_instance.to_dict()

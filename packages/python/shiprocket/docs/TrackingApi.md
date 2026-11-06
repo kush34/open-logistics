@@ -19,6 +19,7 @@ Track by AWB code
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.track_by_awb_response import TrackByAWBResponse
 from open_logistics_shiprocket.rest import ApiException
@@ -96,6 +97,7 @@ Track by order ID
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.track_by_awb_response import TrackByAWBResponse
 from open_logistics_shiprocket.rest import ApiException
@@ -173,6 +175,7 @@ Track by shipment ID
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.track_by_awb_response import TrackByAWBResponse
 from open_logistics_shiprocket.rest import ApiException

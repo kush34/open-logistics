@@ -17,7 +17,7 @@ json = "{}"
 # create an instance of GeneratePickupPayload from a JSON string
 generate_pickup_payload_instance = GeneratePickupPayload.from_json(json)
 # print the JSON string representation of the object
-print(GeneratePickupPayload.to_json())
+print(generate_pickup_payload_instance.to_json())
 
 # convert the object into a dict
 generate_pickup_payload_dict = generate_pickup_payload_instance.to_dict()

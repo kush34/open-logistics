@@ -16,7 +16,7 @@ json = "{}"
 # create an instance of DelhiveryShipmentPayloadQc from a JSON string
 delhivery_shipment_payload_qc_instance = DelhiveryShipmentPayloadQc.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryShipmentPayloadQc.to_json())
+print(delhivery_shipment_payload_qc_instance.to_json())
 
 # convert the object into a dict
 delhivery_shipment_payload_qc_dict = delhivery_shipment_payload_qc_instance.to_dict()

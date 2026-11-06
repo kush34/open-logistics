@@ -17,7 +17,7 @@ json = "{}"
 # create an instance of MessageResponse from a JSON string
 message_response_instance = MessageResponse.from_json(json)
 # print the JSON string representation of the object
-print(MessageResponse.to_json())
+print(message_response_instance.to_json())
 
 # convert the object into a dict
 message_response_dict = message_response_instance.to_dict()

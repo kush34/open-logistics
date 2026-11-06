@@ -20,6 +20,7 @@ Cancel orders
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.cancel_orders_payload import CancelOrdersPayload
 from open_logistics_shiprocket.models.message_response import MessageResponse
@@ -98,6 +99,7 @@ Create a single ad-hoc order
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.create_order_payload import CreateOrderPayload
 from open_logistics_shiprocket.models.order_response import OrderResponse
@@ -176,6 +178,7 @@ Get one order
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.order_response import OrderResponse
 from open_logistics_shiprocket.rest import ApiException
@@ -253,6 +256,7 @@ List orders
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.paginated_orders import PaginatedOrders
 from open_logistics_shiprocket.rest import ApiException

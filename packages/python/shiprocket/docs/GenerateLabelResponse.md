@@ -18,7 +18,7 @@ json = "{}"
 # create an instance of GenerateLabelResponse from a JSON string
 generate_label_response_instance = GenerateLabelResponse.from_json(json)
 # print the JSON string representation of the object
-print(GenerateLabelResponse.to_json())
+print(generate_label_response_instance.to_json())
 
 # convert the object into a dict
 generate_label_response_dict = generate_label_response_instance.to_dict()

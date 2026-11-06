@@ -18,7 +18,7 @@ json = "{}"
 # create an instance of AssignAWBPayload from a JSON string
 assign_awb_payload_instance = AssignAWBPayload.from_json(json)
 # print the JSON string representation of the object
-print(AssignAWBPayload.to_json())
+print(assign_awb_payload_instance.to_json())
 
 # convert the object into a dict
 assign_awb_payload_dict = assign_awb_payload_instance.to_dict()

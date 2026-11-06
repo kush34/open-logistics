@@ -17,7 +17,7 @@ json = "{}"
 # create an instance of ManifestResponse from a JSON string
 manifest_response_instance = ManifestResponse.from_json(json)
 # print the JSON string representation of the object
-print(ManifestResponse.to_json())
+print(manifest_response_instance.to_json())
 
 # convert the object into a dict
 manifest_response_dict = manifest_response_instance.to_dict()

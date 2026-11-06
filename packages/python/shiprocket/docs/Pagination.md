@@ -21,7 +21,7 @@ json = "{}"
 # create an instance of Pagination from a JSON string
 pagination_instance = Pagination.from_json(json)
 # print the JSON string representation of the object
-print(Pagination.to_json())
+print(pagination_instance.to_json())
 
 # convert the object into a dict
 pagination_dict = pagination_instance.to_dict()

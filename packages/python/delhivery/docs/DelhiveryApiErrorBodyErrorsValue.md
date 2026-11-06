@@ -16,7 +16,7 @@ json = "{}"
 # create an instance of DelhiveryApiErrorBodyErrorsValue from a JSON string
 delhivery_api_error_body_errors_value_instance = DelhiveryApiErrorBodyErrorsValue.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryApiErrorBodyErrorsValue.to_json())
+print(delhivery_api_error_body_errors_value_instance.to_json())
 
 # convert the object into a dict
 delhivery_api_error_body_errors_value_dict = delhivery_api_error_body_errors_value_instance.to_dict()

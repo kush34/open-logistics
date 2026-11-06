@@ -21,7 +21,7 @@ json = "{}"
 # create an instance of TrackActivity from a JSON string
 track_activity_instance = TrackActivity.from_json(json)
 # print the JSON string representation of the object
-print(TrackActivity.to_json())
+print(track_activity_instance.to_json())
 
 # convert the object into a dict
 track_activity_dict = track_activity_instance.to_dict()

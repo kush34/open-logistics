@@ -17,7 +17,7 @@ json = "{}"
 # create an instance of PrintManifestPayload from a JSON string
 print_manifest_payload_instance = PrintManifestPayload.from_json(json)
 # print the JSON string representation of the object
-print(PrintManifestPayload.to_json())
+print(print_manifest_payload_instance.to_json())
 
 # convert the object into a dict
 print_manifest_payload_dict = print_manifest_payload_instance.to_dict()

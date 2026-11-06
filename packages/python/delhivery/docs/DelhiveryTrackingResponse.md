@@ -18,7 +18,7 @@ json = "{}"
 # create an instance of DelhiveryTrackingResponse from a JSON string
 delhivery_tracking_response_instance = DelhiveryTrackingResponse.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryTrackingResponse.to_json())
+print(delhivery_tracking_response_instance.to_json())
 
 # convert the object into a dict
 delhivery_tracking_response_dict = delhivery_tracking_response_instance.to_dict()

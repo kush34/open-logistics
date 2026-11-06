@@ -46,7 +46,7 @@ json = "{}"
 # create an instance of CreateOrderPayload from a JSON string
 create_order_payload_instance = CreateOrderPayload.from_json(json)
 # print the JSON string representation of the object
-print(CreateOrderPayload.to_json())
+print(create_order_payload_instance.to_json())
 
 # convert the object into a dict
 create_order_payload_dict = create_order_payload_instance.to_dict()

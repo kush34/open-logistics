@@ -17,7 +17,7 @@ json = "{}"
 # create an instance of GenerateLabelPayload from a JSON string
 generate_label_payload_instance = GenerateLabelPayload.from_json(json)
 # print the JSON string representation of the object
-print(GenerateLabelPayload.to_json())
+print(generate_label_payload_instance.to_json())
 
 # convert the object into a dict
 generate_label_payload_dict = generate_label_payload_instance.to_dict()

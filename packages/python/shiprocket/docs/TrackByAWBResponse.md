@@ -17,7 +17,7 @@ json = "{}"
 # create an instance of TrackByAWBResponse from a JSON string
 track_by_awb_response_instance = TrackByAWBResponse.from_json(json)
 # print the JSON string representation of the object
-print(TrackByAWBResponse.to_json())
+print(track_by_awb_response_instance.to_json())
 
 # convert the object into a dict
 track_by_awb_response_dict = track_by_awb_response_instance.to_dict()

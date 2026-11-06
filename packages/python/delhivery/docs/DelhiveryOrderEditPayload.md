@@ -28,7 +28,7 @@ json = "{}"
 # create an instance of DelhiveryOrderEditPayload from a JSON string
 delhivery_order_edit_payload_instance = DelhiveryOrderEditPayload.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryOrderEditPayload.to_json())
+print(delhivery_order_edit_payload_instance.to_json())
 
 # convert the object into a dict
 delhivery_order_edit_payload_dict = delhivery_order_edit_payload_instance.to_dict()

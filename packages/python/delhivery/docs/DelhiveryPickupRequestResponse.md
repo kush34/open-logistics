@@ -20,7 +20,7 @@ json = "{}"
 # create an instance of DelhiveryPickupRequestResponse from a JSON string
 delhivery_pickup_request_response_instance = DelhiveryPickupRequestResponse.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryPickupRequestResponse.to_json())
+print(delhivery_pickup_request_response_instance.to_json())
 
 # convert the object into a dict
 delhivery_pickup_request_response_dict = delhivery_pickup_request_response_instance.to_dict()

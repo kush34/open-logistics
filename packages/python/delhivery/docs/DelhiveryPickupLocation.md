@@ -17,7 +17,7 @@ json = "{}"
 # create an instance of DelhiveryPickupLocation from a JSON string
 delhivery_pickup_location_instance = DelhiveryPickupLocation.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryPickupLocation.to_json())
+print(delhivery_pickup_location_instance.to_json())
 
 # convert the object into a dict
 delhivery_pickup_location_dict = delhivery_pickup_location_instance.to_dict()

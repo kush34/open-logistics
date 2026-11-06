@@ -19,7 +19,7 @@ json = "{}"
 # create an instance of ShiprocketError from a JSON string
 shiprocket_error_instance = ShiprocketError.from_json(json)
 # print the JSON string representation of the object
-print(ShiprocketError.to_json())
+print(shiprocket_error_instance.to_json())
 
 # convert the object into a dict
 shiprocket_error_dict = shiprocket_error_instance.to_dict()

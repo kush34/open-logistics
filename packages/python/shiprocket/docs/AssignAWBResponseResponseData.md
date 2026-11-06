@@ -18,7 +18,7 @@ json = "{}"
 # create an instance of AssignAWBResponseResponseData from a JSON string
 assign_awb_response_response_data_instance = AssignAWBResponseResponseData.from_json(json)
 # print the JSON string representation of the object
-print(AssignAWBResponseResponseData.to_json())
+print(assign_awb_response_response_data_instance.to_json())
 
 # convert the object into a dict
 assign_awb_response_response_data_dict = assign_awb_response_response_data_instance.to_dict()

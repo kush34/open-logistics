@@ -31,7 +31,7 @@ json = "{}"
 # create an instance of TrackEvent from a JSON string
 track_event_instance = TrackEvent.from_json(json)
 # print the JSON string representation of the object
-print(TrackEvent.to_json())
+print(track_event_instance.to_json())
 
 # convert the object into a dict
 track_event_dict = track_event_instance.to_dict()

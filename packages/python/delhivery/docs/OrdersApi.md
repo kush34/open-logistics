@@ -22,6 +22,7 @@ Form-encoded endpoint. `data` is a JSON string of the form
 * Api Key Authentication (delhiveryToken):
 
 ```python
+import os
 import open_logistics_delhivery
 from open_logistics_delhivery.models.delhivery_order_create_response import DelhiveryOrderCreateResponse
 from open_logistics_delhivery.rest import ApiException
@@ -41,8 +42,8 @@ configuration = open_logistics_delhivery.Configuration(
 # Configure API key authorization: delhiveryToken
 configuration.api_key['delhiveryToken'] = os.environ["API_KEY"]
 
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['delhiveryToken'] = 'Bearer'
+# Set the required API key prefix
+configuration.api_key_prefix['delhiveryToken'] = 'Token'
 
 # Enter a context with an instance of the API client
 with open_logistics_delhivery.ApiClient(configuration) as api_client:
@@ -106,6 +107,7 @@ Send an update payload to change shipment details, or
 * Api Key Authentication (delhiveryToken):
 
 ```python
+import os
 import open_logistics_delhivery
 from open_logistics_delhivery.models.delhivery_order_edit_payload import DelhiveryOrderEditPayload
 from open_logistics_delhivery.models.delhivery_order_edit_response import DelhiveryOrderEditResponse
@@ -126,8 +128,8 @@ configuration = open_logistics_delhivery.Configuration(
 # Configure API key authorization: delhiveryToken
 configuration.api_key['delhiveryToken'] = os.environ["API_KEY"]
 
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['delhiveryToken'] = 'Bearer'
+# Set the required API key prefix
+configuration.api_key_prefix['delhiveryToken'] = 'Token'
 
 # Enter a context with an instance of the API client
 with open_logistics_delhivery.ApiClient(configuration) as api_client:

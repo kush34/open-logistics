@@ -48,7 +48,7 @@ json = "{}"
 # create an instance of DelhiveryShipmentPayload from a JSON string
 delhivery_shipment_payload_instance = DelhiveryShipmentPayload.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryShipmentPayload.to_json())
+print(delhivery_shipment_payload_instance.to_json())
 
 # convert the object into a dict
 delhivery_shipment_payload_dict = delhivery_shipment_payload_instance.to_dict()

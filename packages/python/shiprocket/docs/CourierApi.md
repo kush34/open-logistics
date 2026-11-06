@@ -19,6 +19,7 @@ Assign an AWB to a shipment
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.assign_awb_payload import AssignAWBPayload
 from open_logistics_shiprocket.models.assign_awb_response import AssignAWBResponse
@@ -97,6 +98,7 @@ List couriers with counts
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.rest import ApiException
 from pprint import pprint
@@ -169,6 +171,7 @@ Check serviceability (also used for rate calculation)
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.rest import ApiException
 from pprint import pprint

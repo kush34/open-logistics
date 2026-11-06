@@ -21,7 +21,7 @@ json = "{}"
 # create an instance of DelhiveryRateResponseInner from a JSON string
 delhivery_rate_response_inner_instance = DelhiveryRateResponseInner.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryRateResponseInner.to_json())
+print(delhivery_rate_response_inner_instance.to_json())
 
 # convert the object into a dict
 delhivery_rate_response_inner_dict = delhivery_rate_response_inner_instance.to_dict()

@@ -21,7 +21,7 @@ json = "{}"
 # create an instance of DelhiveryOrderEditResponse from a JSON string
 delhivery_order_edit_response_instance = DelhiveryOrderEditResponse.from_json(json)
 # print the JSON string representation of the object
-print(DelhiveryOrderEditResponse.to_json())
+print(delhivery_order_edit_response_instance.to_json())
 
 # convert the object into a dict
 delhivery_order_edit_response_dict = delhivery_order_edit_response_instance.to_dict()

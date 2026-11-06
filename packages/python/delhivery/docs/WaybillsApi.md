@@ -18,6 +18,7 @@ Fetch a single waybill
 * Api Key Authentication (delhiveryToken):
 
 ```python
+import os
 import open_logistics_delhivery
 from open_logistics_delhivery.rest import ApiException
 from pprint import pprint
@@ -36,8 +37,8 @@ configuration = open_logistics_delhivery.Configuration(
 # Configure API key authorization: delhiveryToken
 configuration.api_key['delhiveryToken'] = os.environ["API_KEY"]
 
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['delhiveryToken'] = 'Bearer'
+# Set the required API key prefix
+configuration.api_key_prefix['delhiveryToken'] = 'Token'
 
 # Enter a context with an instance of the API client
 with open_logistics_delhivery.ApiClient(configuration) as api_client:
@@ -99,6 +100,7 @@ Fetch waybills in bulk
 * Api Key Authentication (delhiveryToken):
 
 ```python
+import os
 import open_logistics_delhivery
 from open_logistics_delhivery.rest import ApiException
 from pprint import pprint
@@ -117,8 +119,8 @@ configuration = open_logistics_delhivery.Configuration(
 # Configure API key authorization: delhiveryToken
 configuration.api_key['delhiveryToken'] = os.environ["API_KEY"]
 
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['delhiveryToken'] = 'Bearer'
+# Set the required API key prefix
+configuration.api_key_prefix['delhiveryToken'] = 'Token'
 
 # Enter a context with an instance of the API client
 with open_logistics_delhivery.ApiClient(configuration) as api_client:

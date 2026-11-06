@@ -67,6 +67,7 @@ Execute `pytest` to run the tests.
 Please follow the [installation procedure](#installation--usage) and then run the following:
 
 ```python
+import os
 
 import open_logistics_delhivery
 from open_logistics_delhivery.rest import ApiException
@@ -86,8 +87,8 @@ configuration = open_logistics_delhivery.Configuration(
 # Configure API key authorization: delhiveryToken
 configuration.api_key['delhiveryToken'] = os.environ["API_KEY"]
 
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['delhiveryToken'] = 'Bearer'
+# Set the required API key prefix
+configuration.api_key_prefix['delhiveryToken'] = 'Token'
 
 
 # Enter a context with an instance of the API client

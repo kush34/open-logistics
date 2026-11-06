@@ -20,6 +20,7 @@ Generate labels
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.generate_label_payload import GenerateLabelPayload
 from open_logistics_shiprocket.models.generate_label_response import GenerateLabelResponse
@@ -98,6 +99,7 @@ Generate a manifest
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.generate_manifest_payload import GenerateManifestPayload
 from open_logistics_shiprocket.models.manifest_response import ManifestResponse
@@ -176,6 +178,7 @@ Generate a pickup request
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.generate_pickup_payload import GeneratePickupPayload
 from open_logistics_shiprocket.models.generate_pickup_response import GeneratePickupResponse
@@ -254,6 +257,7 @@ Print a manifest for one order
 * Bearer Authentication (bearerAuth):
 
 ```python
+import os
 import open_logistics_shiprocket
 from open_logistics_shiprocket.models.manifest_response import ManifestResponse
 from open_logistics_shiprocket.models.print_manifest_payload import PrintManifestPayload

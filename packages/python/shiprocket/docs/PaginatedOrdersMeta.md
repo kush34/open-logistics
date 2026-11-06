@@ -17,7 +17,7 @@ json = "{}"
 # create an instance of PaginatedOrdersMeta from a JSON string
 paginated_orders_meta_instance = PaginatedOrdersMeta.from_json(json)
 # print the JSON string representation of the object
-print(PaginatedOrdersMeta.to_json())
+print(paginated_orders_meta_instance.to_json())
 
 # convert the object into a dict
 paginated_orders_meta_dict = paginated_orders_meta_instance.to_dict()

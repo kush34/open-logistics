@@ -18,7 +18,7 @@ json = "{}"
 # create an instance of AuthCredentials from a JSON string
 auth_credentials_instance = AuthCredentials.from_json(json)
 # print the JSON string representation of the object
-print(AuthCredentials.to_json())
+print(auth_credentials_instance.to_json())
 
 # convert the object into a dict
 auth_credentials_dict = auth_credentials_instance.to_dict()
