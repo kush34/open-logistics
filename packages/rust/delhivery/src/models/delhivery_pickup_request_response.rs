@@ -14,6 +14,10 @@ use serde::{Deserialize, Serialize};
 /// DelhiveryPickupRequestResponse : Raw `POST /fm/request/new/` response.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DelhiveryPickupRequestResponse {
+    /// Fields the schema allows but does not enumerate.
+    #[serde(flatten)]
+    pub additional_properties: std::collections::HashMap<String, serde_json::Value>,
+
     #[serde(rename = "pickup_id", skip_serializing_if = "Option::is_none")]
     pub pickup_id: Option<String>,
     #[serde(rename = "message", skip_serializing_if = "Option::is_none")]
@@ -29,6 +33,7 @@ impl DelhiveryPickupRequestResponse {
             pickup_id: None,
             message: None,
             status: None,
+            additional_properties: Default::default(),
         }
     }
 }

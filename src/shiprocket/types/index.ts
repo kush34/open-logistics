@@ -27,6 +27,16 @@ export interface CreateOrderPayload {
   billing_email: string;
   billing_phone: string;
   shipping_is_billing: boolean;
+  shipping_customer_name?: string;
+  shipping_last_name?: string;
+  shipping_address?: string;
+  shipping_address_2?: string;
+  shipping_city?: string;
+  shipping_pincode?: string;
+  shipping_state?: string;
+  shipping_country?: string;
+  shipping_email?: string;
+  shipping_phone?: string;
   order_items: OrderItem[];
   payment_method: "prepaid" | "COD";
   sub_total: number;

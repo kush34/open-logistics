@@ -41,6 +41,16 @@ class CreateOrderPayload(BaseModel):
     billing_email: StrictStr
     billing_phone: StrictStr
     shipping_is_billing: StrictBool
+    shipping_customer_name: Optional[StrictStr] = Field(default=None, description="Required when `shipping_is_billing` is false.")
+    shipping_last_name: Optional[StrictStr] = None
+    shipping_address: Optional[StrictStr] = Field(default=None, description="Required when `shipping_is_billing` is false.")
+    shipping_address_2: Optional[StrictStr] = None
+    shipping_city: Optional[StrictStr] = Field(default=None, description="Required when `shipping_is_billing` is false.")
+    shipping_pincode: Optional[StrictStr] = Field(default=None, description="Required when `shipping_is_billing` is false.")
+    shipping_state: Optional[StrictStr] = Field(default=None, description="Required when `shipping_is_billing` is false.")
+    shipping_country: Optional[StrictStr] = Field(default=None, description="Required when `shipping_is_billing` is false.")
+    shipping_email: Optional[StrictStr] = None
+    shipping_phone: Optional[StrictStr] = Field(default=None, description="Required when `shipping_is_billing` is false.")
     order_items: List[OrderItem]
     payment_method: StrictStr
     sub_total: Union[StrictFloat, StrictInt]
@@ -48,7 +58,7 @@ class CreateOrderPayload(BaseModel):
     breadth: Union[StrictFloat, StrictInt]
     height: Union[StrictFloat, StrictInt]
     weight: Union[StrictFloat, StrictInt]
-    __properties: ClassVar[List[str]] = ["order_id", "order_date", "pickup_location", "billing_customer_name", "billing_last_name", "billing_address", "billing_city", "billing_pincode", "billing_state", "billing_country", "billing_email", "billing_phone", "shipping_is_billing", "order_items", "payment_method", "sub_total", "length", "breadth", "height", "weight"]
+    __properties: ClassVar[List[str]] = ["order_id", "order_date", "pickup_location", "billing_customer_name", "billing_last_name", "billing_address", "billing_city", "billing_pincode", "billing_state", "billing_country", "billing_email", "billing_phone", "shipping_is_billing", "shipping_customer_name", "shipping_last_name", "shipping_address", "shipping_address_2", "shipping_city", "shipping_pincode", "shipping_state", "shipping_country", "shipping_email", "shipping_phone", "order_items", "payment_method", "sub_total", "length", "breadth", "height", "weight"]
 
     @field_validator('payment_method')
     def payment_method_validate_enum(cls, value):
@@ -127,6 +137,16 @@ class CreateOrderPayload(BaseModel):
             "billing_email": obj.get("billing_email"),
             "billing_phone": obj.get("billing_phone"),
             "shipping_is_billing": obj.get("shipping_is_billing"),
+            "shipping_customer_name": obj.get("shipping_customer_name"),
+            "shipping_last_name": obj.get("shipping_last_name"),
+            "shipping_address": obj.get("shipping_address"),
+            "shipping_address_2": obj.get("shipping_address_2"),
+            "shipping_city": obj.get("shipping_city"),
+            "shipping_pincode": obj.get("shipping_pincode"),
+            "shipping_state": obj.get("shipping_state"),
+            "shipping_country": obj.get("shipping_country"),
+            "shipping_email": obj.get("shipping_email"),
+            "shipping_phone": obj.get("shipping_phone"),
             "order_items": [OrderItem.from_dict(_item) for _item in obj["order_items"]] if obj.get("order_items") is not None else None,
             "payment_method": obj.get("payment_method"),
             "sub_total": obj.get("sub_total"),

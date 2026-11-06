@@ -14,6 +14,10 @@ use serde::{Deserialize, Serialize};
 /// DelhiveryTrackingResponse : Raw `GET /api/v1/packages/json/` response. `ShipmentData` is provider-shaped and is exposed as-is; there is no client-side normalization. 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DelhiveryTrackingResponse {
+    /// Fields the schema allows but does not enumerate.
+    #[serde(flatten)]
+    pub additional_properties: std::collections::HashMap<String, serde_json::Value>,
+
     #[serde(rename = "ShipmentData", skip_serializing_if = "Option::is_none")]
     pub shipment_data: Option<Vec<std::collections::HashMap<String, serde_json::Value>>>,
 }
@@ -23,6 +27,7 @@ impl DelhiveryTrackingResponse {
     pub fn new() -> DelhiveryTrackingResponse {
         DelhiveryTrackingResponse {
             shipment_data: None,
+            additional_properties: Default::default(),
         }
     }
 }

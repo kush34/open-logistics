@@ -18,7 +18,7 @@ trap 'rm -rf "$work"' EXIT
 
 generate() {
   npx -y "@openapitools/openapi-generator-cli@${generator_version}" generate \
-    --global-property=apiDocs=false,modelDocs=false,apiTests=false,modelTests=false \
+    --global-property=apiTests=false,modelTests=false \
     "$@"
 }
 
@@ -57,6 +57,8 @@ for provider in "${providers[@]}"; do
   rm -f "$work/packages/rust/${provider}/git_push.sh" "$work/packages/rust/${provider}/.travis.yml"
   sed -i "s|^authors = .*|authors = [\"${author}\"]\nrepository = \"${repo_url}\"\nhomepage = \"${homepage}\"\ndocumentation = \"https://docs.rs/open_logistics_${provider}\"|" \
     "$work/packages/rust/${provider}/Cargo.toml"
+  python3 "$root/scripts/rust_extra_fields.py" \
+    "$work/packages/rust/${provider}/src/models"
 done
 
 if [[ "${1:-}" == "--check" ]]; then

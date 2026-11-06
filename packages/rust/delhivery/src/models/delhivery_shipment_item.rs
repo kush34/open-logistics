@@ -13,6 +13,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DelhiveryShipmentItem {
+    /// Fields the schema allows but does not enumerate.
+    #[serde(flatten)]
+    pub additional_properties: std::collections::HashMap<String, serde_json::Value>,
+
     #[serde(rename = "name", skip_serializing_if = "Option::is_none")]
     pub name: Option<String>,
     #[serde(rename = "quantity", skip_serializing_if = "Option::is_none")]
@@ -33,6 +37,7 @@ impl DelhiveryShipmentItem {
             sku: None,
             price: None,
             hsn_code: None,
+            additional_properties: Default::default(),
         }
     }
 }

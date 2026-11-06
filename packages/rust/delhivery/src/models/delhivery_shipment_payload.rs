@@ -13,6 +13,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DelhiveryShipmentPayload {
+    /// Fields the schema allows but does not enumerate.
+    #[serde(flatten)]
+    pub additional_properties: std::collections::HashMap<String, serde_json::Value>,
+
     #[serde(rename = "order_id")]
     pub order_id: String,
     #[serde(rename = "waybill", skip_serializing_if = "Option::is_none")]
@@ -114,6 +118,7 @@ impl DelhiveryShipmentPayload {
             invoice_reference: None,
             qc: None,
             shipment: None,
+            additional_properties: Default::default(),
         }
     }
 }

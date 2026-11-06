@@ -14,6 +14,10 @@ use serde::{Deserialize, Serialize};
 /// DelhiveryOrderCreateResponse : Raw `POST /api/cmu/create.json` response.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DelhiveryOrderCreateResponse {
+    /// Fields the schema allows but does not enumerate.
+    #[serde(flatten)]
+    pub additional_properties: std::collections::HashMap<String, serde_json::Value>,
+
     #[serde(rename = "success", skip_serializing_if = "Option::is_none")]
     pub success: Option<bool>,
     #[serde(rename = "rmk", skip_serializing_if = "Option::is_none")]
@@ -47,6 +51,7 @@ impl DelhiveryOrderCreateResponse {
             status: None,
             shipment_id: None,
             packages: None,
+            additional_properties: Default::default(),
         }
     }
 }

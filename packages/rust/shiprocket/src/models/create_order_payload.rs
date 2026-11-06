@@ -40,6 +40,33 @@ pub struct CreateOrderPayload {
     pub billing_phone: String,
     #[serde(rename = "shipping_is_billing")]
     pub shipping_is_billing: bool,
+    /// Required when `shipping_is_billing` is false.
+    #[serde(rename = "shipping_customer_name", skip_serializing_if = "Option::is_none")]
+    pub shipping_customer_name: Option<String>,
+    #[serde(rename = "shipping_last_name", skip_serializing_if = "Option::is_none")]
+    pub shipping_last_name: Option<String>,
+    /// Required when `shipping_is_billing` is false.
+    #[serde(rename = "shipping_address", skip_serializing_if = "Option::is_none")]
+    pub shipping_address: Option<String>,
+    #[serde(rename = "shipping_address_2", skip_serializing_if = "Option::is_none")]
+    pub shipping_address_2: Option<String>,
+    /// Required when `shipping_is_billing` is false.
+    #[serde(rename = "shipping_city", skip_serializing_if = "Option::is_none")]
+    pub shipping_city: Option<String>,
+    /// Required when `shipping_is_billing` is false.
+    #[serde(rename = "shipping_pincode", skip_serializing_if = "Option::is_none")]
+    pub shipping_pincode: Option<String>,
+    /// Required when `shipping_is_billing` is false.
+    #[serde(rename = "shipping_state", skip_serializing_if = "Option::is_none")]
+    pub shipping_state: Option<String>,
+    /// Required when `shipping_is_billing` is false.
+    #[serde(rename = "shipping_country", skip_serializing_if = "Option::is_none")]
+    pub shipping_country: Option<String>,
+    #[serde(rename = "shipping_email", skip_serializing_if = "Option::is_none")]
+    pub shipping_email: Option<String>,
+    /// Required when `shipping_is_billing` is false.
+    #[serde(rename = "shipping_phone", skip_serializing_if = "Option::is_none")]
+    pub shipping_phone: Option<String>,
     #[serde(rename = "order_items")]
     pub order_items: Vec<models::OrderItem>,
     #[serde(rename = "payment_method")]
@@ -72,6 +99,16 @@ impl CreateOrderPayload {
             billing_email,
             billing_phone,
             shipping_is_billing,
+            shipping_customer_name: None,
+            shipping_last_name: None,
+            shipping_address: None,
+            shipping_address_2: None,
+            shipping_city: None,
+            shipping_pincode: None,
+            shipping_state: None,
+            shipping_country: None,
+            shipping_email: None,
+            shipping_phone: None,
             order_items,
             payment_method,
             sub_total,

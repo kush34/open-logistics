@@ -778,6 +778,43 @@
           "shipping_is_billing": {
             "type": "boolean"
           },
+          "shipping_customer_name": {
+            "type": "string",
+            "description": "Required when `shipping_is_billing` is false."
+          },
+          "shipping_last_name": {
+            "type": "string"
+          },
+          "shipping_address": {
+            "type": "string",
+            "description": "Required when `shipping_is_billing` is false."
+          },
+          "shipping_address_2": {
+            "type": "string"
+          },
+          "shipping_city": {
+            "type": "string",
+            "description": "Required when `shipping_is_billing` is false."
+          },
+          "shipping_pincode": {
+            "type": "string",
+            "description": "Required when `shipping_is_billing` is false."
+          },
+          "shipping_state": {
+            "type": "string",
+            "description": "Required when `shipping_is_billing` is false."
+          },
+          "shipping_country": {
+            "type": "string",
+            "description": "Required when `shipping_is_billing` is false."
+          },
+          "shipping_email": {
+            "type": "string"
+          },
+          "shipping_phone": {
+            "type": "string",
+            "description": "Required when `shipping_is_billing` is false."
+          },
           "order_items": {
             "type": "array",
             "items": {

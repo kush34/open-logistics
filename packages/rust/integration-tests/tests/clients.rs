@@ -85,7 +85,7 @@ fn handle(mut stream: TcpStream, store: &Arc<Mutex<Vec<Record>>>) -> std::io::Re
             r#"{"success":true,"rmk":"","upload_wbn":"W1"}"#
         }
         "/api/v1/packages/json/" => {
-            r#"{"ShipmentData":[{"Shipment":{"AWB":"W1","Status":{"Status":"In Transit","StatusType":"UD","StatusDateTime":"2026-01-01T10:00:00"}}}]}"#
+            r#"{"ShipmentData":[{"Shipment":{"AWB":"W1","Status":{"Status":"In Transit","StatusType":"UD","StatusDateTime":"2026-01-01T10:00:00"}}}],"ProviderField":"kept"}"#
         }
         "/c/api/pin-codes/json/" => {
             r#"{"delivery_codes":[{"postal_code":{"pin":400001,"pre_paid":"Y","cod":"Y","pickup":"Y","city":"Mumbai","remarks":""}}]}"#
@@ -192,8 +192,9 @@ async fn delhivery_raw_responses() {
     )
     .await
     .unwrap();
-    let shipment = &tracking.shipment_data.unwrap()[0];
+    let shipment = &tracking.shipment_data.as_ref().unwrap()[0];
     assert_eq!(shipment["Shipment"]["Status"]["Status"], "In Transit");
+    assert_eq!(tracking.additional_properties["ProviderField"], "kept");
 
     let serviceability =
         open_logistics_delhivery::apis::serviceability_api::serviceability_check(

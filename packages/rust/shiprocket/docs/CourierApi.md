@@ -1,0 +1,96 @@
+# \CourierApi
+
+All URIs are relative to *https://apiv2.shiprocket.in/v1/external*
+
+Method | HTTP request | Description
+------------- | ------------- | -------------
+[**courier_assign_awb**](CourierApi.md#courier_assign_awb) | **POST** /courier/assign/awb | Assign an AWB to a shipment
+[**courier_list**](CourierApi.md#courier_list) | **GET** /courier/courierListWithCounts | List couriers with counts
+[**courier_serviceability**](CourierApi.md#courier_serviceability) | **GET** /courier/serviceability | Check serviceability (also used for rate calculation)
+
+
+
+## courier_assign_awb
+
+> models::AssignAwbResponse courier_assign_awb(assign_awb_payload)
+Assign an AWB to a shipment
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**assign_awb_payload** | [**AssignAwbPayload**](AssignAwbPayload.md) |  | [required] |
+
+### Return type
+
+[**models::AssignAwbResponse**](AssignAWBResponse.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## courier_list
+
+> std::collections::HashMap<String, serde_json::Value> courier_list()
+List couriers with counts
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+[**std::collections::HashMap<String, serde_json::Value>**](serde_json::Value.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+
+## courier_serviceability
+
+> std::collections::HashMap<String, serde_json::Value> courier_serviceability(pickup_postcode, delivery_postcode, weight, cod, order_id)
+Check serviceability (also used for rate calculation)
+
+### Parameters
+
+
+Name | Type | Description  | Required | Notes
+------------- | ------------- | ------------- | ------------- | -------------
+**pickup_postcode** | **String** |  | [required] |
+**delivery_postcode** | **String** |  | [required] |
+**weight** | **f64** |  | [required] |
+**cod** | Option<**i32**> |  |  |
+**order_id** | Option<**String**> |  |  |
+
+### Return type
+
+[**std::collections::HashMap<String, serde_json::Value>**](serde_json::Value.md)
+
+### Authorization
+
+[bearerAuth](../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+

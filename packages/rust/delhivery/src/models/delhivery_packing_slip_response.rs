@@ -14,6 +14,10 @@ use serde::{Deserialize, Serialize};
 /// DelhiveryPackingSlipResponse : Raw `GET /api/p/packing_slip` response.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DelhiveryPackingSlipResponse {
+    /// Fields the schema allows but does not enumerate.
+    #[serde(flatten)]
+    pub additional_properties: std::collections::HashMap<String, serde_json::Value>,
+
     #[serde(rename = "waybill", skip_serializing_if = "Option::is_none")]
     pub waybill: Option<String>,
     #[serde(rename = "pdf_url", skip_serializing_if = "Option::is_none")]
@@ -32,6 +36,7 @@ impl DelhiveryPackingSlipResponse {
             pdf_url: None,
             packages_found: None,
             packages: None,
+            additional_properties: Default::default(),
         }
     }
 }

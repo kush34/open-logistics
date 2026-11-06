@@ -13,6 +13,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DelhiveryPostalCodeServiceability {
+    /// Fields the schema allows but does not enumerate.
+    #[serde(flatten)]
+    pub additional_properties: std::collections::HashMap<String, serde_json::Value>,
+
     #[serde(rename = "city", skip_serializing_if = "Option::is_none")]
     pub city: Option<String>,
     #[serde(rename = "cod", skip_serializing_if = "Option::is_none")]
@@ -66,6 +70,7 @@ impl DelhiveryPostalCodeServiceability {
             country_code: None,
             is_oda: None,
             remarks: None,
+            additional_properties: Default::default(),
         }
     }
 }

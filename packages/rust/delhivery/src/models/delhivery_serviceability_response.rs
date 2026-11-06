@@ -14,6 +14,10 @@ use serde::{Deserialize, Serialize};
 /// DelhiveryServiceabilityResponse : Raw `GET /c/api/pin-codes/json/` response.
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DelhiveryServiceabilityResponse {
+    /// Fields the schema allows but does not enumerate.
+    #[serde(flatten)]
+    pub additional_properties: std::collections::HashMap<String, serde_json::Value>,
+
     #[serde(rename = "delivery_codes", skip_serializing_if = "Option::is_none")]
     pub delivery_codes: Option<Vec<models::DelhiveryServiceabilityResponseDeliveryCodesInner>>,
 }
@@ -23,6 +27,7 @@ impl DelhiveryServiceabilityResponse {
     pub fn new() -> DelhiveryServiceabilityResponse {
         DelhiveryServiceabilityResponse {
             delivery_codes: None,
+            additional_properties: Default::default(),
         }
     }
 }

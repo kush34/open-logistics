@@ -13,6 +13,10 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct DelhiveryApiErrorBody {
+    /// Fields the schema allows but does not enumerate.
+    #[serde(flatten)]
+    pub additional_properties: std::collections::HashMap<String, serde_json::Value>,
+
     #[serde(rename = "message", skip_serializing_if = "Option::is_none")]
     pub message: Option<String>,
     #[serde(rename = "error", skip_serializing_if = "Option::is_none")]
@@ -33,6 +37,7 @@ impl DelhiveryApiErrorBody {
             detail: None,
             status_code: None,
             errors: None,
+            additional_properties: Default::default(),
         }
     }
 }
