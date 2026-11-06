@@ -5,8 +5,11 @@ Python client for the Shiprocket and Delhivery APIs.
 ## Install
 
 ```bash
-pip install open-logistics
+pip install open-logistics-sdk
 ```
+
+The distribution is `open-logistics-sdk` because `open-logistics` is taken on
+PyPI; the import package is `open_logistics`.
 
 ## Modules
 
