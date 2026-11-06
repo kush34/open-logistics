@@ -35,20 +35,20 @@ for provider in "${providers[@]}"; do
   generate \
     -i "$root/specs/${provider}.yaml" \
     -g python \
-    -o "$work/packages/python/${provider}" \
-    --additional-properties "packageName=open_logistics_${provider},projectName=open-logistics-${provider},packageVersion=${version},library=urllib3"
-  rm -rf "$work/packages/python/${provider}/git_push.sh" \
-    "$work/packages/python/${provider}/.github" \
-    "$work/packages/python/${provider}/.gitlab-ci.yml" \
-    "$work/packages/python/${provider}/.travis.yml" \
-    "$work/packages/python/${provider}/test" \
-    "$work/packages/python/${provider}/tox.ini" \
-    "$work/packages/python/${provider}/test-requirements.txt"
+    -o "$work/py/${provider}" \
+    --additional-properties "packageName=open_logistics_${provider},projectName=open-logistics,packageVersion=${version},library=urllib3"
+  rm -rf "$work/py/${provider}/git_push.sh" \
+    "$work/py/${provider}/.github" \
+    "$work/py/${provider}/.gitlab-ci.yml" \
+    "$work/py/${provider}/.travis.yml" \
+    "$work/py/${provider}/test" \
+    "$work/py/${provider}/tox.ini" \
+    "$work/py/${provider}/test-requirements.txt"
   sed -i \
     -e "s|https://github.com/GIT_USER_ID/GIT_REPO_ID|${repo_url}|" \
     -e "s|{name = \"OpenAPI Generator Community\",email = \"team@openapitools.org\"}|{name = \"${author}\"}|" \
-    "$work/packages/python/${provider}/pyproject.toml"
-  python3 "$root/scripts/python_docs.py" "$work/packages/python/${provider}"
+    "$work/py/${provider}/pyproject.toml"
+  python3 "$root/scripts/python_docs.py" "$work/py/${provider}"
 
   generate \
     -i "$root/specs/${provider}.yaml" \
@@ -57,6 +57,54 @@ for provider in "${providers[@]}"; do
     --additional-properties "packageName=open-logistics,library=reqwest"
   rm -f "$work/rust/${provider}/git_push.sh" "$work/rust/${provider}/.travis.yml"
 done
+
+# Both providers ship as one distribution: open_logistics.{shiprocket,delhivery}.
+merged_py="$work/packages/python/open-logistics"
+mkdir -p "$merged_py/open_logistics" "$merged_py/docs"
+for provider in "${providers[@]}"; do
+  cp -a "$work/py/${provider}/open_logistics_${provider}" "$merged_py/open_logistics/${provider}"
+  cp -a "$work/py/${provider}/docs" "$merged_py/docs/${provider}"
+  find "$merged_py/open_logistics/${provider}" "$merged_py/docs/${provider}" \
+    -type f \( -name '*.py' -o -name '*.md' \) \
+    -exec sed -i "s|open_logistics_${provider}|open_logistics.${provider}|g" {} +
+  rm -f "$merged_py/open_logistics/${provider}/py.typed"
+done
+touch "$merged_py/open_logistics/py.typed"
+printf '"""Open Logistics — Shiprocket and Delhivery clients."""\n' > "$merged_py/open_logistics/__init__.py"
+cp "$work/py/shiprocket/pyproject.toml" "$work/py/shiprocket/setup.cfg" "$merged_py/"
+sed -i \
+  -e "s|open_logistics_shiprocket|open_logistics|g" \
+  -e 's|^name = .*|name = "open-logistics"|' \
+  -e 's|^description = .*|description = "Open Logistics — Shiprocket and Delhivery"|' \
+  -e 's|^keywords = .*|keywords = ["logistics", "shiprocket", "delhivery", "shipping", "api-client"]|' \
+  "$merged_py/pyproject.toml"
+printf '\n[tool.setuptools.package-data]\nopen_logistics = ["py.typed"]\n' >> "$merged_py/pyproject.toml"
+cat > "$merged_py/README.md" <<EOF
+# open-logistics
+
+Python client for the Shiprocket and Delhivery APIs.
+
+## Install
+
+\`\`\`bash
+pip install open-logistics
+\`\`\`
+
+## Modules
+
+- \`open_logistics.shiprocket\` — Shiprocket APIs and models (docs in \`docs/shiprocket/\`)
+- \`open_logistics.delhivery\` — Delhivery APIs and models (docs in \`docs/delhivery/\`)
+
+\`\`\`python
+from open_logistics.shiprocket import ApiClient, AuthApi, AuthCredentials, Configuration, OrdersApi
+
+configuration = Configuration(host="https://apiv2.shiprocket.in/v1/external")
+with ApiClient(configuration) as api_client:
+    auth = AuthApi(api_client).auth_login(AuthCredentials(email=..., password=...))
+    configuration.access_token = auth.token
+    order = OrdersApi(api_client).orders_create(payload)
+\`\`\`
+EOF
 
 # Both providers ship as one crate: open_logistics::{shiprocket,delhivery}.
 merged="$work/packages/rust/open-logistics"
@@ -100,17 +148,17 @@ done
 if [[ "${1:-}" == "--check" ]]; then
   for provider in "${providers[@]}"; do
     diff "$root/specs/${provider}.json" "$work/specs/${provider}.json"
-    diff -r -x build -x dist -x '*.egg-info' -x __pycache__ -x .ruff_cache -x .pytest_cache \
-      "$root/packages/python/${provider}" "$work/packages/python/${provider}"
   done
+  diff -r -x build -x dist -x '*.egg-info' -x __pycache__ -x .ruff_cache -x .pytest_cache \
+    "$root/packages/python/open-logistics" "$merged_py"
   diff -r -x target "$root/packages/rust/open-logistics" "$merged"
   echo "Generated specs and clients are up to date."
 else
   for provider in "${providers[@]}"; do
     cp "$work/specs/${provider}.json" "$root/specs/${provider}.json"
-    rm -rf "${root:?}/packages/python/${provider:?}"
-    cp -a "$work/packages/python/${provider}" "$root/packages/python/"
   done
+  rm -rf "${root:?}/packages/python/open-logistics"
+  cp -a "$merged_py" "$root/packages/python/"
   rm -rf "${root:?}/packages/rust/open-logistics"
   cp -a "$merged" "$root/packages/rust/"
   echo "Regenerated specs and clients."

@@ -5,8 +5,7 @@ Do not edit these files by hand: change the spec, then regenerate.
 
 | Path | Source | Package / crate |
 | --- | --- | --- |
-| `packages/python/shiprocket` | `specs/shiprocket.yaml` | `open-logistics-shiprocket` (`open_logistics_shiprocket`) |
-| `packages/python/delhivery` | `specs/delhivery.yaml` | `open-logistics-delhivery` (`open_logistics_delhivery`) |
+| `packages/python/open-logistics` | `specs/*.yaml` | `open-logistics` (`open_logistics`) |
 | `packages/rust/open-logistics` | `specs/*.yaml` | `open-logistics` (`open_logistics`) |
 
 ## Method names
@@ -23,11 +22,11 @@ languages:
 ## Python
 
 ```bash
-pip install ./packages/python/shiprocket ./packages/python/delhivery
+pip install ./packages/python/open-logistics
 ```
 
 ```python
-from open_logistics_shiprocket import ApiClient, Configuration, OrdersApi
+from open_logistics.shiprocket import ApiClient, Configuration, OrdersApi
 
 configuration = Configuration(host="https://apiv2.shiprocket.in/v1/external")
 with ApiClient(configuration) as api_client:
