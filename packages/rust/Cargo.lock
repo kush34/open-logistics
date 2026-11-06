@@ -917,7 +917,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
 
 [[package]]
-name = "open-logistics-delhivery"
+name = "open-logistics"
 version = "0.2.2"
 dependencies = [
  "reqwest",
@@ -932,21 +932,8 @@ dependencies = [
 name = "open-logistics-integration-tests"
 version = "0.2.2"
 dependencies = [
- "open-logistics-delhivery",
- "open-logistics-shiprocket",
+ "open-logistics",
  "tokio",
-]
-
-[[package]]
-name = "open-logistics-shiprocket"
-version = "0.2.2"
-dependencies = [
- "reqwest",
- "serde",
- "serde_json",
- "serde_repr",
- "serde_with",
- "url",
 ]
 
 [[package]]

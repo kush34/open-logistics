@@ -7,8 +7,7 @@ Do not edit these files by hand: change the spec, then regenerate.
 | --- | --- | --- |
 | `packages/python/shiprocket` | `specs/shiprocket.yaml` | `open-logistics-shiprocket` (`open_logistics_shiprocket`) |
 | `packages/python/delhivery` | `specs/delhivery.yaml` | `open-logistics-delhivery` (`open_logistics_delhivery`) |
-| `packages/rust/shiprocket` | `specs/shiprocket.yaml` | `open-logistics-shiprocket` (`open_logistics_shiprocket`) |
-| `packages/rust/delhivery` | `specs/delhivery.yaml` | `open-logistics-delhivery` (`open_logistics_delhivery`) |
+| `packages/rust/open-logistics` | `specs/*.yaml` | `open-logistics` (`open_logistics`) |
 
 ## Method names
 
@@ -44,18 +43,17 @@ Delhivery uses `api_key={"delhiveryToken": token}` plus
 
 ```toml
 [dependencies]
-open-logistics-shiprocket = { path = "packages/rust/shiprocket" }
-open-logistics-delhivery = { path = "packages/rust/delhivery" }
+open-logistics = { path = "packages/rust/open-logistics" }
 ```
 
 ```rust
-let mut configuration = open_logistics_shiprocket::apis::configuration::Configuration::new();
-let auth = open_logistics_shiprocket::apis::auth_api::auth_login(
+let mut configuration = open_logistics::shiprocket::apis::configuration::Configuration::new();
+let auth = open_logistics::shiprocket::apis::auth_api::auth_login(
     &configuration,
     AuthCredentials { email, password },
 ).await?;
 configuration.bearer_access_token = Some(auth.token);
-let order = open_logistics_shiprocket::apis::orders_api::orders_create(
+let order = open_logistics::shiprocket::apis::orders_api::orders_create(
     &configuration,
     payload,
 ).await?;

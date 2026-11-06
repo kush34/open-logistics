@@ -78,10 +78,8 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Publish crates
+      - name: Publish crate
         working-directory: packages/rust
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-        run: |
-          cargo publish -p open-logistics-shiprocket
-          cargo publish -p open-logistics-delhivery
+        run: cargo publish -p open-logistics

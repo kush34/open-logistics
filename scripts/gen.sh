@@ -53,20 +53,48 @@ for provider in "${providers[@]}"; do
   generate \
     -i "$root/specs/${provider}.yaml" \
     -g rust \
-    -o "$work/packages/rust/${provider}" \
-    --additional-properties "packageName=open-logistics-${provider},library=reqwest"
-  rm -f "$work/packages/rust/${provider}/git_push.sh" "$work/packages/rust/${provider}/.travis.yml"
-  sed -i \
-    -e "s|^authors = .*|authors = [\"${author}\"]|" \
-    -e "s|^license = .*|license = \"MIT\"\nkeywords = [\"logistics\", \"${provider}\", \"shipping\", \"api-client\"]\ncategories = [\"api-bindings\", \"web-programming::http-client\"]\nrepository = \"${repo_url}\"\nhomepage = \"${homepage}\"|" \
-    "$work/packages/rust/${provider}/Cargo.toml"
-  sed -i \
-    -e "s|Put the package under your project folder in a directory named .*|Add the crate to your \`Cargo.toml\`:|" \
-    -e "s|^open-logistics-${provider} = { path = .*|open-logistics-${provider} = \"${version}\"|" \
-    -e "s|^## Author$|## Author\n\n${author}|" \
-    "$work/packages/rust/${provider}/README.md"
-  python3 "$root/scripts/rust_extra_fields.py" \
-    "$work/packages/rust/${provider}/src/models"
+    -o "$work/rust/${provider}" \
+    --additional-properties "packageName=open-logistics,library=reqwest"
+  rm -f "$work/rust/${provider}/git_push.sh" "$work/rust/${provider}/.travis.yml"
+done
+
+# Both providers ship as one crate: open_logistics::{shiprocket,delhivery}.
+merged="$work/packages/rust/open-logistics"
+mkdir -p "$merged/src"
+cp "$work/rust/shiprocket/Cargo.toml" "$merged/Cargo.toml"
+sed -i \
+  -e 's|^name = .*|name = "open-logistics"|' \
+  -e "s|^authors = .*|authors = [\"${author}\"]|" \
+  -e 's|^description = .*|description = "Rust client for the Open Logistics Shiprocket and Delhivery APIs."|' \
+  -e "s|^license = .*|license = \"MIT\"\nkeywords = [\"logistics\", \"shipping\", \"shiprocket\", \"delhivery\", \"api-client\"]\ncategories = [\"api-bindings\", \"web-programming::http-client\"]\nrepository = \"${repo_url}\"\nhomepage = \"${homepage}\"|" \
+  "$merged/Cargo.toml"
+printf '#![allow(unused_imports)]\n#![allow(clippy::too_many_arguments)]\n\npub mod delhivery;\npub mod shiprocket;\n' > "$merged/src/lib.rs"
+cat > "$merged/README.md" <<EOF
+# open-logistics
+
+Rust client for the Shiprocket and Delhivery APIs.
+
+## Install
+
+\`\`\`toml
+[dependencies]
+open-logistics = "${version}"
+\`\`\`
+
+## Modules
+
+- \`open_logistics::shiprocket\` — Shiprocket APIs and models
+- \`open_logistics::delhivery\` — Delhivery APIs and models
+
+Both modules expose \`apis\` and \`models\`.
+EOF
+
+for provider in "${providers[@]}"; do
+  mkdir -p "$merged/src/${provider}"
+  cp -a "$work/rust/${provider}/src/apis" "$work/rust/${provider}/src/models" "$merged/src/${provider}/"
+  printf 'pub mod apis;\npub mod models;\n' > "$merged/src/${provider}/mod.rs"
+  find "$merged/src/${provider}" -name '*.rs' -exec sed -i "s|crate::|crate::${provider}::|g" {} +
+  python3 "$root/scripts/rust_extra_fields.py" "$merged/src/${provider}/models"
 done
 
 if [[ "${1:-}" == "--check" ]]; then
@@ -74,17 +102,16 @@ if [[ "${1:-}" == "--check" ]]; then
     diff "$root/specs/${provider}.json" "$work/specs/${provider}.json"
     diff -r -x build -x dist -x '*.egg-info' -x __pycache__ -x .ruff_cache -x .pytest_cache \
       "$root/packages/python/${provider}" "$work/packages/python/${provider}"
-    diff -r -x target \
-      "$root/packages/rust/${provider}" "$work/packages/rust/${provider}"
   done
+  diff -r -x target "$root/packages/rust/open-logistics" "$merged"
   echo "Generated specs and clients are up to date."
 else
   for provider in "${providers[@]}"; do
     cp "$work/specs/${provider}.json" "$root/specs/${provider}.json"
-    for language in python rust; do
-      rm -rf "${root:?}/packages/${language:?}/${provider:?}"
-      cp -a "$work/packages/${language}/${provider}" "$root/packages/${language}/"
-    done
+    rm -rf "${root:?}/packages/python/${provider:?}"
+    cp -a "$work/packages/python/${provider}" "$root/packages/python/"
   done
+  rm -rf "${root:?}/packages/rust/open-logistics"
+  cp -a "$merged" "$root/packages/rust/"
   echo "Regenerated specs and clients."
 fi

@@ -6,10 +6,10 @@ use std::net::{TcpListener, TcpStream};
 use std::sync::{Arc, Mutex};
 use std::thread;
 
-use open_logistics_shiprocket::apis::configuration::Configuration;
-use open_logistics_shiprocket::apis::{auth_api, orders_api, tracking_api};
-use open_logistics_shiprocket::models::create_order_payload::PaymentMethod;
-use open_logistics_shiprocket::models::{AuthCredentials, CreateOrderPayload, OrderItem};
+use open_logistics::shiprocket::apis::configuration::Configuration;
+use open_logistics::shiprocket::apis::{auth_api, orders_api, tracking_api};
+use open_logistics::shiprocket::models::create_order_payload::PaymentMethod;
+use open_logistics::shiprocket::models::{AuthCredentials, CreateOrderPayload, OrderItem};
 
 #[derive(Debug, Clone)]
 struct Record {
@@ -168,10 +168,10 @@ async fn shiprocket_auth_create_and_track() {
 async fn delhivery_raw_responses() {
     let (port, records) = start_server();
     let mut configuration =
-        open_logistics_delhivery::apis::configuration::Configuration::default();
+        open_logistics::delhivery::apis::configuration::Configuration::default();
     configuration.base_path = format!("http://127.0.0.1:{port}");
     configuration.api_key = Some(
-        open_logistics_delhivery::apis::configuration::ApiKey {
+        open_logistics::delhivery::apis::configuration::ApiKey {
             prefix: Some("Token".to_string()),
             key: "delta-token".to_string(),
         },
@@ -179,13 +179,13 @@ async fn delhivery_raw_responses() {
 
     let data = r#"{"shipments":[{"order_id":"O1"}]}"#;
     let order =
-        open_logistics_delhivery::apis::orders_api::orders_create(&configuration, "json", data)
+        open_logistics::delhivery::apis::orders_api::orders_create(&configuration, "json", data)
             .await
             .unwrap();
     assert_eq!(order.success, Some(true));
     assert_eq!(order.upload_wbn.as_deref(), Some("W1"));
 
-    let tracking = open_logistics_delhivery::apis::tracking_api::tracking_fetch(
+    let tracking = open_logistics::delhivery::apis::tracking_api::tracking_fetch(
         &configuration,
         Some("W1"),
         None,
@@ -197,7 +197,7 @@ async fn delhivery_raw_responses() {
     assert_eq!(tracking.additional_properties["ProviderField"], "kept");
 
     let serviceability =
-        open_logistics_delhivery::apis::serviceability_api::serviceability_check(
+        open_logistics::delhivery::apis::serviceability_api::serviceability_check(
             &configuration,
             Some("400001"),
             None,
@@ -208,7 +208,7 @@ async fn delhivery_raw_responses() {
     let delivery_code = &serviceability.delivery_codes.unwrap()[0];
     assert_eq!(delivery_code.postal_code.as_ref().unwrap().pin, Some(400001));
 
-    let rate = open_logistics_delhivery::apis::rates_api::rates_calculate(
+    let rate = open_logistics::delhivery::apis::rates_api::rates_calculate(
         &configuration,
         "S",
         0.5,
@@ -221,7 +221,7 @@ async fn delhivery_raw_responses() {
     .unwrap();
     assert_eq!(rate[0].total_amount, Some(47.2));
 
-    let waybill = open_logistics_delhivery::apis::waybills_api::waybills_fetch(
+    let waybill = open_logistics::delhivery::apis::waybills_api::waybills_fetch(
         &configuration,
         None,
         None,
