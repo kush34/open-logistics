@@ -11,7 +11,7 @@ import unittest
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit
 
-from open_logistics_delhivery import (
+from open_logistics.delhivery import (
     ApiClient as DelhiveryApiClient,
     Configuration as DelhiveryConfiguration,
     OrdersApi as DelhiveryOrdersApi,
@@ -20,7 +20,7 @@ from open_logistics_delhivery import (
     TrackingApi as DelhiveryTrackingApi,
     WaybillsApi as DelhiveryWaybillsApi,
 )
-from open_logistics_shiprocket import (
+from open_logistics.shiprocket import (
     ApiClient as ShiprocketApiClient,
     AuthApi,
     AuthCredentials,
