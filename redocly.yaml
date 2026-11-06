@@ -1,0 +1,9 @@
+extends:
+  - recommended
+
+rules:
+  # Real provider paths end in a slash; do not rewrite them for style.
+  no-path-trailing-slash: off
+  # A `default` response already documents provider errors.
+  operation-4xx-response: off
+  tag-description: off

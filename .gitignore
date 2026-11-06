@@ -5,3 +5,9 @@ docs/.vitepress/dist
 docs/.vitepress/cache
 docs/docs
 .env
+target/
+__pycache__/
+*.egg-info/
+.ruff_cache/
+.pytest_cache/
+packages/python/*/build/
