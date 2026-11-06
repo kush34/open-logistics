@@ -54,10 +54,17 @@ for provider in "${providers[@]}"; do
     -i "$root/specs/${provider}.yaml" \
     -g rust \
     -o "$work/packages/rust/${provider}" \
-    --additional-properties "packageName=open_logistics_${provider},library=reqwest"
+    --additional-properties "packageName=open-logistics-${provider},library=reqwest"
   rm -f "$work/packages/rust/${provider}/git_push.sh" "$work/packages/rust/${provider}/.travis.yml"
-  sed -i "s|^authors = .*|authors = [\"${author}\"]\nrepository = \"${repo_url}\"\nhomepage = \"${homepage}\"\ndocumentation = \"https://docs.rs/open_logistics_${provider}\"|" \
+  sed -i \
+    -e "s|^authors = .*|authors = [\"${author}\"]|" \
+    -e "s|^license = .*|license = \"MIT\"\nkeywords = [\"logistics\", \"${provider}\", \"shipping\", \"api-client\"]\ncategories = [\"api-bindings\", \"web-programming::http-client\"]\nrepository = \"${repo_url}\"\nhomepage = \"${homepage}\"|" \
     "$work/packages/rust/${provider}/Cargo.toml"
+  sed -i \
+    -e "s|Put the package under your project folder in a directory named .*|Add the crate to your \`Cargo.toml\`:|" \
+    -e "s|^open-logistics-${provider} = { path = .*|open-logistics-${provider} = \"${version}\"|" \
+    -e "s|^## Author$|## Author\n\n${author}|" \
+    "$work/packages/rust/${provider}/README.md"
   python3 "$root/scripts/rust_extra_fields.py" \
     "$work/packages/rust/${provider}/src/models"
 done

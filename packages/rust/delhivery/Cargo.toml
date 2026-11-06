@@ -1,12 +1,13 @@
 [package]
-name = "open_logistics_delhivery"
+name = "open-logistics-delhivery"
 version = "0.2.2"
 authors = ["Open Logistics"]
-repository = "https://github.com/kush34/open-logistics"
-homepage = "https://open-logistics.vercel.app"
-documentation = "https://docs.rs/open_logistics_delhivery"
 description = "OpenAPI description of the Delhivery B2C endpoints wrapped by `open-logistics`.  Source of truth for generated Python and Rust clients. Operation IDs and schema field names are intentionally snake_case so every language exposes the same names.  Delhivery overloads `POST /api/p/edit` for update and cancel, and `GET /api/v1/packages/json/` for single, order, and bulk tracking. OpenAPI permits one operation per path + method, so this spec exposes `orders_edit` and `tracking_fetch`; language facades may alias them as `update`, `cancel`, `by_waybill`, `by_order_id`, and `by_waybills`. "
 license = "MIT"
+keywords = ["logistics", "delhivery", "shipping", "api-client"]
+categories = ["api-bindings", "web-programming::http-client"]
+repository = "https://github.com/kush34/open-logistics"
+homepage = "https://open-logistics.vercel.app"
 edition = "2021"
 
 [dependencies]

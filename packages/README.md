@@ -7,8 +7,8 @@ Do not edit these files by hand: change the spec, then regenerate.
 | --- | --- | --- |
 | `packages/python/shiprocket` | `specs/shiprocket.yaml` | `open-logistics-shiprocket` (`open_logistics_shiprocket`) |
 | `packages/python/delhivery` | `specs/delhivery.yaml` | `open-logistics-delhivery` (`open_logistics_delhivery`) |
-| `packages/rust/shiprocket` | `specs/shiprocket.yaml` | `open_logistics_shiprocket` |
-| `packages/rust/delhivery` | `specs/delhivery.yaml` | `open_logistics_delhivery` |
+| `packages/rust/shiprocket` | `specs/shiprocket.yaml` | `open-logistics-shiprocket` (`open_logistics_shiprocket`) |
+| `packages/rust/delhivery` | `specs/delhivery.yaml` | `open-logistics-delhivery` (`open_logistics_delhivery`) |
 
 ## Method names
 
@@ -44,8 +44,8 @@ Delhivery uses `api_key={"delhiveryToken": token}` plus
 
 ```toml
 [dependencies]
-open_logistics_shiprocket = { path = "packages/rust/shiprocket" }
-open_logistics_delhivery = { path = "packages/rust/delhivery" }
+open-logistics-shiprocket = { path = "packages/rust/shiprocket" }
+open-logistics-delhivery = { path = "packages/rust/delhivery" }
 ```
 
 ```rust

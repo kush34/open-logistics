@@ -1,12 +1,13 @@
 [package]
-name = "open_logistics_shiprocket"
+name = "open-logistics-shiprocket"
 version = "0.2.2"
 authors = ["Open Logistics"]
-repository = "https://github.com/kush34/open-logistics"
-homepage = "https://open-logistics.vercel.app"
-documentation = "https://docs.rs/open_logistics_shiprocket"
 description = "OpenAPI description of the Shiprocket endpoints wrapped by `open-logistics`.  Source of truth for generated Python and Rust clients. Operation IDs and schema field names are intentionally snake_case so every language exposes the same names.  Two TypeScript methods (`checkServiceability` and `calculateRates`) call `GET /courier/serviceability`; OpenAPI permits one operation per path + method, so this spec exposes a single `courier_serviceability` operation. Language facades may alias it as `calculate_rates`. "
 license = "MIT"
+keywords = ["logistics", "shiprocket", "shipping", "api-client"]
+categories = ["api-bindings", "web-programming::http-client"]
+repository = "https://github.com/kush34/open-logistics"
+homepage = "https://open-logistics.vercel.app"
 edition = "2021"
 
 [dependencies]

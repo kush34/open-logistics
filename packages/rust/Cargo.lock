@@ -917,16 +917,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
 
 [[package]]
-name = "open-logistics-integration-tests"
-version = "0.2.2"
-dependencies = [
- "open_logistics_delhivery",
- "open_logistics_shiprocket",
- "tokio",
-]
-
-[[package]]
-name = "open_logistics_delhivery"
+name = "open-logistics-delhivery"
 version = "0.2.2"
 dependencies = [
  "reqwest",
@@ -938,7 +929,16 @@ dependencies = [
 ]
 
 [[package]]
-name = "open_logistics_shiprocket"
+name = "open-logistics-integration-tests"
+version = "0.2.2"
+dependencies = [
+ "open-logistics-delhivery",
+ "open-logistics-shiprocket",
+ "tokio",
+]
+
+[[package]]
+name = "open-logistics-shiprocket"
 version = "0.2.2"
 dependencies = [
  "reqwest",

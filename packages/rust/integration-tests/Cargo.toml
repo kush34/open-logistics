@@ -6,5 +6,5 @@ publish = false
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
-open_logistics_shiprocket = { path = "../shiprocket" }
-open_logistics_delhivery = { path = "../delhivery" }
+open-logistics-shiprocket = { path = "../shiprocket" }
+open-logistics-delhivery = { path = "../delhivery" }
