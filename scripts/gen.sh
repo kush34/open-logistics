@@ -74,7 +74,7 @@ printf '"""Open Logistics — Shiprocket and Delhivery clients."""\n' > "$merged
 cp "$work/py/shiprocket/pyproject.toml" "$work/py/shiprocket/setup.cfg" "$merged_py/"
 sed -i \
   -e "s|open_logistics_shiprocket|open_logistics|g" \
-  -e 's|^name = .*|name = "open-logistics"|' \
+  -e 's|^name = .*|name = "open-logistics-sdk"|' \
   -e 's|^description = .*|description = "Open Logistics — Shiprocket and Delhivery"|' \
   -e 's|^keywords = .*|keywords = ["logistics", "shiprocket", "delhivery", "shipping", "api-client"]|' \
   "$merged_py/pyproject.toml"
@@ -87,8 +87,11 @@ Python client for the Shiprocket and Delhivery APIs.
 ## Install
 
 \`\`\`bash
-pip install open-logistics
+pip install open-logistics-sdk
 \`\`\`
+
+The distribution is \`open-logistics-sdk\` because \`open-logistics\` is taken on
+PyPI; the import package is \`open_logistics\`.
 
 ## Modules
 

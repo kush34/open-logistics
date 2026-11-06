@@ -1,5 +1,5 @@
 [project]
-name = "open-logistics"
+name = "open-logistics-sdk"
 version = "0.2.2"
 description = "Open Logistics — Shiprocket and Delhivery"
 authors = [
