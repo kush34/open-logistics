@@ -3,6 +3,7 @@
 dist
 docs/.vitepress/dist
 docs/.vitepress/cache
+docs/public/downloads.json
 docs/docs
 .env
 target/
