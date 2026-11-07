@@ -1,3 +1,7 @@
+---
+description: "Authenticate Delhivery requests with a static API token and registered client name in the Open-Logistics SDK."
+---
+
 # Delhivery authentication
 
 Delhivery uses a static API token plus the registered client name.

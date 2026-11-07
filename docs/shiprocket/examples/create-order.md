@@ -1,4 +1,12 @@
+---
+description: "Shiprocket create-order example with ShiprocketClient credentials, a full payload, and the returned order response."
+---
+
 # Example: create an order
+
+Create a Shiprocket order with `ShiprocketClient`. The client authenticates with
+your email and password on the first request, caches the bearer token, and
+reuses it for later calls.
 
 ```ts
 import { ShiprocketClient } from "open-logistics";
@@ -32,3 +40,7 @@ const order = await sdk.createOrder({
 
 console.log(order);
 ```
+
+The response is an `OrderResponse` containing the Shiprocket order identifiers
+and status. Use the returned `order_id` and `shipment_id` with
+[shipments](/shiprocket/api/shipments) and [tracking](/shiprocket/api/tracking).

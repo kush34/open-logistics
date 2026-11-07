@@ -1,6 +1,17 @@
-# Tracking
+---
+description: "Track Shiprocket shipments in TypeScript and inspect the fields returned in TrackByAWBResponse."
+---
 
-`ShiprocketClient` exposes three tracking methods.
+# Shiprocket tracking guide
+
+`ShiprocketClient` exposes three tracking methods. They differ only in the
+identifier they send to Shiprocket; the response shape is the same.
+
+```ts
+const byAwb = await sdk.trackByAWB("1234567890");
+const byShipment = await sdk.trackByShipmentId(123456);
+const byOrder = await sdk.trackByOrderId("ORD-001");
+```
 
 ## Methods
 

@@ -1,6 +1,11 @@
-# Shipments
+---
+description: "Shiprocket shipment workflows in the SDK: pickup generation, labels, and manifests."
+---
 
-`ShiprocketClient` exposes direct shipment methods.
+# Shiprocket shipments guide
+
+`ShiprocketClient` exposes direct shipment methods for pickups, labels, and
+manifests.
 
 ## Methods
 
@@ -21,4 +26,6 @@ await sdk.printManifest(456);
 ## Notes
 
 - Shipment identifiers are passed as arrays for pickup, label, and manifest generation
+- `generatePickup()` returns pickup status and appointment date
+- `generateLabel()` returns `label_created` and `url`
 - `printManifest` wraps the order id in `order_ids`

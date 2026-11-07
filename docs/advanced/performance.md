@@ -1,3 +1,7 @@
+---
+description: "Open-Logistics performance characteristics: per-client token caching, no background polling, and fetch-based requests."
+---
+
 # Performance
 
 This SDK keeps the implementation simple.
@@ -13,3 +17,8 @@ This SDK keeps the implementation simple.
 
 - Reuse a single `Shiprocket` instance when possible
 - Avoid constructing a new client for every request
+- Cache serviceability and rate responses instead of repeating identical calls
+- Handle `ShiprocketAPIError` so a failed refresh does not leave a request silent
+
+The SDK does not add queues, background workers, or connection pooling. Keep
+concurrency control in the calling application.

@@ -1,4 +1,8 @@
-# Authentication
+---
+description: "Authenticate Shiprocket with email and password, including token caching and automatic refresh on 401."
+---
+
+# Shiprocket authentication
 
 The SDK authenticates against Shiprocket using an email and password pair.
 

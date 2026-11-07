@@ -1,3 +1,7 @@
+---
+description: "Catch and inspect ShiprocketAPIError and DelhiveryAPIError in the Open-Logistics SDK, and distinguish API failures from auth errors."
+---
+
 # Error handling
 
 The recommended error handling path is to catch `ShiprocketAPIError` for API failures and treat plain `Error` as auth or runtime failure.

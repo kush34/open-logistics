@@ -1,10 +1,16 @@
+---
+description: "Shiprocket integration in Open-Logistics: installation, authentication, configuration, API reference, guides, and examples."
+---
+
 # Shiprocket
 
-Shiprocket is the original provider surface in this repository.
+Shiprocket is the original provider surface in this repository. The
+`ShiprocketClient` authenticates with email and password, caches the bearer
+token, and refreshes it automatically once on a `401` response.
 
 ## Start here
 
-- [Installation](/shiprocket/getting-started/installation)
+- [Installation](/getting-started/installation)
 - [Authentication](/shiprocket/getting-started/authentication)
 - [Configuration](/shiprocket/getting-started/configuration)
 
@@ -30,3 +36,8 @@ Shiprocket is the original provider surface in this repository.
 
 - [Create order](/shiprocket/examples/create-order)
 - [Tracking](/shiprocket/examples/tracking)
+
+## Official resources
+
+- [Shiprocket website](https://www.shiprocket.in/)
+- [Shiprocket API documentation](https://apidocs.shiprocket.in/)
