@@ -4,16 +4,16 @@ description: "Track Shiprocket shipments by AWB, shipment ID, or order ID and re
 
 # Shiprocket tracking
 
-`ShiprocketClient` exposes three tracking methods. All three call Shiprocket's
-order tracking endpoint and return the same `TrackByAWBResponse`.
+`ShiprocketClient` exposes three tracking methods. They return the same
+`TrackByAWBResponse`, but each calls a different Shiprocket endpoint.
 
 ## Methods
 
 | Method | Argument | Endpoint |
 | --- | --- | --- |
-| `trackByAWB(awbCode)` | AWB string | `orders/track/awb/<awb>` |
-| `trackByShipmentId(shipmentId)` | Numeric shipment id | `orders/track/shipments/<id>` |
-| `trackByOrderId(orderId)` | Order reference string | `orders/track/<orderId>` |
+| `trackByAWB(awbCode)` | AWB string | `/courier/track/awb/<awb>` |
+| `trackByShipmentId(shipmentId)` | Numeric shipment id | `/courier/track/shipment/<id>` |
+| `trackByOrderId(orderId)` | Order reference string | `/orders/track/<orderId>` |
 
 ```ts
 const tracking = await sdk.trackByAWB("1234567890");

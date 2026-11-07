@@ -32,7 +32,7 @@ Sends an ad hoc order to Shiprocket's `orders/create/adhoc` endpoint.
 | `billing_phone` | `string` | yes | Billing phone |
 | `shipping_is_billing` | `boolean` | yes | Reuse billing details for shipping |
 | `order_items` | `OrderItem[]` | yes | Name, SKU, units, and selling price |
-| `payment_method` | `string` | yes | For example `"prepaid"` |
+| `payment_method` | `"prepaid" \| "COD"` | yes | Use the exact casing shown |
 | `sub_total` | `number` | yes | Order subtotal |
 | `length` / `breadth` / `height` / `weight` | `number` | yes | Package dimensions and weight |
 

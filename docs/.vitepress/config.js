@@ -22,12 +22,18 @@ const sectionLinks = {
   delhivery: `${SITE_URL}/delhivery/`,
 };
 
+// Pages kept only to redirect old URLs to their new home.
+const redirectPages = {
+  "shiprocket/getting-started/installation.md": "getting-started/installation.md",
+};
+
 function pageUrl(relativePath) {
-  if (relativePath === "index.md") return `${SITE_URL}/`;
-  if (relativePath.endsWith("/index.md")) {
-    return `${SITE_URL}/${relativePath.replace(/index\.md$/, "")}`;
+  const target = redirectPages[relativePath] || relativePath;
+  if (target === "index.md") return `${SITE_URL}/`;
+  if (target.endsWith("/index.md")) {
+    return `${SITE_URL}/${target.replace(/index\.md$/, "")}`;
   }
-  return `${SITE_URL}/${relativePath.replace(/\.md$/, ".html")}`;
+  return `${SITE_URL}/${target.replace(/\.md$/, ".html")}`;
 }
 
 function breadcrumb(pageData, canonical) {
@@ -65,6 +71,10 @@ module.exports = {
   lastUpdated: true,
   sitemap: {
     hostname: SITE_URL,
+    transformItems: (items) =>
+      items.filter(
+        (item) => item.url !== "shiprocket/getting-started/installation.html",
+      ),
   },
   head: [
     ["link", { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" }],
