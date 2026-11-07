@@ -8,13 +8,18 @@ const PACKAGES = {
   crates: "open-logistics",
 };
 
-const today = new Date().toISOString().slice(0, 10);
-const monthStart = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+const iso = (date) => date.toISOString().slice(0, 10);
+const today = iso(new Date());
+// 30 calendar dates including today: today and the 29 days before it.
+const windowStart = iso(new Date(Date.now() - 29 * 864e5));
 
 const headers = { "User-Agent": "open-logistics-docs" };
 
 async function getJSON(url) {
-  const res = await fetch(url, { headers });
+  const res = await fetch(url, {
+    headers,
+    signal: AbortSignal.timeout(10_000),
+  });
   if (!res.ok) throw new Error(`${res.status} ${url}`);
   return res.json();
 }
@@ -24,18 +29,31 @@ function totals(days) {
   let monthly = 0;
   for (const { date, downloads } of days) {
     lifetime += downloads;
-    if (date >= monthStart) monthly += downloads;
+    if (date >= windowStart) monthly += downloads;
   }
   return { lifetime, monthly };
 }
 
 const sources = {
-  // shortcut: npm's range API caps at 18 months. The package is younger, so this is lifetime for now.
   npm: async () => {
-    const data = await getJSON(
-      `https://api.npmjs.org/downloads/range/2020-01-01:${today}/${PACKAGES.npm}`,
-    );
-    return data.downloads.map((d) => ({ date: d.day, downloads: d.downloads }));
+    // npm caps each stats request at 18 months, so walk from first publish in 500-day chunks.
+    const meta = await getJSON(`https://registry.npmjs.org/${PACKAGES.npm}`);
+    const days = [];
+    const end = new Date(`${today}T00:00:00Z`);
+    const created = meta.time.created.slice(0, 10);
+    for (let start = new Date(`${created}T00:00:00Z`); start <= end; ) {
+      const stop = new Date(
+        Math.min(start.getTime() + 499 * 864e5, end.getTime()),
+      );
+      const data = await getJSON(
+        `https://api.npmjs.org/downloads/range/${iso(start)}:${iso(stop)}/${PACKAGES.npm}`,
+      );
+      days.push(
+        ...data.downloads.map((d) => ({ date: d.day, downloads: d.downloads })),
+      );
+      start = new Date(stop.getTime() + 864e5);
+    }
+    return days;
   },
   pypi: async () => {
     const data = await getJSON(
