@@ -8,8 +8,9 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
+    "docs:stats": "node scripts/docs-downloads.mjs",
+    "docs:dev": "npm run docs:stats && vitepress dev docs",
+    "docs:build": "npm run docs:stats && vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "test": "vitest run",
     "test:watch": "vitest",
