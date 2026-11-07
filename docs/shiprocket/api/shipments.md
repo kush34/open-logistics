@@ -1,21 +1,44 @@
+---
+description: "Generate Shiprocket pickups, labels, and manifests with ShiprocketClient shipment methods."
+---
+
 # Shiprocket shipments
 
-## `ShiprocketClient#generatePickup(payload)`
+## `generatePickup(payload)`
 
-Returns a pickup creation response with pickup status and appointment date.
+Schedules a pickup for one or more shipments.
 
-## `ShiprocketClient#generateLabel(payload)`
+```ts
+const pickup = await sdk.generatePickup({ shipment_id: [123456] });
+console.log(pickup);
+```
 
-Returns a label generation response with `label_created` and `url`.
+`GeneratePickupPayload` accepts `shipment_id: number[]`. The response includes
+the pickup status and appointment date from Shiprocket.
 
-## `ShiprocketClient#generateManifest(payload)`
+## `generateLabel(payload)`
 
-Returns a manifest URL.
+Creates shipping labels and returns `label_created` plus a label `url`.
 
-## `ShiprocketClient#printManifest(orderId)`
+```ts
+const label = await sdk.generateLabel({ shipment_id: [123456] });
+console.log(label.label_created, label.url);
+```
 
-Prints a manifest for a single order id.
+## `generateManifest(payload)`
 
-## Types
+Generates a manifest for one or more shipments and returns the manifest URL.
 
-See `GeneratePickupPayload`, `GenerateLabelPayload`, and `GenerateManifestPayload` in `src/shiprocket/types/index.ts`.
+## `printManifest(orderId)`
+
+Returns `{ manifest_url }` for a single numeric order id.
+
+```ts
+const manifest = await sdk.printManifest(987654);
+console.log(manifest.manifest_url);
+```
+
+Payload types (`GeneratePickupPayload`, `GenerateLabelPayload`, and
+`GenerateManifestPayload`) each accept `shipment_id: number[]`.
+
+See the [shipments guide](/shiprocket/guides/shipments) for a walkthrough.

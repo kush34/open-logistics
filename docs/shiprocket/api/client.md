@@ -1,3 +1,7 @@
+---
+description: "Create a ShiprocketClient with email and password, and call orders, shipments, tracking, courier, and rate methods."
+---
+
 # Shiprocket client
 
 The public Shiprocket entry point is the `ShiprocketClient` class exported from the package root.

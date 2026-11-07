@@ -1,3 +1,7 @@
+---
+description: "ShiprocketAPIError fields and examples for handling failed Shiprocket API requests in TypeScript."
+---
+
 # Shiprocket errors
 
 ## `ShiprocketAPIError`

@@ -1,6 +1,11 @@
-# Orders
+---
+description: "Create Shiprocket orders in TypeScript with the SDK, including required payload fields and responses."
+---
 
-`ShiprocketClient` exposes direct order methods.
+# Shiprocket orders guide
+
+`ShiprocketClient` exposes direct order methods for creating, listing, fetching,
+and cancelling Shiprocket orders.
 
 ## Methods
 
@@ -8,6 +13,15 @@
 - `listOrders(page = 1, perPage = 20)`
 - `getOrder(orderId)`
 - `cancelOrders(ids)`
+
+## Pagination and cancellation
+
+`listOrders()` returns `data` plus `meta.pagination` with `total`, `count`,
+`per_page`, `current_page`, and `total_pages`. Pass page and page size
+explicitly when iterating large order lists.
+
+`cancelOrders()` accepts an array of numeric order ids and returns a
+`{ message }` response from Shiprocket.
 
 ## Example
 

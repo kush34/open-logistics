@@ -1,3 +1,7 @@
+---
+description: "Configure DelhiveryClient with token, clientName, and an optional base URL override."
+---
+
 # Delhivery configuration
 
 The current Delhivery constructor accepts:
@@ -9,6 +13,12 @@ new DelhiveryClient({
   baseUrl: "https://track.delhivery.com", // optional
 });
 ```
+
+| Option | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `token` | `string` | yes | Static Delhivery API token |
+| `clientName` | `string` | yes | Registered Delhivery client name |
+| `baseUrl` | `string` | no | Overrides the built-in API host |
 
 ## What is configurable
 
@@ -37,3 +47,4 @@ new DelhiveryClient({
 - Use `checkServiceability()` before creating orders
 - Use `generateLabel()` for packing slip generation
 - Use `createPickupRequest()` for pickup scheduling
+- Set `baseUrl` explicitly when you need a non-default Delhivery environment

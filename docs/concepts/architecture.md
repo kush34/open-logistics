@@ -1,3 +1,7 @@
+---
+description: "How Open-Logistics is structured: provider facades, resource modules, clients, and shared TypeScript types."
+---
+
 # Architecture
 
 Open-Logistics is the package name. The current repository architecture exposes provider-specific facades for Shiprocket and Delhivery.

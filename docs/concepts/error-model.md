@@ -1,3 +1,7 @@
+---
+description: "The Open-Logistics error model: ShiprocketAPIError and DelhiveryAPIError fields, status codes, and when each is thrown."
+---
+
 # Error model
 
 The SDK has two dedicated public error classes: `ShiprocketAPIError` and `DelhiveryAPIError`.

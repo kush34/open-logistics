@@ -1,3 +1,7 @@
+---
+description: "Delhivery API reference: client setup, orders, shipments, tracking, rates, serviceability, and waybills."
+---
+
 # Delhivery API reference
 
 Delhivery-specific API pages live here.

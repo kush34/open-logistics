@@ -1,3 +1,7 @@
+---
+description: "Retry behavior in the Open-Logistics SDK: one automatic Shiprocket token refresh and request retry on HTTP 401."
+---
+
 # Retries
 
 The only retry behavior implemented today is a single automatic refresh-and-retry when Shiprocket returns `401`.

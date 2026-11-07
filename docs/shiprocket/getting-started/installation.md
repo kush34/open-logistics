@@ -1,19 +1,12 @@
-# Installation
+---
+description: "The Shiprocket installation instructions have moved to the shared installation guide."
+head:
+  - - meta
+    - http-equiv: refresh
+      content: "0; url=/getting-started/installation.html"
+---
 
-Install the package from npm:
+# Installation moved
 
-```bash
-npm install open-logistics
-```
-
-## Requirements
-
-- Node.js 18 or newer is recommended because the SDK relies on the built-in `fetch` API.
-- Provider credentials are required for authenticated calls:
-  - Shiprocket uses `email` and `password`
-  - Delhivery uses `token` and `clientName`
-
-## Package metadata
-
-- Package name: `open-logistics`
-- Repository: `https://github.com/kush34/open-logistics`
+The Shiprocket installation instructions now live in the shared guide:
+[Installation](/getting-started/installation).
