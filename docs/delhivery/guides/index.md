@@ -1,3 +1,7 @@
+---
+description: "Supported Delhivery B2C operations in the Open-Logistics SDK and where behavior differs from the TypeScript client."
+---
+
 # Delhivery guide
 
 `DelhiveryClient` exposes the Delhivery B2C operations that are clearly documented in Delhivery’s API.

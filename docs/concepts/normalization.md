@@ -1,3 +1,7 @@
+---
+description: "What the Open-Logistics SDK normalizes across Shiprocket and Delhivery, and which provider payloads stay raw."
+---
+
 # Normalization
 
 The SDK uses a mix of TypeScript interfaces, raw provider responses, and Delhivery response mapping.

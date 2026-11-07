@@ -1,0 +1,28 @@
+# Open-Logistics
+
+> Open-Logistics is an SDK for the Shiprocket and Delhivery logistics APIs. It ships a TypeScript SDK on npm plus generated Python and Rust clients, with typed orders, shipments, tracking, rates, serviceability, waybills, labels, and normalized errors.
+
+## Packages
+
+- npm: `open-logistics`
+- PyPI: `open-logistics-sdk` (import name `open_logistics`)
+- crates.io: `open-logistics`
+
+## Documentation
+
+- [Installation](https://open-logistics.vercel.app/getting-started/installation)
+- [Python and Rust clients](https://open-logistics.vercel.app/languages/)
+- [Shiprocket overview](https://open-logistics.vercel.app/shiprocket/)
+- [Shiprocket authentication](https://open-logistics.vercel.app/shiprocket/getting-started/authentication)
+- [Shiprocket orders API](https://open-logistics.vercel.app/shiprocket/api/orders)
+- [Shiprocket tracking API](https://open-logistics.vercel.app/shiprocket/api/tracking)
+- [Delhivery overview](https://open-logistics.vercel.app/delhivery/)
+- [Delhivery authentication](https://open-logistics.vercel.app/delhivery/getting-started/authentication)
+- [Delhivery orders API](https://open-logistics.vercel.app/delhivery/api/orders)
+- [Delhivery tracking API](https://open-logistics.vercel.app/delhivery/api/tracking)
+- [Error model](https://open-logistics.vercel.app/concepts/error-model)
+
+## Source
+
+- [GitHub repository](https://github.com/kush34/open-logistics)
+- License: MIT

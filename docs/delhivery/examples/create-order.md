@@ -1,4 +1,12 @@
+---
+description: "Delhivery create-order example with DelhiveryClient: credentials, shipment payload, and the waybill returned by the API."
+---
+
 # Delhivery create order
+
+Create a B2C order with `DelhiveryClient`. The client adds your `clientName` as
+the shipment `client`, wraps the payload in Delhivery's `format=json` envelope,
+and normalizes the response.
 
 ```ts
 import { DelhiveryClient } from "open-logistics";
@@ -20,9 +28,13 @@ const shipment = await sdk.createOrder({
   state: "MH",
   products_desc: "Shoes",
 });
+
+console.log(shipment.success, shipment.waybill, shipment.order_id);
 ```
 
-If Delhivery returns a waybill in the create response, you can feed that into:
+The response exposes `success`, `message`, `order_id`, `waybill`, `status`,
+`shipment_id`, and `raw`. If Delhivery returns a waybill in the create response,
+you can feed that into:
 
 - `sdk.trackByWaybill()`
 - `sdk.generateLabel()`

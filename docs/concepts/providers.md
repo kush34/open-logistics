@@ -1,3 +1,7 @@
+---
+description: "Provider support in Open-Logistics: explicit Shiprocket and Delhivery facades instead of a runtime provider registry."
+---
+
 # Providers
 
 The package exposes explicit provider facades rather than a provider registry.

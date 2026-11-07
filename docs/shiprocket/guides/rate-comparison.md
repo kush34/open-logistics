@@ -1,3 +1,7 @@
+---
+description: "Compare Shiprocket serviceability and rate checks, and see why both methods share one provider endpoint."
+---
+
 # Rate and serviceability checks
 
 The repository exposes two related methods:
@@ -16,7 +20,18 @@ const serviceability = await sdk.checkServiceability({
   weight: 0.5,
   cod: 0,
 });
+
+console.log(serviceability);
 ```
+
+Both methods accept `pickup_postcode`, `delivery_postcode`, `weight`, and an
+optional `cod` flag (`calculateRates()` also accepts `order_id`).
+
+## Response shape
+
+The SDK returns the raw Shiprocket payload typed as `unknown`. Courier options
+and charges are typically under `data.available_courier_companies`; inspect that
+array to compare delivery estimates and rates.
 
 ## Notes
 
