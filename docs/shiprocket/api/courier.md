@@ -4,6 +4,8 @@ description: "Shiprocket courier serviceability and rate methods in the Open-Log
 
 # Shiprocket courier
 
+`ShiprocketClient` exposes courier serviceability, AWB assignment, and courier list methods that call Shiprocket's courier endpoints and return raw payloads.
+
 ## `checkServiceability(params)`
 
 Calls Shiprocket's `courier/serviceability` endpoint to check whether a route can

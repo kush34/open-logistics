@@ -1,4 +1,38 @@
+# Search engines and AI answer engines are welcome to crawl and cite this site.
 User-agent: *
 Allow: /
 
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
 Sitemap: https://open-logistics.vercel.app/sitemap.xml
+
+# LLM-friendly index: https://open-logistics.vercel.app/llms.txt
+# Full Markdown corpus: https://open-logistics.vercel.app/llms-full.txt

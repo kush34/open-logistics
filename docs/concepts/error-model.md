@@ -31,7 +31,7 @@ Fields:
 
 ## Retry behavior
 
-- The Shiprocket client retries once when a request returns `401`
+- The Shiprocket client refreshes the token and retries when a request returns `401`, with no cap on refreshes
 - The Delhivery client performs no retries
 - Other failures are not retried
 

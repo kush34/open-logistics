@@ -4,6 +4,8 @@ description: "Generate Shiprocket pickups, labels, and manifests with Shiprocket
 
 # Shiprocket shipments
 
+`ShiprocketClient` generates pickups, labels, and manifests for existing Shiprocket shipments.
+
 ## `generatePickup(payload)`
 
 Schedules a pickup for one or more shipments.

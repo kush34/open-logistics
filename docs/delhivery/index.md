@@ -37,3 +37,21 @@ rates, labels, pickup requests, and waybills.
 
 - [Delhivery website](https://www.delhivery.com/)
 - [Delhivery tracking](https://www.delhivery.com/tracking)
+
+## FAQ
+
+### How do I authenticate with Delhivery?
+
+Create a `DelhiveryClient` with your Delhivery API `token` and registered `clientName`. Every request sends `Authorization: Token <token>`; there is no login endpoint and no token refresh.
+
+### What Delhivery operations are supported?
+
+B2C order creation, editing, and cancellation; tracking by waybill, order ID, or multiple waybills; pincode serviceability; invoice-based rate calculation; packing slips and labels; pickup requests; and single or bulk waybill fetch.
+
+### Does the SDK support Delhivery webhooks or NDR actions?
+
+No. Warehouse creation, NDR actions, and webhook setup are not part of the current SDK surface. See the [Delhivery guide](/delhivery/guides/) for the exact list.
+
+### Do I need a Delhivery account to use the SDK?
+
+Yes. The SDK calls Delhivery's live API, so you need Delhivery API credentials and an active account. The package itself is MIT-licensed and free.
