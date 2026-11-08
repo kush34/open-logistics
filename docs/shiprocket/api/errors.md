@@ -4,11 +4,11 @@ description: "ShiprocketAPIError fields and examples for handling failed Shiproc
 
 # Shiprocket errors
 
-Failed Shiprocket API requests throw `ShiprocketAPIError`, which carries the HTTP status and parsed response body.
+Failed Shiprocket API requests throw `ShiprocketAPIError`, which carries the HTTP status and the provider's field errors. Delhivery failures throw `DelhiveryAPIError`, which also exposes the parsed response body; see the [error model](/concepts/error-model) for both classes.
 
 ## `ShiprocketAPIError`
 
-Thrown for non-OK Shiprocket responses after the response body is parsed.
+Thrown for non-OK Shiprocket responses. The response body is parsed to build `message` and `errors` but is not stored on the error.
 
 ### Fields
 

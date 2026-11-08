@@ -54,7 +54,7 @@ Orders (create, list, fetch, cancel), shipments, courier serviceability and rate
 
 ### Does the SDK refresh Shiprocket tokens automatically?
 
-Yes. When a request returns `401`, the client refreshes the token once and retries that request. There is no other automatic retry behavior; see [retries](/advanced/retries).
+Yes. When a request returns `401`, the client refreshes the token and retries that request. The client does not cap the number of refreshes, and there is no other automatic retry behavior; see [retries](/advanced/retries).
 
 ### Do I need a Shiprocket account to use the SDK?
 

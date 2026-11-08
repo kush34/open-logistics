@@ -23,7 +23,7 @@ const sdk = new ShiprocketClient({
 2. Shiprocket returns an access token.
 3. The token is cached in memory by the client.
 4. The token is reused until it expires or a request returns `401`.
-5. On `401`, the client refreshes the token once and retries the request.
+5. On `401`, the client refreshes the token and retries the request; refreshes are not capped.
 
 ## Token lifetime
 

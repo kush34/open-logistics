@@ -137,11 +137,11 @@ TypeScript, Python, and Rust. Install the TypeScript SDK with `npm install open-
 
 ### Does the SDK handle authentication?
 
-Yes. Shiprocket authenticates with an email and password, caches the token in memory, and refreshes it once when a request returns `401`. Delhivery uses a static API token plus your registered client name, with no login endpoint or refresh flow.
+Yes. Shiprocket authenticates with an email and password, caches the token in memory, and refreshes it and retries the request when it returns `401`. Delhivery uses a static API token plus your registered client name, with no login endpoint or refresh flow.
 
 ### How are API errors surfaced?
 
-Failed API calls throw `ShiprocketAPIError` or `DelhiveryAPIError` with the HTTP status and the provider response body. Authentication and configuration problems throw a plain `Error`.
+Failed API calls throw `ShiprocketAPIError` or `DelhiveryAPIError` with the HTTP status. `ShiprocketAPIError` also carries the provider's field errors in `errors`; `DelhiveryAPIError` also carries the parsed response in `body`. Authentication and configuration problems throw a plain `Error`.
 
 ### Is Open-Logistics free to use?
 

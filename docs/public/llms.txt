@@ -7,9 +7,9 @@
 - Providers: Shiprocket and Delhivery (India).
 - Languages: TypeScript, Python, and Rust.
 - License: MIT. No paid tier.
-- Shiprocket auth: email and password; token cached in memory and refreshed once on HTTP 401.
+- Shiprocket auth: email and password; token cached in memory and refreshed on HTTP 401, with no cap on refreshes.
 - Delhivery auth: static API token plus registered client name; no refresh flow.
-- Errors: `ShiprocketAPIError` and `DelhiveryAPIError` include status and provider response.
+- Errors: both classes include the HTTP status; `ShiprocketAPIError` adds provider field errors, `DelhiveryAPIError` adds the parsed response body.
 - Repository: https://github.com/kush34/open-logistics
 
 ## Packages
@@ -72,7 +72,7 @@
 - [Error model](https://open-logistics.vercel.app/concepts/error-model): error classes, fields, and status codes.
 - [Providers](https://open-logistics.vercel.app/concepts/providers): why there is no runtime provider registry.
 - [Error handling](https://open-logistics.vercel.app/advanced/error-handling): catch and inspect provider errors.
-- [Retries](https://open-logistics.vercel.app/advanced/retries): the single Shiprocket 401 refresh-and-retry.
+- [Retries](https://open-logistics.vercel.app/advanced/retries): the Shiprocket 401 refresh-and-retry and what is not retried.
 - [Performance](https://open-logistics.vercel.app/advanced/performance): token caching, no polling, fetch-based requests.
 
 ## Optional

@@ -28,10 +28,7 @@ const active = ref("ts");
     </div>
 
     <pre v-if="active === 'ts'"><code><span class="c">// create an order, then read the shipment id</span>
-<span class="k">const</span> order = <span class="k">await</span> shiprocket.<span class="f">createOrder</span>({
-  order_id: <span class="s">"ORD-001"</span>,
-  pickup_location: <span class="s">"Primary Warehouse"</span>,
-});
+<span class="k">const</span> order = <span class="k">await</span> shiprocket.<span class="f">createOrder</span>(payload);
 order.shipment_id; <span class="c">// 123456789</span></code></pre>
 
     <pre v-else-if="active === 'py'"><code><span class="c"># create an order, then read the shipment id</span>
@@ -39,10 +36,8 @@ order = OrdersApi(api_client).<span class="f">orders_create</span>(payload)
 order.shipment_id  <span class="c"># 123456789</span></code></pre>
 
     <pre v-else><code><span class="c">// create an order, then read the shipment id</span>
-<span class="k">let</span> order = orders_api::<span class="f">orders_create</span>(
-    &amp;configuration,
-    payload,
-).<span class="k">await</span>?;
+<span class="k">let</span> order = orders_api::<span class="f">orders_create</span>(&amp;configuration, payload)
+    .<span class="k">await</span>?;
 order.shipment_id; <span class="c">// 123456789</span></code></pre>
   </div>
 </template>
