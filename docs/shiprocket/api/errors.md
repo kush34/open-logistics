@@ -4,6 +4,8 @@ description: "ShiprocketAPIError fields and examples for handling failed Shiproc
 
 # Shiprocket errors
 
+Failed Shiprocket API requests throw `ShiprocketAPIError`, which carries the HTTP status and parsed response body.
+
 ## `ShiprocketAPIError`
 
 Thrown for non-OK Shiprocket responses after the response body is parsed.

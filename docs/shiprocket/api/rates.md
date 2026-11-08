@@ -4,6 +4,8 @@ description: "Shiprocket rate and serviceability checks with checkServiceability
 
 # Shiprocket rates
 
+`calculateRates()` returns Shiprocket's rate data for a pickup and delivery pincode pair at a given weight.
+
 ## `calculateRates(params)`
 
 Calculates rate-related data for a route.

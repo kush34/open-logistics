@@ -1,43 +1,27 @@
 ---
 layout: home
-title: Open-Logistics
-titleTemplate: Open-Logistics
+title: Open-Logistics — Shiprocket and Delhivery SDK
+titleTemplate: false
 description: "Open-Logistics SDK documentation: one API for Shiprocket and Delhivery with TypeScript, Python, and Rust clients."
 hero:
-  name: Open-Logistics
-  text: Developer documentation for the Open-Logistics SDK
-  tagline: One unified API for logistics integrations, with TypeScript, Python, and Rust clients for Shiprocket and Delhivery.
+  text: One API for every Indian courier.
+  tagline: Ship, track, and rate orders across Shiprocket and Delhivery with typed TypeScript, Python, and Rust clients.
   actions:
     - theme: brand
-      text: Getting Started
+      text: Get started
       link: /shiprocket/
     - theme: alt
-      text: API Reference
+      text: API reference
       link: /shiprocket/api/client
-features:
-  - icon: >-
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
-    title: Shiprocket
-    details: Existing Shiprocket integration with orders, shipments, tracking, courier, and rates.
-  - icon: >-
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
-    title: Delhivery
-    details: B2C integration with order creation, tracking, serviceability, rates, labels, pickup requests, and waybills.
-  - icon: >-
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-    title: Typed SDK surface
-    details: Orders, shipments, tracking, courier, rates, and normalized API errors.
-  - icon: >-
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
-    title: Practical docs
-    details: Installation, auth, configuration, guides, examples, and advanced behavior notes.
 ---
 
-## Open-Logistics
+## Overview
 
-One unified API for logistics integrations, currently implemented for Shiprocket and Delhivery.
+Open-Logistics is an MIT-licensed SDK that wraps the Shiprocket and Delhivery
+logistics APIs in one typed interface. It ships a TypeScript package on npm plus
+generated Python and Rust clients, and this site is its developer documentation.
 
-The repository ships a TypeScript SDK, generated Python and Rust clients, and this developer-facing documentation site. Start with installation and authentication, then move into the API reference and examples.
+Start with [installation](/getting-started/installation) and authentication, then move into the API reference and examples.
 
 ### Installation
 
@@ -59,7 +43,9 @@ cargo add open-logistics
 
 ### Minimal working example
 
-```ts
+::: code-group
+
+```ts [TypeScript]
 import { ShiprocketClient } from "open-logistics";
 
 const sdk = new ShiprocketClient({
@@ -69,6 +55,51 @@ const sdk = new ShiprocketClient({
 
 const tracking = await sdk.trackByAWB("1234567890");
 ```
+
+```python [Python]
+import os
+
+from open_logistics.shiprocket import (
+    ApiClient,
+    AuthApi,
+    AuthCredentials,
+    Configuration,
+    TrackingApi,
+)
+
+configuration = Configuration(host="https://apiv2.shiprocket.in/v1/external")
+with ApiClient(configuration) as api_client:
+    auth = AuthApi(api_client).auth_login(
+        AuthCredentials(
+            email=os.environ["SHIPROCKET_EMAIL"],
+            password=os.environ["SHIPROCKET_PASSWORD"],
+        )
+    )
+    configuration.access_token = auth.token
+    tracking = TrackingApi(api_client).tracking_by_awb("1234567890")
+```
+
+```rust [Rust]
+use open_logistics::shiprocket::apis::{
+    auth_api, configuration::Configuration, tracking_api,
+};
+use open_logistics::shiprocket::models::AuthCredentials;
+
+let mut configuration = Configuration::new();
+let auth = auth_api::auth_login(
+    &configuration,
+    AuthCredentials {
+        email: std::env::var("SHIPROCKET_EMAIL").expect("SHIPROCKET_EMAIL"),
+        password: std::env::var("SHIPROCKET_PASSWORD").expect("SHIPROCKET_PASSWORD"),
+    },
+)
+.await?;
+configuration.bearer_access_token = Some(auth.token);
+
+let tracking = tracking_api::tracking_by_awb(&configuration, "1234567890").await?;
+```
+
+:::
 
 ### Core capabilities
 
@@ -89,5 +120,35 @@ const tracking = await sdk.trackByAWB("1234567890");
 - [Shiprocket docs](/shiprocket/)
 - [Delhivery docs](/delhivery/)
 - [Python and Rust clients](/languages/)
+
+## Frequently asked questions
+
+### What is Open-Logistics?
+
+Open-Logistics is a free, MIT-licensed SDK that wraps the Shiprocket and Delhivery logistics APIs in one typed interface. It is published for TypeScript, Python, and Rust.
+
+### Which logistics providers are supported?
+
+Shiprocket and Delhivery. Shiprocket covers orders, shipments, courier serviceability, tracking, rates, labels, and manifests. Delhivery covers B2C order creation and editing, cancellation, tracking, pincode serviceability, rates, labels, pickup requests, and waybills.
+
+### Which programming languages can I use?
+
+TypeScript, Python, and Rust. Install the TypeScript SDK with `npm install open-logistics`, the Python client with `pip install open-logistics-sdk` (import `open_logistics`), or the Rust client with `cargo add open-logistics`.
+
+### Does the SDK handle authentication?
+
+Yes. Shiprocket authenticates with an email and password, caches the token in memory, and refreshes it once when a request returns `401`. Delhivery uses a static API token plus your registered client name, with no login endpoint or refresh flow.
+
+### How are API errors surfaced?
+
+Failed API calls throw `ShiprocketAPIError` or `DelhiveryAPIError` with the HTTP status and the provider response body. Authentication and configuration problems throw a plain `Error`.
+
+### Is Open-Logistics free to use?
+
+Yes. The SDK is MIT-licensed with no paid tier. You still need your own Shiprocket or Delhivery account, and the providers' own pricing and rate limits apply.
+
+### Can I use it in production?
+
+The SDK is a thin typed wrapper over the provider APIs, so production suitability depends on your provider account, credentials, and rate limits. See [performance](/advanced/performance) and [retries](/advanced/retries) for the current behavior.
 
 <DownloadStats />

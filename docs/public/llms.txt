@@ -1,6 +1,16 @@
 # Open-Logistics
 
-> Open-Logistics is an SDK for the Shiprocket and Delhivery logistics APIs. It ships a TypeScript SDK on npm plus generated Python and Rust clients, with typed orders, shipments, tracking, rates, serviceability, waybills, labels, and normalized errors.
+> Open-Logistics is a free, MIT-licensed SDK for the Shiprocket and Delhivery logistics APIs. It ships a typed TypeScript SDK on npm plus generated Python and Rust clients, covering orders, shipments, tracking, rates, serviceability, waybills, labels, pickups, and normalized errors.
+
+## Key facts
+
+- Providers: Shiprocket and Delhivery (India).
+- Languages: TypeScript, Python, and Rust.
+- License: MIT. No paid tier.
+- Shiprocket auth: email and password; token cached in memory and refreshed once on HTTP 401.
+- Delhivery auth: static API token plus registered client name; no refresh flow.
+- Errors: `ShiprocketAPIError` and `DelhiveryAPIError` include status and provider response.
+- Repository: https://github.com/kush34/open-logistics
 
 ## Packages
 
@@ -8,21 +18,65 @@
 - PyPI: `open-logistics-sdk` (import name `open_logistics`)
 - crates.io: `open-logistics`
 
+## Quick start
+
+- TypeScript: `npm install open-logistics`, then `new ShiprocketClient({ email, password })` or `new DelhiveryClient({ token, clientName })`.
+- Python: `pip install open-logistics-sdk`, then `from open_logistics.shiprocket import ApiClient, AuthApi, AuthCredentials, Configuration`.
+- Rust: `cargo add open-logistics`, then use `open_logistics::shiprocket::apis`.
+
 ## Documentation
 
-- [Installation](https://open-logistics.vercel.app/getting-started/installation)
-- [Python and Rust clients](https://open-logistics.vercel.app/languages/)
-- [Shiprocket overview](https://open-logistics.vercel.app/shiprocket/)
-- [Shiprocket authentication](https://open-logistics.vercel.app/shiprocket/getting-started/authentication)
-- [Shiprocket orders API](https://open-logistics.vercel.app/shiprocket/api/orders)
-- [Shiprocket tracking API](https://open-logistics.vercel.app/shiprocket/api/tracking)
-- [Delhivery overview](https://open-logistics.vercel.app/delhivery/)
-- [Delhivery authentication](https://open-logistics.vercel.app/delhivery/getting-started/authentication)
-- [Delhivery orders API](https://open-logistics.vercel.app/delhivery/api/orders)
-- [Delhivery tracking API](https://open-logistics.vercel.app/delhivery/api/tracking)
-- [Error model](https://open-logistics.vercel.app/concepts/error-model)
+- [Installation](https://open-logistics.vercel.app/getting-started/installation): install commands, runtime requirements, and package names for npm, PyPI, and crates.io.
+- [Python and Rust clients](https://open-logistics.vercel.app/languages/): generated client imports, authentication, method-name mapping, and differences from TypeScript.
 
-## Source
+### Shiprocket
 
+- [Shiprocket overview](https://open-logistics.vercel.app/shiprocket/): provider capabilities, auth model, guides, and examples.
+- [Shiprocket authentication](https://open-logistics.vercel.app/shiprocket/getting-started/authentication): email/password login, token caching, and refresh on 401.
+- [Shiprocket configuration](https://open-logistics.vercel.app/shiprocket/getting-started/configuration): constructor options and base URL override.
+- [Shiprocket client](https://open-logistics.vercel.app/shiprocket/api/client): the `ShiprocketClient` entry point and method list.
+- [Shiprocket orders](https://open-logistics.vercel.app/shiprocket/api/orders): create, list, fetch, and cancel orders.
+- [Shiprocket shipments](https://open-logistics.vercel.app/shiprocket/api/shipments): shipment, pickup, and manifest methods.
+- [Shiprocket courier](https://open-logistics.vercel.app/shiprocket/api/courier): courier serviceability and rate checks.
+- [Shiprocket tracking](https://open-logistics.vercel.app/shiprocket/api/tracking): track shipments by AWB.
+- [Shiprocket rates](https://open-logistics.vercel.app/shiprocket/api/rates): rate calculation parameters and responses.
+- [Shiprocket errors](https://open-logistics.vercel.app/shiprocket/api/errors): `ShiprocketAPIError` fields and handling.
+- [Shiprocket orders guide](https://open-logistics.vercel.app/shiprocket/guides/orders): end-to-end order workflow.
+- [Shiprocket shipments guide](https://open-logistics.vercel.app/shiprocket/guides/shipments): shipment workflow.
+- [Shiprocket tracking guide](https://open-logistics.vercel.app/shiprocket/guides/tracking): tracking workflow.
+- [Shiprocket label generation](https://open-logistics.vercel.app/shiprocket/guides/label-generation): label and pickup generation.
+- [Shiprocket rate comparison](https://open-logistics.vercel.app/shiprocket/guides/rate-comparison): compare courier rates.
+- [Shiprocket create-order example](https://open-logistics.vercel.app/shiprocket/examples/create-order): full order payload.
+- [Shiprocket tracking example](https://open-logistics.vercel.app/shiprocket/examples/tracking): AWB tracking example.
+
+### Delhivery
+
+- [Delhivery overview](https://open-logistics.vercel.app/delhivery/): provider capabilities, auth model, guides, and examples.
+- [Delhivery authentication](https://open-logistics.vercel.app/delhivery/getting-started/authentication): static token and client name.
+- [Delhivery configuration](https://open-logistics.vercel.app/delhivery/getting-started/configuration): constructor options and base URL override.
+- [Delhivery API reference](https://open-logistics.vercel.app/delhivery/api/): resource index and facade methods.
+- [Delhivery client](https://open-logistics.vercel.app/delhivery/api/client): the `DelhiveryClient` entry point.
+- [Delhivery orders](https://open-logistics.vercel.app/delhivery/api/orders): create, edit, and cancel B2C orders.
+- [Delhivery shipments](https://open-logistics.vercel.app/delhivery/api/shipments): packing slips and pickup requests.
+- [Delhivery tracking](https://open-logistics.vercel.app/delhivery/api/tracking): track by waybill or order ID.
+- [Delhivery rates](https://open-logistics.vercel.app/delhivery/api/rates): invoice-based charge estimates.
+- [Delhivery serviceability](https://open-logistics.vercel.app/delhivery/api/serviceability): pincode serviceability checks.
+- [Delhivery waybills](https://open-logistics.vercel.app/delhivery/api/waybills): single and bulk waybill fetch.
+- [Delhivery guide](https://open-logistics.vercel.app/delhivery/guides/): supported operations and known gaps.
+- [Delhivery create-order example](https://open-logistics.vercel.app/delhivery/examples/create-order): full B2C shipment payload.
+
+### Concepts and advanced behavior
+
+- [Architecture](https://open-logistics.vercel.app/concepts/architecture): provider facades, resource modules, clients, and shared types.
+- [Normalization](https://open-logistics.vercel.app/concepts/normalization): what the SDK normalizes and what stays raw.
+- [Error model](https://open-logistics.vercel.app/concepts/error-model): error classes, fields, and status codes.
+- [Providers](https://open-logistics.vercel.app/concepts/providers): why there is no runtime provider registry.
+- [Error handling](https://open-logistics.vercel.app/advanced/error-handling): catch and inspect provider errors.
+- [Retries](https://open-logistics.vercel.app/advanced/retries): the single Shiprocket 401 refresh-and-retry.
+- [Performance](https://open-logistics.vercel.app/advanced/performance): token caching, no polling, fetch-based requests.
+
+## Optional
+
+- [Full documentation in one file](https://open-logistics.vercel.app/llms-full.txt): every page of this site as plain Markdown.
+- [Sitemap](https://open-logistics.vercel.app/sitemap.xml)
 - [GitHub repository](https://github.com/kush34/open-logistics)
-- License: MIT

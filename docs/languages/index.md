@@ -78,3 +78,21 @@ Delhivery sets `configuration.api_key = Some(ApiKey { prefix: Some("Token".into(
 The generated sources live in `packages/python/open-logistics` and
 `packages/rust/open-logistics`; do not edit them by hand. Change the specs and
 regenerate with `./scripts/gen.sh`.
+
+## FAQ
+
+### Which languages are supported?
+
+TypeScript (npm package `open-logistics`), Python (PyPI distribution `open-logistics-sdk`, import `open_logistics`), and Rust (crate `open-logistics`).
+
+### Are the Python and Rust clients generated from the same API?
+
+Yes. Both are generated from the OpenAPI specs in `specs/` with `./scripts/gen.sh`, using `operationId` values for method names.
+
+### Do the Python and Rust clients return the same responses as TypeScript?
+
+No. They use the same operation names, but return raw provider payloads, while the TypeScript SDK returns normalized responses for some resources. See [normalization](/concepts/normalization).
+
+### Do I need to install the TypeScript SDK to use Python or Rust?
+
+No. Each language has its own package and calls the Shiprocket and Delhivery APIs directly.

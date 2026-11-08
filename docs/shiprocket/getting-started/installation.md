@@ -3,7 +3,7 @@ description: "The Shiprocket installation instructions have moved to the shared 
 head:
   - - meta
     - http-equiv: refresh
-      content: "0; url=/getting-started/installation.html"
+      content: "0; url=/getting-started/installation"
 ---
 
 # Installation moved

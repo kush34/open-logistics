@@ -4,6 +4,8 @@ description: "Create, list, fetch, and cancel Shiprocket orders with ShiprocketC
 
 # Shiprocket orders
 
+`ShiprocketClient` exposes order creation, listing, lookup, and cancellation methods. Each method returns the parsed Shiprocket response.
+
 ## Methods
 
 | Method | Returns |
