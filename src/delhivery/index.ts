@@ -7,6 +7,10 @@ import { Serviceability } from "./resources/serviceability.js";
 import { Waybills } from "./resources/waybills.js";
 import type { DelhiveryCredentials } from "./types/index.js";
 
+/**
+ * @deprecated Use `OpenLogistics` with `provider: "delhivery"`.
+ * Kept for two more releases.
+ */
 export class Delhivery {
   public orders: Orders;
   public shipments: Shipments;

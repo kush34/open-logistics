@@ -6,6 +6,10 @@ import { Tracking } from "./resources/tracking.js";
 import { Rates } from "./resources/rates.js";
 import type { AuthCredentials } from "./types/index.js";
 
+/**
+ * @deprecated Use `OpenLogistics` with `provider: "shiprocket"`.
+ * Kept for two more releases.
+ */
 export class Shiprocket {
   public orders: Orders;
   public shipments: Shipments;

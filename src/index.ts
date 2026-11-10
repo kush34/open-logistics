@@ -1,3 +1,8 @@
+export {
+  OpenLogistics,
+  type OpenLogisticsConfig,
+  type OpenLogisticsProvider,
+} from "./open-logistics.js";
 export { Shiprocket } from "./shiprocket/index.js";
 export { ShiprocketClient, ShiprocketAPIError } from "./shiprocket/index.js";
 export * from "./shiprocket/types/index.js";
