@@ -1,6 +1,6 @@
 [package]
 name = "open-logistics"
-version = "0.2.2"
+version = "0.3.0"
 authors = ["Open Logistics"]
 description = "Rust client for the Open Logistics Shiprocket and Delhivery APIs."
 license = "MIT"
