@@ -14,6 +14,9 @@ new DelhiveryClient({
 });
 ```
 
+`OpenLogistics({ provider: "delhivery", token, clientName, baseUrl })` accepts
+the same options and is the recommended entry point.
+
 | Option | Type | Required | Notes |
 | --- | --- | --- | --- |
 | `token` | `string` | yes | Static Delhivery API token |

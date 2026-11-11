@@ -13,6 +13,17 @@ new ShiprocketClient({
 });
 ```
 
+The same options go to the recommended entry point, which selects Shiprocket
+with `provider`:
+
+```ts
+new OpenLogistics({
+  provider: "shiprocket",
+  email: "your@email.com",
+  password: "yourpassword",
+});
+```
+
 ## What is configurable today
 
 | Option | Type | Required | Notes |
@@ -31,7 +42,8 @@ tokens are reused for roughly 10 days or until Shiprocket returns `401`.
 
 - Global retry policy
 - Per-provider configuration
-- Provider selection or fallback routing
+- Fallback routing between providers (use `OpenLogistics` to pick one at
+  construction instead)
 - Timeout settings
 - Base URL overrides
 

@@ -15,7 +15,7 @@ This SDK keeps the implementation simple.
 
 ## Practical advice
 
-- Reuse a single `Shiprocket` instance when possible
+- Reuse a single `OpenLogistics` instance (or one client) when possible
 - Avoid constructing a new client for every request
 - Cache serviceability and rate responses instead of repeating identical calls
 - Handle `ShiprocketAPIError` so a failed refresh does not leave a request silent

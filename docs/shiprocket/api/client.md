@@ -4,7 +4,9 @@ description: "Create a ShiprocketClient with email and password, and call orders
 
 # Shiprocket client
 
-The public Shiprocket entry point is the `ShiprocketClient` class exported from the package root.
+`OpenLogistics` with `provider: "shiprocket"` is the recommended entry point. It
+exposes the same operations grouped into resources. `ShiprocketClient` remains
+the direct, flat-method client exported from the package root.
 
 ## Constructor
 
@@ -41,7 +43,7 @@ interface AuthCredentials {
 
 ## Resource facades
 
-The same operations are also available through the `Shiprocket` facade, which owns one client and groups methods into resources:
+The same operations are also available through the `Shiprocket` facade, which owns one client and groups methods into resources. The facade is deprecated in favour of `OpenLogistics({ provider: "shiprocket", ... })` and will be removed after two more releases.
 
 - `orders`: `create`, `list`, `get`, `cancel`
 - `shipments`: `generatePickup`, `generateLabel`, `generateManifest`, `printManifest`

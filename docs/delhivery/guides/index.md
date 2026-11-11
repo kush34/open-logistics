@@ -24,7 +24,7 @@ description: "Supported Delhivery B2C operations in the Open-Logistics SDK and w
 - Warehouse creation
 - NDR actions
 - Webhook setup
-- Provider routing or fallback logic
+- Automatic provider routing or fallback logic
 
 Those endpoints exist in Delhivery’s ecosystem, but they are not part of the current SDK surface because the repository does not yet model them as first-class resources.
 

@@ -4,9 +4,10 @@ description: "Create a DelhiveryClient with a token and client name, then call D
 
 # Delhivery client
 
-`DelhiveryClient` is the direct entry point for Delhivery B2C operations. It is
-exported from the package root and is also available through the `Delhivery`
-facade, which groups the same operations into resources.
+`OpenLogistics` with `provider: "delhivery"` is the recommended entry point for
+Delhivery B2C operations. `DelhiveryClient` remains the direct client exported
+from the package root, and the deprecated `Delhivery` facade groups the same
+operations into resources.
 
 ## Create a client
 
