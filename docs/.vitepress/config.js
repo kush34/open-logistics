@@ -398,6 +398,10 @@ module.exports = async () => ({
   },
   themeConfig: {
     logo: { src: "/logo.svg", alt: "Open-Logistics" },
+    editLink: {
+      pattern: `${REPO_URL}/edit/main/docs/:path`,
+      text: "Edit this page on GitHub",
+    },
     search: {
       provider: "local",
     },
@@ -463,6 +467,10 @@ module.exports = async () => ({
             {
               text: "Shared",
               items: [
+                {
+                  text: "OpenLogistics client",
+                  link: "/getting-started/open-logistics",
+                },
                 { text: "Providers API", link: "/shiprocket/api/providers" },
                 { text: "Python & Rust", link: "/languages/" },
                 { text: "Architecture", link: "/concepts/architecture" },
@@ -525,6 +533,10 @@ module.exports = async () => ({
             {
               text: "Shared",
               items: [
+                {
+                  text: "OpenLogistics client",
+                  link: "/getting-started/open-logistics",
+                },
                 { text: "Providers API", link: "/shiprocket/api/providers" },
                 { text: "Python & Rust", link: "/languages/" },
                 { text: "Architecture", link: "/concepts/architecture" },
@@ -543,6 +555,7 @@ module.exports = async () => ({
         {
           text: "Getting started",
           items: [
+            { text: "OpenLogistics client", link: "/getting-started/open-logistics" },
             { text: "Installation", link: "/getting-started/installation" },
             { text: "Python & Rust", link: "/languages/" },
           ],

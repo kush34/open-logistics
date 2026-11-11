@@ -8,6 +8,11 @@ The Python and Rust clients are generated from the OpenAPI specs in `specs/`
 with `./scripts/gen.sh`. Method names come from `operationId`, so they match
 across languages.
 
+The `OpenLogistics` provider-agnostic entry point is TypeScript-only for now.
+Python and Rust keep one module per provider; see the
+[OpenLogistics client](/getting-started/open-logistics) for the TypeScript
+surface.
+
 ## Install
 
 ::: code-group

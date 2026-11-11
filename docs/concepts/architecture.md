@@ -4,10 +4,13 @@ description: "How Open-Logistics is structured: provider facades, resource modul
 
 # Architecture
 
-Open-Logistics is the package name. The current repository architecture exposes provider-specific facades for Shiprocket and Delhivery.
+Open-Logistics is the package name. `OpenLogistics` is the recommended
+TypeScript entry point: it takes a `provider` and delegates every resource call
+to the matching provider facade. The provider-specific facades remain available.
 
 ## Structure
 
+- `OpenLogistics` is the provider-agnostic public facade
 - `Shiprocket` is the public facade for Shiprocket
 - `Delhivery` is the public facade for Delhivery B2C
 - `ShiprocketClient` handles authentication and HTTP requests for Shiprocket
@@ -29,6 +32,12 @@ Open-Logistics is the package name. The current repository architecture exposes 
 ## Request flow
 
 ```text
+OpenLogistics(provider)
+  -> provider facade (Shiprocket or Delhivery)
+  -> provider resource (orders, tracking, ...)
+  -> provider client request
+  -> provider response or provider error
+
 Shiprocket.orders.create()
   -> ShiprocketClient.request()
   -> authenticate if needed

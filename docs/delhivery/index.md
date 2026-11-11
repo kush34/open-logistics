@@ -11,6 +11,7 @@ rates, labels, pickup requests, and waybills.
 ## Start here
 
 - [Installation](/getting-started/installation)
+- [OpenLogistics client](/getting-started/open-logistics)
 - [Authentication](/delhivery/getting-started/authentication)
 - [Configuration](/delhivery/getting-started/configuration)
 
