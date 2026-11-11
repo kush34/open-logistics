@@ -1,11 +1,14 @@
 # Open-Logistics
 
-> Open-Logistics is a free, MIT-licensed SDK for the Shiprocket and Delhivery logistics APIs. It ships a typed TypeScript SDK on npm plus generated Python and Rust clients, covering orders, shipments, tracking, rates, serviceability, waybills, labels, pickups, and normalized errors.
+> Open-Logistics is a free, MIT-licensed SDK for the Shiprocket and Delhivery logistics APIs. It ships a typed TypeScript SDK on npm plus generated Python and Rust clients, covering orders, shipments, tracking, rates, serviceability, waybills, labels, pickups, and normalized errors. The recommended TypeScript entry point is `OpenLogistics`, which selects a provider at construction and uses one resource surface for either vendor.
 
 ## Key facts
 
 - Providers: Shiprocket and Delhivery (India).
 - Languages: TypeScript, Python, and Rust.
+- TypeScript entry points: `OpenLogistics` (recommended, provider-agnostic) and the `Shiprocket` / `Delhivery` facades (deprecated, kept for two more releases).
+- Provider selection: pass `provider: "shiprocket" | "delhivery"` to `new OpenLogistics(...)`. One instance talks to one provider; there is no registry, fallback chain, or automatic routing.
+- Resource mapping: `orders`, `shipments`, `tracking`, and `rates` exist on both providers; `courier` is Shiprocket-only; `serviceability` and `waybills` are Delhivery-only. Resources a provider does not offer are `undefined`.
 - License: MIT. No paid tier.
 - Shiprocket auth: email and password; token cached in memory and refreshed on HTTP 401, with no cap on refreshes.
 - Delhivery auth: static API token plus registered client name; no refresh flow.
@@ -20,12 +23,14 @@
 
 ## Quick start
 
-- TypeScript: `npm install open-logistics`, then `new ShiprocketClient({ email, password })` or `new DelhiveryClient({ token, clientName })`.
+- TypeScript (recommended): `npm install open-logistics`, then `new OpenLogistics({ provider: "shiprocket", email, password })` or `new OpenLogistics({ provider: "delhivery", token, clientName })`, then call `openLogistics.orders.create(payload)`, `openLogistics.tracking.byAWB(awb)`, or `openLogistics.tracking.byWaybill(waybill)`.
+- TypeScript (legacy facades): `new ShiprocketClient({ email, password })` or `new DelhiveryClient({ token, clientName })`.
 - Python: `pip install open-logistics-sdk`, then `from open_logistics.shiprocket import ApiClient, AuthApi, AuthCredentials, Configuration`.
 - Rust: `cargo add open-logistics`, then use `open_logistics::shiprocket::apis`.
 
 ## Documentation
 
+- [OpenLogistics client](https://open-logistics.vercel.app/getting-started/open-logistics): provider selection, per-provider resource matrix, switching providers, backward compatibility, and migration.
 - [Installation](https://open-logistics.vercel.app/getting-started/installation): install commands, runtime requirements, and package names for npm, PyPI, and crates.io.
 - [Python and Rust clients](https://open-logistics.vercel.app/languages/): generated client imports, authentication, method-name mapping, and differences from TypeScript.
 

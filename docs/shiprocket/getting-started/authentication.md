@@ -6,6 +6,10 @@ description: "Authenticate Shiprocket with email and password, including token c
 
 The SDK authenticates against Shiprocket using an email and password pair.
 
+`OpenLogistics({ provider: "shiprocket", email, password })` takes the same
+credentials and is the recommended entry point; the client below is the
+lower-level option.
+
 ## Credentials
 
 ```ts

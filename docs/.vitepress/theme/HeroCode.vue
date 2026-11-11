@@ -28,7 +28,7 @@ const active = ref("ts");
     </div>
 
     <pre v-if="active === 'ts'"><code><span class="c">// create an order, then read the shipment id</span>
-<span class="k">const</span> order = <span class="k">await</span> shiprocket.<span class="f">createOrder</span>(payload);
+<span class="k">const</span> order = <span class="k">await</span> openLogistics.orders.<span class="f">create</span>(payload);
 order.shipment_id; <span class="c">// 123456789</span></code></pre>
 
     <pre v-else-if="active === 'py'"><code><span class="c"># create an order, then read the shipment id</span>

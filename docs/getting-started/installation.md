@@ -35,6 +35,20 @@ Provider credentials are required for authenticated calls:
 - Shiprocket uses `email` and `password`
 - Delhivery uses `token` and `clientName`
 
+## Choosing an entry point
+
+The TypeScript SDK has two layers:
+
+- `OpenLogistics` is the recommended entry point. Set `provider` to
+  `"shiprocket"` or `"delhivery"` and use one resource surface for either
+  vendor. See the [OpenLogistics client](/getting-started/open-logistics).
+- `Shiprocket` and `Delhivery` are the provider-specific facades. They still
+  work and are kept for two more releases. `ShiprocketClient` and
+  `DelhiveryClient` remain available for direct-method use.
+
+The Python and Rust clients are provider-specific and do not have an
+`OpenLogistics` equivalent yet.
+
 ## Package metadata
 
 | Registry | Package | Import |
@@ -48,6 +62,7 @@ Provider credentials are required for authenticated calls:
 
 ## Next steps
 
+- [OpenLogistics client](/getting-started/open-logistics)
 - [Shiprocket authentication](/shiprocket/getting-started/authentication)
 - [Delhivery authentication](/delhivery/getting-started/authentication)
 - [Python and Rust clients](/languages/)

@@ -6,6 +6,10 @@ description: "Authenticate Delhivery requests with a static API token and regist
 
 Delhivery uses a static API token plus the registered client name.
 
+`OpenLogistics({ provider: "delhivery", token, clientName })` takes the same
+credentials and is the recommended entry point; the client below is the
+lower-level option.
+
 ## Credentials
 
 ```ts

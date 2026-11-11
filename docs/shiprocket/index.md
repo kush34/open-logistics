@@ -11,6 +11,7 @@ token, and refreshes it automatically once on a `401` response.
 ## Start here
 
 - [Installation](/getting-started/installation)
+- [OpenLogistics client](/getting-started/open-logistics)
 - [Authentication](/shiprocket/getting-started/authentication)
 - [Configuration](/shiprocket/getting-started/configuration)
 

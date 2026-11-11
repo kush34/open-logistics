@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: Get started
-      link: /shiprocket/
+      link: /getting-started/open-logistics
     - theme: alt
       text: API reference
       link: /shiprocket/api/client
@@ -46,14 +46,15 @@ cargo add open-logistics
 ::: code-group
 
 ```ts [TypeScript]
-import { ShiprocketClient } from "open-logistics";
+import { OpenLogistics } from "open-logistics";
 
-const sdk = new ShiprocketClient({
+const openLogistics = new OpenLogistics({
+  provider: "shiprocket",
   email: process.env.SHIPROCKET_EMAIL!,
   password: process.env.SHIPROCKET_PASSWORD!,
 });
 
-const tracking = await sdk.trackByAWB("1234567890");
+const tracking = await openLogistics.tracking.byAWB("1234567890");
 ```
 
 ```python [Python]
@@ -101,8 +102,14 @@ let tracking = tracking_api::tracking_by_awb(&configuration, "1234567890").await
 
 :::
 
+`OpenLogistics` is the TypeScript entry point: set `provider` to `"shiprocket"`
+or `"delhivery"` and use the same resource names for either vendor. See the
+[OpenLogistics client](/getting-started/open-logistics) guide. The Python and
+Rust clients remain provider-specific.
+
 ### Core capabilities
 
+- `OpenLogistics` provider-agnostic entry point
 - `ShiprocketClient` direct methods
 - `DelhiveryClient` direct methods
 - Automatic token refresh on `401` for Shiprocket
@@ -117,6 +124,7 @@ let tracking = tracking_api::tracking_by_awb(&configuration, "1234567890").await
 
 ### Start here
 
+- [OpenLogistics client](/getting-started/open-logistics)
 - [Shiprocket docs](/shiprocket/)
 - [Delhivery docs](/delhivery/)
 - [Python and Rust clients](/languages/)
@@ -138,6 +146,10 @@ TypeScript, Python, and Rust. Install the TypeScript SDK with `npm install open-
 ### Does the SDK handle authentication?
 
 Yes. Shiprocket authenticates with an email and password, caches the token in memory, and refreshes it and retries the request when it returns `401`. Delhivery uses a static API token plus your registered client name, with no login endpoint or refresh flow.
+
+### How do I choose between Shiprocket and Delhivery?
+
+Use the `OpenLogistics` entry point and set `provider` to `"shiprocket"` or `"delhivery"` in the constructor. The chosen provider receives every resource call, and the payload and response types stay specific to that vendor.
 
 ### How are API errors surfaced?
 

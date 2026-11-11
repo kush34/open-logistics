@@ -19,7 +19,7 @@ Delhivery-specific API pages live here.
 
 ## Resource facades
 
-The same operations are also available through the `Delhivery` facade, which owns one client and groups methods into resources:
+The same operations are also available through the `Delhivery` facade, which owns one client and groups methods into resources. The facade is deprecated in favour of `OpenLogistics({ provider: "delhivery", ... })` and will be removed after two more releases.
 
 - `orders`: `create`, `update`, `cancel`
 - `shipments`: `generateLabel`, `createPickupRequest`

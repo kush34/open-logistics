@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Open Logistics — Shiprocket",
-    "version": "0.2.2",
+    "version": "0.3.0",
     "license": {
       "name": "MIT",
       "url": "https://github.com/kush34/open-logistics/blob/main/LICENSE"
