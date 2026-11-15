@@ -14,7 +14,7 @@ iThink-specific API pages live here.
 - [Tracking](/ithink/api/tracking)
 - [Rates](/ithink/api/rates)
 - [Serviceability](/ithink/api/serviceability)
-- [Errors](/shiprocket/api/errors)
+- [Errors](/concepts/error-model)
 
 ## Resource facades
 
