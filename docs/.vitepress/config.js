@@ -5,7 +5,7 @@ const pkg = require("../../package.json");
 const SITE_URL = "https://open-logistics.vercel.app";
 const SITE_NAME = "Open-Logistics";
 const SITE_DESCRIPTION =
-  "TypeScript, Python, and Rust SDK documentation for the Shiprocket and Delhivery logistics APIs.";
+  "TypeScript, Python, and Rust SDK documentation for the Shiprocket, Delhivery, and iThink Logistics APIs.";
 const REPO_URL = "https://github.com/kush34/open-logistics";
 const DOCS_ROOT = path.resolve(__dirname, "..");
 
@@ -52,11 +52,13 @@ const sectionNames = {
   languages: "Python and Rust",
   shiprocket: "Shiprocket",
   delhivery: "Delhivery",
+  ithink: "iThink",
 };
 
 const sectionLinks = {
   shiprocket: `${SITE_URL}/shiprocket/`,
   delhivery: `${SITE_URL}/delhivery/`,
+  ithink: `${SITE_URL}/ithink/`,
 };
 
 // Pages kept only to redirect old URLs to their new home.
@@ -178,10 +180,11 @@ function structuredData(pageData, canonical, description, isHome) {
       featureList: [
         "Shiprocket orders, shipments, courier, tracking, and rates",
         "Delhivery B2C orders, tracking, serviceability, rates, labels, pickups, and waybills",
+        "iThink Logistics orders, tracking, serviceability, rates, labels, and manifests",
         "Normalized API errors",
         "Automatic Shiprocket token refresh on 401",
       ],
-      keywords: "Shiprocket SDK, Delhivery SDK, logistics API, TypeScript, Python, Rust",
+      keywords: "Shiprocket SDK, Delhivery SDK, iThink Logistics SDK, logistics API, TypeScript, Python, Rust",
       sameAs: [REPO_URL, packageLinks.npm, packageLinks.pypi, packageLinks.crates],
       isAccessibleForFree: true,
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -346,11 +349,11 @@ module.exports = async () => ({
     const isSection = pageData.relativePath.endsWith("/index.md");
     const redirect = isRedirect(pageData.relativePath) || pageData.relativePath === "404.md";
     const title = isHome
-      ? `${SITE_NAME} — Shiprocket and Delhivery SDK`
+      ? `${SITE_NAME} — Shiprocket, Delhivery, and iThink SDK`
       : `${pageData.title} | ${SITE_NAME}`;
     const description = pageData.description || SITE_DESCRIPTION;
     const image = `${SITE_URL}/og-image.png`;
-    const imageAlt = `${SITE_NAME} — Shiprocket and Delhivery SDK documentation`;
+    const imageAlt = `${SITE_NAME} — Shiprocket, Delhivery, and iThink SDK documentation`;
 
     const tags = [
       ...(pageData.relativePath === "404.md"
@@ -408,6 +411,7 @@ module.exports = async () => ({
     nav: [
       { text: "Shiprocket", link: "/shiprocket/" },
       { text: "Delhivery", link: "/delhivery/" },
+      { text: "iThink", link: "/ithink/" },
       { text: "SDKs", link: "/languages/" },
       await starNavItem(),
     ],
@@ -527,6 +531,71 @@ module.exports = async () => ({
                 {
                   text: "Delhivery Create Order",
                   link: "/delhivery/examples/create-order",
+                },
+              ],
+            },
+            {
+              text: "Shared",
+              items: [
+                {
+                  text: "OpenLogistics client",
+                  link: "/getting-started/open-logistics",
+                },
+                { text: "Providers API", link: "/shiprocket/api/providers" },
+                { text: "Python & Rust", link: "/languages/" },
+                { text: "Architecture", link: "/concepts/architecture" },
+                { text: "Normalization", link: "/concepts/normalization" },
+                { text: "Error Model", link: "/concepts/error-model" },
+                { text: "Provider Concepts", link: "/concepts/providers" },
+                { text: "Error Handling", link: "/advanced/error-handling" },
+                { text: "Retries", link: "/advanced/retries" },
+                { text: "Performance", link: "/advanced/performance" },
+              ],
+            },
+          ],
+        },
+      ],
+      "/ithink/": [
+        {
+          text: "iThink Logistics",
+          items: [
+            { text: "Overview", link: "/ithink/" },
+            {
+              text: "Installation",
+              link: "/getting-started/installation",
+            },
+            {
+              text: "Authentication",
+              link: "/ithink/getting-started/authentication",
+            },
+            {
+              text: "Configuration",
+              link: "/ithink/getting-started/configuration",
+            },
+            {
+              text: "API Reference",
+              items: [
+                { text: "Client", link: "/ithink/api/client" },
+                { text: "Orders", link: "/ithink/api/orders" },
+                { text: "Shipments", link: "/ithink/api/shipments" },
+                { text: "Tracking", link: "/ithink/api/tracking" },
+                { text: "Rates", link: "/ithink/api/rates" },
+                {
+                  text: "Serviceability",
+                  link: "/ithink/api/serviceability",
+                },
+              ],
+            },
+            {
+              text: "Guides",
+              items: [{ text: "iThink", link: "/ithink/guides/" }],
+            },
+            {
+              text: "Examples",
+              items: [
+                {
+                  text: "iThink Create Order",
+                  link: "/ithink/examples/create-order",
                 },
               ],
             },

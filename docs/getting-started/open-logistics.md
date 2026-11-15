@@ -1,12 +1,12 @@
 ---
-description: "Use the OpenLogistics client to call Shiprocket or Delhivery through one typed resource surface, with the provider selected at construction."
+description: "Use the OpenLogistics client to call Shiprocket, Delhivery, or iThink Logistics through one typed resource surface, with the provider selected at construction."
 ---
 
 # OpenLogistics client
 
 `OpenLogistics` is the provider-agnostic entry point in the TypeScript SDK. You
 create one instance per provider, set `provider`, and then call resources the
-same way for either vendor. The provider you choose decides which API receives
+same way for any vendor. The provider you choose decides which API receives
 every request.
 
 ```ts
@@ -15,10 +15,10 @@ import { OpenLogistics } from "open-logistics";
 
 ## Why use it
 
-- **One import.** No need to pick between `Shiprocket` and `Delhivery` at the
-  import site; the choice moves into configuration.
+- **One import.** No need to pick between `Shiprocket`, `Delhivery`, and
+  `Ithink` at the import site; the choice moves into configuration.
 - **One resource vocabulary.** `orders`, `shipments`, `tracking`, and `rates`
-  exist on both providers, so code that uses those resources barely changes
+  exist on all providers, so code that uses those resources barely changes
   between vendors.
 - **Provider-specific types.** Request payloads and responses stay typed for the
   selected vendor. A Delhivery payload is not accepted by a Shiprocket instance.
@@ -72,21 +72,45 @@ Shiprocket credentials are the same as `new Shiprocket(...)`: `email` and
 `password`. Authentication, token caching, and the refresh-on-`401` retry run
 exactly as they do for the `Shiprocket` facade.
 
+## iThink Logistics
+
+```ts
+import { OpenLogistics } from "open-logistics";
+
+const openLogistics = new OpenLogistics({
+  provider: "ithink",
+  accessToken: process.env.ITHINK_ACCESS_TOKEN!,
+  secretKey: process.env.ITHINK_SECRET_KEY!,
+});
+
+const order = await openLogistics.orders.create({
+  pickup_address_id: 24,
+  shipments: [{ ... }],
+});
+
+const tracking = await openLogistics.tracking.byWaybill(order.waybill!);
+```
+
+iThink credentials are the same as `new Ithink(...)`: an `accessToken` and
+`secretKey` issued by the iThink Logistics team. An optional `baseUrl` overrides
+the default production host.
+
 ## What each provider supports
 
-Both providers expose `orders`, `shipments`, `tracking`, and `rates`, but the
+All providers expose `orders`, `shipments`, `tracking`, and `rates`, but the
 methods inside those resources differ. `courier` belongs to Shiprocket;
-`serviceability` and `waybills` belong to Delhivery.
+`serviceability` and `waybills` belong to Delhivery, and `serviceability` also
+belongs to iThink.
 
-| Resource         | Shiprocket                                                   | Delhivery                                    |
-| ---------------- | ------------------------------------------------------------ | -------------------------------------------- |
-| `orders`         | `create`, `list`, `get`, `cancel`                            | `create`, `update`, `cancel`                 |
-| `shipments`      | `generatePickup`, `generateLabel`, `generateManifest`, `printManifest` | `generateLabel`, `createPickupRequest` |
-| `tracking`       | `byAWB`, `byShipmentId`, `byOrderId`                         | `byWaybill`, `byOrderId`, `byWaybills`       |
-| `rates`          | `check`                                                      | `calculate`                                  |
-| `courier`        | `serviceability`, `assignAWB`, `list`                        | —                                            |
-| `serviceability` | —                                                            | `check`                                      |
-| `waybills`       | —                                                            | `fetchOne`, `fetchBulk`                      |
+| Resource         | Shiprocket                                                   | Delhivery                                    | iThink                                       |
+| ---------------- | ------------------------------------------------------------ | -------------------------------------------- | -------------------------------------------- |
+| `orders`         | `create`, `list`, `get`, `cancel`                            | `create`, `update`, `cancel`                 | `create`, `cancel`, `cancelMany`             |
+| `shipments`      | `generatePickup`, `generateLabel`, `generateManifest`, `printManifest` | `generateLabel`, `createPickupRequest` | `generateLabel`, `generateManifest` |
+| `tracking`       | `byAWB`, `byShipmentId`, `byOrderId`                         | `byWaybill`, `byOrderId`, `byWaybills`       | `byWaybill`, `byWaybills`                    |
+| `rates`          | `check`                                                      | `calculate`                                  | `calculate`                                  |
+| `courier`        | `serviceability`, `assignAWB`, `list`                        | —                                            | —                                            |
+| `serviceability` | —                                                            | `check`                                      | `check`                                      |
+| `waybills`       | —                                                            | `fetchOne`, `fetchBulk`                      | —                                            |
 
 Accessing a resource that the selected provider does not offer returns
 `undefined` at runtime. With a literal `provider` value, TypeScript flags the
@@ -125,10 +149,10 @@ failover between providers; see [Providers](/concepts/providers).
 `OpenLogistics` sits on top of the existing provider facades, so nothing that
 already works has changed:
 
-- `Shiprocket`, `Delhivery`, `ShiprocketClient`, and `DelhiveryClient` are still
-  exported and behave the same.
-- `Shiprocket` and `Delhivery` are marked deprecated and will be removed after
-  two more releases. The clients stay for lower-level, direct-method use.
+- `Shiprocket`, `Delhivery`, `Ithink`, `ShiprocketClient`, `DelhiveryClient`,
+  and `IthinkClient` are still exported.
+- `Shiprocket`, `Delhivery`, and `Ithink` are marked deprecated and will be
+  removed after two more releases. The clients stay for lower-level, direct-method use.
 - Existing code keeps working through the migration window.
 
 ### Migrating from a provider facade
@@ -159,7 +183,7 @@ No. Create one instance per provider. Each instance owns a single provider clien
 
 ### Why is a resource undefined on my instance?
 
-The selected provider does not offer that resource. For example, courier is Shiprocket-only, while serviceability and waybills are Delhivery-only. Check the support table above.
+The selected provider does not offer that resource. For example, courier is Shiprocket-only, while waybills is Delhivery-only. Check the support table above.
 
 ### Is OpenLogistics available in Python and Rust?
 

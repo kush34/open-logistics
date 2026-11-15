@@ -1,11 +1,11 @@
 ---
 layout: home
-title: Open-Logistics — Shiprocket and Delhivery SDK
+title: Open-Logistics — Shiprocket, Delhivery, and iThink SDK
 titleTemplate: false
-description: "Open-Logistics SDK documentation: one API for Shiprocket and Delhivery with TypeScript, Python, and Rust clients."
+description: "Open-Logistics SDK documentation: one API for Shiprocket, Delhivery, and iThink Logistics with TypeScript, Python, and Rust clients."
 hero:
   text: One API for every Indian courier.
-  tagline: Ship, track, and rate orders across Shiprocket and Delhivery with typed TypeScript, Python, and Rust clients.
+  tagline: Ship, track, and rate orders across Shiprocket, Delhivery, and iThink Logistics with typed TypeScript, Python, and Rust clients.
   actions:
     - theme: brand
       text: Get started
@@ -17,9 +17,10 @@ hero:
 
 ## Overview
 
-Open-Logistics is an MIT-licensed SDK that wraps the Shiprocket and Delhivery
-logistics APIs in one typed interface. It ships a TypeScript package on npm plus
-generated Python and Rust clients, and this site is its developer documentation.
+Open-Logistics is an MIT-licensed SDK that wraps the Shiprocket, Delhivery, and
+iThink Logistics APIs in one typed interface. It ships a TypeScript package on
+npm plus generated Python and Rust clients, and this site is its developer
+documentation.
 
 Start with [installation](/getting-started/installation) and authentication, then move into the API reference and examples.
 
@@ -102,9 +103,9 @@ let tracking = tracking_api::tracking_by_awb(&configuration, "1234567890").await
 
 :::
 
-`OpenLogistics` is the TypeScript entry point: set `provider` to `"shiprocket"`
-or `"delhivery"` and use the same resource names for either vendor. See the
-[OpenLogistics client](/getting-started/open-logistics) guide. The Python and
+`OpenLogistics` is the TypeScript entry point: set `provider` to `"shiprocket"`,
+`"delhivery"`, or `"ithink"` and use the same resource names for any vendor. See
+the [OpenLogistics client](/getting-started/open-logistics) guide. The Python and
 Rust clients remain provider-specific.
 
 ### Core capabilities
@@ -112,32 +113,37 @@ Rust clients remain provider-specific.
 - `OpenLogistics` provider-agnostic entry point
 - `ShiprocketClient` direct methods
 - `DelhiveryClient` direct methods
+- `IthinkClient` direct methods
 - Automatic token refresh on `401` for Shiprocket
 - Static token auth for Delhivery
+- Static access-token and secret-key auth for iThink Logistics
 - Normalized `ShiprocketAPIError` for API failures
 - Normalized `DelhiveryAPIError` for API failures
+- Normalized `IthinkAPIError` for API failures
 
 ### Provider support
 
 - Shiprocket
 - Delhivery
+- iThink Logistics
 
 ### Start here
 
 - [OpenLogistics client](/getting-started/open-logistics)
 - [Shiprocket docs](/shiprocket/)
 - [Delhivery docs](/delhivery/)
+- [iThink Logistics docs](/ithink/)
 - [Python and Rust clients](/languages/)
 
 ## Frequently asked questions
 
 ### What is Open-Logistics?
 
-Open-Logistics is a free, MIT-licensed SDK that wraps the Shiprocket and Delhivery logistics APIs in one typed interface. It is published for TypeScript, Python, and Rust.
+Open-Logistics is a free, MIT-licensed SDK that wraps the Shiprocket, Delhivery, and iThink Logistics APIs in one typed interface. It is published for TypeScript, Python, and Rust.
 
 ### Which logistics providers are supported?
 
-Shiprocket and Delhivery. Shiprocket covers orders, shipments, courier serviceability, tracking, rates, labels, and manifests. Delhivery covers B2C order creation and editing, cancellation, tracking, pincode serviceability, rates, labels, pickup requests, and waybills.
+Shiprocket, Delhivery, and iThink Logistics. Shiprocket covers orders, shipments, courier serviceability, tracking, rates, labels, and manifests. Delhivery covers B2C order creation and editing, cancellation, tracking, pincode serviceability, rates, labels, pickup requests, and waybills. iThink covers order creation and cancellation, tracking, pincode serviceability, rate comparison, labels, and manifests.
 
 ### Which programming languages can I use?
 
@@ -147,13 +153,13 @@ TypeScript, Python, and Rust. Install the TypeScript SDK with `npm install open-
 
 Yes. Shiprocket authenticates with an email and password, caches the token in memory, and refreshes it and retries the request when it returns `401`. Delhivery uses a static API token plus your registered client name, with no login endpoint or refresh flow.
 
-### How do I choose between Shiprocket and Delhivery?
+### How do I choose between providers?
 
-Use the `OpenLogistics` entry point and set `provider` to `"shiprocket"` or `"delhivery"` in the constructor. The chosen provider receives every resource call, and the payload and response types stay specific to that vendor.
+Use the `OpenLogistics` entry point and set `provider` to `"shiprocket"`, `"delhivery"`, or `"ithink"` in the constructor. The chosen provider receives every resource call, and the payload and response types stay specific to that vendor.
 
 ### How are API errors surfaced?
 
-Failed API calls throw `ShiprocketAPIError` or `DelhiveryAPIError` with the HTTP status. `ShiprocketAPIError` also carries the provider's field errors in `errors`; `DelhiveryAPIError` also carries the parsed response in `body`. Authentication and configuration problems throw a plain `Error`.
+Failed API calls throw `ShiprocketAPIError`, `DelhiveryAPIError`, or `IthinkAPIError` with the HTTP status. `ShiprocketAPIError` also carries the provider's field errors in `errors`; the other two carry the parsed response in `body`. Authentication and configuration problems throw a plain `Error`.
 
 ### Is Open-Logistics free to use?
 

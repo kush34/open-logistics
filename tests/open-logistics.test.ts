@@ -54,6 +54,30 @@ describe("OpenLogistics", () => {
     expect(urls[1]).toContain("/orders?page=1&per_page=20");
   });
 
+  it("sends iThink resource calls to the iThink API", async () => {
+    mockFetch.mockResolvedValueOnce(
+      jsonResponse({
+        status_code: 200,
+        data: { "AWB1": { awb_no: "AWB1", current_status: "In Transit" } },
+      })
+    );
+
+    const sdk = new OpenLogistics({
+      provider: "ithink",
+      accessToken: "ithink-access-token",
+      secretKey: "ithink-secret-key",
+    });
+    await sdk.tracking.byWaybill("AWB1");
+
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    const [url, init] = mockFetch.mock.calls[0];
+    expect(url).toContain("/api_v3/order/track.json");
+    const body = JSON.parse(String(init.body)) as {
+      data: { access_token: string };
+    };
+    expect(body.data.access_token).toBe("ithink-access-token");
+  });
+
   it("leaves resources the selected provider does not offer undefined", () => {
     const sdk = new OpenLogistics({
       provider: "delhivery",
@@ -63,5 +87,17 @@ describe("OpenLogistics", () => {
 
     expect(sdk.courier).toBeUndefined();
     expect(sdk.waybills).toBeDefined();
+  });
+
+  it("leaves itthink-only gaps undefined for iThink", () => {
+    const sdk = new OpenLogistics({
+      provider: "ithink",
+      accessToken: "ithink-access-token",
+      secretKey: "ithink-secret-key",
+    });
+
+    expect(sdk.courier).toBeUndefined();
+    expect(sdk.waybills).toBeUndefined();
+    expect(sdk.serviceability).toBeDefined();
   });
 });
