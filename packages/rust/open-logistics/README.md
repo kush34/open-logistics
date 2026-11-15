@@ -6,7 +6,7 @@ Rust client for the Shiprocket and Delhivery APIs.
 
 ```toml
 [dependencies]
-open-logistics = "0.3.0"
+open-logistics = "0.4.0"
 ```
 
 ## Modules

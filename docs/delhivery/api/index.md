@@ -15,7 +15,7 @@ Delhivery-specific API pages live here.
 - [Rates](/delhivery/api/rates)
 - [Serviceability](/delhivery/api/serviceability)
 - [Waybills](/delhivery/api/waybills)
-- [Errors](/shiprocket/api/errors)
+- [Errors](/concepts/error-model)
 
 ## Resource facades
 

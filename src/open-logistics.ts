@@ -1,17 +1,31 @@
 import { Delhivery } from "./delhivery/index.js";
+import { Ithink } from "./ithink/index.js";
+import { Shadowfax } from "./shadowfax/index.js";
 import { Shiprocket } from "./shiprocket/index.js";
 import type { DelhiveryCredentials } from "./delhivery/types/index.js";
+import type { IthinkCredentials } from "./ithink/types/index.js";
+import type { ShadowfaxCredentials } from "./shadowfax/types/index.js";
 import type { AuthCredentials } from "./shiprocket/types/index.js";
 
-export type OpenLogisticsProvider = "shiprocket" | "delhivery";
+export type OpenLogisticsProvider =
+  | "shiprocket"
+  | "delhivery"
+  | "ithink"
+  | "shadowfax";
 
 export type OpenLogisticsConfig =
   | ({ provider: "shiprocket" } & AuthCredentials)
-  | ({ provider: "delhivery" } & DelhiveryCredentials);
+  | ({ provider: "delhivery" } & DelhiveryCredentials)
+  | ({ provider: "ithink" } & IthinkCredentials)
+  | ({ provider: "shadowfax" } & ShadowfaxCredentials);
 
 type Facade<P extends OpenLogisticsProvider> = P extends "shiprocket"
   ? Shiprocket
-  : Delhivery;
+  : P extends "delhivery"
+    ? Delhivery
+    : P extends "ithink"
+      ? Ithink
+      : Shadowfax;
 
 type Resource<P extends OpenLogisticsProvider, K extends PropertyKey> =
   Facade<P> extends infer F
@@ -38,8 +52,12 @@ export class OpenLogistics<
   constructor(config: OpenLogisticsConfig & { provider: P }) {
     if (config.provider === "shiprocket") {
       Object.assign(this, new Shiprocket(config as AuthCredentials));
-    } else {
+    } else if (config.provider === "delhivery") {
       Object.assign(this, new Delhivery(config as DelhiveryCredentials));
+    } else if (config.provider === "ithink") {
+      Object.assign(this, new Ithink(config as IthinkCredentials));
+    } else if (config.provider === "shadowfax") {
+      Object.assign(this, new Shadowfax(config as ShadowfaxCredentials));
     }
   }
 }

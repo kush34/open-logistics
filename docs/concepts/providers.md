@@ -1,5 +1,5 @@
 ---
-description: "Provider support in Open-Logistics: one OpenLogistics entry point that selects a provider at construction, plus explicit Shiprocket and Delhivery facades."
+description: "Provider support in Open-Logistics: one OpenLogistics entry point that selects a provider at construction, plus explicit Shiprocket, Delhivery, iThink, and Shadowfax facades."
 ---
 
 # Providers
@@ -10,9 +10,11 @@ runtime registry or fallback router.
 
 ## Actual state
 
-- `OpenLogistics` selects Shiprocket or Delhivery with its `provider` field
+- `OpenLogistics` selects Shiprocket, Delhivery, iThink Logistics, or Shadowfax with its `provider` field
 - `Shiprocket` remains available for the existing Shiprocket integration
 - `Delhivery` remains available for Delhivery B2C
+- `Ithink` remains available for iThink Logistics API v3
+- `Shadowfax` remains available for Shadowfax forward logistics
 - No provider registry exists
 - No fallback chain or cheapest-route selection exists
 
@@ -29,6 +31,8 @@ import { OpenLogistics } from "open-logistics";
 
 const shiprocket = new OpenLogistics({ provider: "shiprocket", email, password });
 const delhivery = new OpenLogistics({ provider: "delhivery", token, clientName });
+const ithink = new OpenLogistics({ provider: "ithink", accessToken, secretKey });
+const shadowfax = new OpenLogistics({ provider: "shadowfax", token });
 ```
 
 See the [OpenLogistics client](/getting-started/open-logistics) for the full
