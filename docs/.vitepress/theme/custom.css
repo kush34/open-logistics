@@ -125,46 +125,52 @@
   font-weight: 600;
 }
 
-/* One centered container shared by the navbar and every home section. */
+/* One centered container shared by the navbar, hero, cards and prose. */
 :root {
   --ol-container: 1152px;
+  --ol-gutter: 24px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --ol-gutter: 32px;
+  }
 }
 
 .VPNavBar.home .container {
   max-width: var(--ol-container);
 }
 
-.VPHero,
-.VPHome > .container,
-.home-cards {
-  padding-left: 24px !important;
-  padding-right: 24px !important;
+/* The hero section carries the gutters, so its container box is flush. */
+.VPHero {
+  padding-left: var(--ol-gutter) !important;
+  padding-right: var(--ol-gutter) !important;
 }
 
-.VPHero .container,
-.VPHome > .container,
-.home-cards {
+.VPHero .container {
   max-width: var(--ol-container);
 }
 
-@media (min-width: 768px) {
-  .VPHero,
-  .VPHome > .container,
-  .home-cards {
-    padding-left: 32px !important;
-    padding-right: 32px !important;
-  }
-}
-
-/* Center the readable prose column in the shared container. */
-.VPHome > .container > * {
-  max-width: 720px;
+/* Cards and prose get the same content box: the gutters live inside a box
+   widened by exactly two gutters, so the content still lines up with the hero. */
+.home-cards,
+.VPHome > .container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--ol-container) + 2 * var(--ol-gutter));
   margin-left: auto;
   margin-right: auto;
+  padding-left: var(--ol-gutter) !important;
+  padding-right: var(--ol-gutter) !important;
 }
 
 .VPHome > .container {
   padding-top: 80px !important;
+}
+
+/* Prose keeps a readable measure and starts on the shared left edge. */
+.VPHome > .container > * {
+  max-width: 720px;
 }
 
 /* Subhead: smaller and softer than the headline. */
@@ -180,10 +186,8 @@
 
 /* Cards: two labelled groups, four columns on wide screens. */
 .home-cards {
-  box-sizing: content-box;
   display: grid;
   gap: 32px;
-  margin: 0 auto;
 }
 
 .home-group {
@@ -306,6 +310,11 @@
   .home-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  /* Four courier cards make a 2x2 block, so the docs stack to match its height. */
+  .home-group:last-child .home-group-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* Hero code card: fills the right column, vertically centred on the copy. */
@@ -318,7 +327,27 @@
   display: none;
 }
 
-@media (max-width: 959px) {
+/* Below the width where the copy and the code card both fit, stack them. */
+@media (max-width: 1135px) {
+  .VPHero .container {
+    display: block;
+  }
+
+  /* Left-align the stacked hero copy with the card labels and the prose. */
+  .VPHero.has-image .container {
+    text-align: left !important;
+  }
+
+  .VPHero.has-image .text,
+  .VPHero.has-image .tagline {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .VPHero.has-image .actions {
+    justify-content: flex-start !important;
+  }
+
   .VPHero .image {
     order: 3;
     margin: 32px 0 0 !important;

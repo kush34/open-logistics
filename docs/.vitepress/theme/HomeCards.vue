@@ -29,6 +29,32 @@
             <span>orders</span><span>serviceability</span><span>labels</span>
           </div>
         </a>
+        <a class="home-card" href="/ithink/">
+          <img
+            class="home-logo"
+            src="/logos/ithink.svg"
+            alt="iThink Logistics"
+            width="139"
+            height="24"
+          />
+          <span class="home-arrow" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 11 5" /><path d="M6.5 5H11v4.5" /></svg></span>
+          <div class="home-tags">
+            <span>orders</span><span>tracking</span><span>rates</span>
+          </div>
+        </a>
+        <a class="home-card" href="/shadowfax/">
+          <img
+            class="home-logo"
+            src="/logos/shadowfax.png"
+            alt="Shadowfax"
+            width="107"
+            height="24"
+          />
+          <span class="home-arrow" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11 11 5" /><path d="M6.5 5H11v4.5" /></svg></span>
+          <div class="home-tags">
+            <span>orders</span><span>tracking</span><span>waybills</span>
+          </div>
+        </a>
       </div>
     </div>
 
