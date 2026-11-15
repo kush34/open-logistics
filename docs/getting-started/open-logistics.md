@@ -15,10 +15,10 @@ import { OpenLogistics } from "open-logistics";
 
 ## Why use it
 
-- **One import.** No need to pick between `Shiprocket`, `Delhivery`, and
-  `Ithink` at the import site; the choice moves into configuration.
+- **One import.** No need to pick between provider classes at the import site;
+  the choice moves into configuration.
 - **One resource vocabulary.** `orders`, `shipments`, `tracking`, and `rates`
-  exist on all providers, so code that uses those resources barely changes
+  exist on every provider, so code that uses those resources barely changes
   between vendors.
 - **Provider-specific types.** Request payloads and responses stay typed for the
   selected vendor. A Delhivery payload is not accepted by a Shiprocket instance.
@@ -52,6 +52,45 @@ const tracking = await openLogistics.tracking.byWaybill(order.waybill!);
 Delhivery credentials are the same as `new Delhivery(...)`: a static API
 `token` and your registered `clientName`. An optional `baseUrl` overrides the
 default host.
+
+## Shadowfax
+
+```ts
+import { OpenLogistics } from "open-logistics";
+
+const openLogistics = new OpenLogistics({
+  provider: "shadowfax",
+  token: process.env.SHADOWFAX_TOKEN!,
+});
+
+const order = await openLogistics.orders.create({
+  customer_details: {
+    name: "Rahul Sharma",
+    contact: "9876543210",
+    address_line_1: "42 MG Road, Koramangala",
+    city: "BANGALORE",
+    pincode: 560034,
+  },
+  order_details: {
+    client_order_id: "FWD-001",
+    product_value: 1299,
+    payment_mode: "prepaid",
+    cod_amount: 0,
+  },
+  pickup_details: { ... },
+  return_details: { ... },
+  product_details: [{ sku_name: "Headphones", sku_id: "SKU-1", price: 1299 }],
+});
+
+if (order.success) {
+  await openLogistics.tracking.byWaybill(order.awb_number!);
+}
+```
+
+Shadowfax credentials are a static `token`; there is no login step or refresh
+flow. An optional `baseUrl` overrides the default production host (use
+`https://dale.staging.shadowfax.in/api` for staging). Forward order creation
+returns HTTP 200 for rejections, so check the mapped `success` flag.
 
 ## Shiprocket
 
@@ -99,18 +138,18 @@ the default production host.
 
 All providers expose `orders`, `shipments`, `tracking`, and `rates`, but the
 methods inside those resources differ. `courier` belongs to Shiprocket;
-`serviceability` and `waybills` belong to Delhivery, and `serviceability` also
-belongs to iThink.
+`serviceability` belongs to Delhivery, iThink, and Shadowfax; `waybills` belongs
+to Delhivery and Shadowfax.
 
-| Resource         | Shiprocket                                                   | Delhivery                                    | iThink                                       |
-| ---------------- | ------------------------------------------------------------ | -------------------------------------------- | -------------------------------------------- |
-| `orders`         | `create`, `list`, `get`, `cancel`                            | `create`, `update`, `cancel`                 | `create`, `cancel`, `cancelMany`             |
-| `shipments`      | `generatePickup`, `generateLabel`, `generateManifest`, `printManifest` | `generateLabel`, `createPickupRequest` | `generateLabel`, `generateManifest` |
-| `tracking`       | `byAWB`, `byShipmentId`, `byOrderId`                         | `byWaybill`, `byOrderId`, `byWaybills`       | `byWaybill`, `byWaybills`                    |
-| `rates`          | `check`                                                      | `calculate`                                  | `calculate`                                  |
-| `courier`        | `serviceability`, `assignAWB`, `list`                        | —                                            | —                                            |
-| `serviceability` | —                                                            | `check`                                      | `check`                                      |
-| `waybills`       | —                                                            | `fetchOne`, `fetchBulk`                      | —                                            |
+| Resource         | Shiprocket                                                   | Delhivery                                    | iThink                                       | Shadowfax                                    |
+| ---------------- | ------------------------------------------------------------ | -------------------------------------------- | -------------------------------------------- | -------------------------------------------- |
+| `orders`         | `create`, `list`, `get`, `cancel`                            | `create`, `update`, `cancel`                 | `create`, `cancel`, `cancelMany`             | `create`, `update`, `cancel`                 |
+| `shipments`      | `generatePickup`, `generateLabel`, `generateManifest`, `printManifest` | `generateLabel`, `createPickupRequest` | `generateLabel`, `generateManifest` | `generateLabel`, `fetchPod` |
+| `tracking`       | `byAWB`, `byShipmentId`, `byOrderId`                         | `byWaybill`, `byOrderId`, `byWaybills`       | `byWaybill`, `byWaybills`                    | `byWaybill`, `byWaybills`                    |
+| `rates`          | `check`                                                      | `calculate`                                  | `calculate`                                  | `calculate`                                  |
+| `courier`        | `serviceability`, `assignAWB`, `list`                        | —                                            | —                                            | —                                            |
+| `serviceability` | —                                                            | `check`                                      | `check`                                      | `check`                                      |
+| `waybills`       | —                                                            | `fetchOne`, `fetchBulk`                      | —                                            | `generatePool`, `request`, `poll`            |
 
 Accessing a resource that the selected provider does not offer returns
 `undefined` at runtime. With a literal `provider` value, TypeScript flags the
@@ -149,10 +188,10 @@ failover between providers; see [Providers](/concepts/providers).
 `OpenLogistics` sits on top of the existing provider facades, so nothing that
 already works has changed:
 
-- `Shiprocket`, `Delhivery`, `Ithink`, `ShiprocketClient`, `DelhiveryClient`,
-  and `IthinkClient` are still exported.
-- `Shiprocket`, `Delhivery`, and `Ithink` are marked deprecated and will be
-  removed after two more releases. The clients stay for lower-level, direct-method use.
+- `Shiprocket`, `Delhivery`, `Ithink`, `Shadowfax`, `ShiprocketClient`,
+  `DelhiveryClient`, `IthinkClient`, and `ShadowfaxClient` are still exported.
+- `Shiprocket`, `Delhivery`, `Ithink`, and `Shadowfax` are marked deprecated and
+  will be removed after two more releases. The clients stay for lower-level, direct-method use.
 - Existing code keeps working through the migration window.
 
 ### Migrating from a provider facade
@@ -183,7 +222,7 @@ No. Create one instance per provider. Each instance owns a single provider clien
 
 ### Why is a resource undefined on my instance?
 
-The selected provider does not offer that resource. For example, courier is Shiprocket-only, while waybills is Delhivery-only. Check the support table above.
+The selected provider does not offer that resource. For example, courier is Shiprocket-only, while waybills is offered by Delhivery and Shadowfax only. Check the support table above.
 
 ### Is OpenLogistics available in Python and Rust?
 

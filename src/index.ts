@@ -12,3 +12,6 @@ export * from "./delhivery/types/index.js";
 export { Ithink } from "./ithink/index.js";
 export { IthinkClient, IthinkAPIError } from "./ithink/index.js";
 export * from "./ithink/types/index.js";
+export { Shadowfax } from "./shadowfax/index.js";
+export { ShadowfaxClient, ShadowfaxAPIError } from "./shadowfax/index.js";
+export * from "./shadowfax/types/index.js";

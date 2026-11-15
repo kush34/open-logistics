@@ -58,7 +58,7 @@ describe("OpenLogistics", () => {
     mockFetch.mockResolvedValueOnce(
       jsonResponse({
         status_code: 200,
-        data: { "AWB1": { awb_no: "AWB1", current_status: "In Transit" } },
+        data: { AWB1: { awb_no: "AWB1", current_status: "In Transit" } },
       })
     );
 
@@ -78,6 +78,29 @@ describe("OpenLogistics", () => {
     expect(body.data.access_token).toBe("ithink-access-token");
   });
 
+  it("sends shadowfax resource calls to the Shadowfax API", async () => {
+    mockFetch.mockResolvedValueOnce(
+      jsonResponse({
+        message: "Success",
+        order_details: { awb_number: "SF1", status: "ofd" },
+        tracking_details: [],
+      })
+    );
+
+    const sdk = new OpenLogistics({
+      provider: "shadowfax",
+      token: "shadowfax-token",
+    });
+    await sdk.tracking.byWaybill("SF1");
+
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    const [url, init] = mockFetch.mock.calls[0];
+    expect(String(url)).toContain("/v4/clients/orders/SF1/track/");
+    expect(new Headers(init.headers).get("Authorization")).toBe(
+      "Token shadowfax-token"
+    );
+  });
+
   it("leaves resources the selected provider does not offer undefined", () => {
     const sdk = new OpenLogistics({
       provider: "delhivery",
@@ -89,7 +112,7 @@ describe("OpenLogistics", () => {
     expect(sdk.waybills).toBeDefined();
   });
 
-  it("leaves itthink-only gaps undefined for iThink", () => {
+  it("leaves iThink-only gaps undefined for iThink", () => {
     const sdk = new OpenLogistics({
       provider: "ithink",
       accessToken: "ithink-access-token",
@@ -98,6 +121,19 @@ describe("OpenLogistics", () => {
 
     expect(sdk.courier).toBeUndefined();
     expect(sdk.waybills).toBeUndefined();
+    expect(sdk.serviceability).toBeDefined();
+  });
+
+  it("exposes shadowfax tracking, rates, and waybills but no courier", () => {
+    const sdk = new OpenLogistics({
+      provider: "shadowfax",
+      token: "shadowfax-token",
+    });
+
+    expect(sdk.courier).toBeUndefined();
+    expect(sdk.tracking).toBeDefined();
+    expect(sdk.rates).toBeDefined();
+    expect(sdk.waybills).toBeDefined();
     expect(sdk.serviceability).toBeDefined();
   });
 });
