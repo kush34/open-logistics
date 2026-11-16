@@ -1,6 +1,6 @@
 [project]
 name = "open-logistics-sdk"
-version = "0.4.0"
+version = "0.4.5"
 description = "Open Logistics — Shiprocket, Delhivery, iThink Logistics, and Shadowfax"
 authors = [
   {name = "Open Logistics"},

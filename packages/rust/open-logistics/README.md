@@ -6,7 +6,7 @@ Rust client for the Shiprocket, Delhivery, iThink Logistics, and Shadowfax APIs.
 
 ```toml
 [dependencies]
-open-logistics = "0.4.0"
+open-logistics = "0.4.5"
 ```
 
 ## Modules
