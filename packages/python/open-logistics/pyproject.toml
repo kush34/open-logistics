@@ -7,7 +7,7 @@ authors = [
 ]
 license = { text = "MIT" }
 readme = "README.md"
-keywords = ["logistics", "shiprocket", "delhivery", "ithink", "shadowfax", "shipping", "api-client"]
+keywords = ["logistics", "shiprocket", "delhivery", "ithink", "shadowfax"]
 requires-python = ">=3.11"
 
 dependencies = [

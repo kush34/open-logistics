@@ -55,17 +55,21 @@ on every request model, inside the `data` object iThink expects.
 
 ```python
 from open_logistics.ithink import (
+    ApiClient,
+    Configuration,
     IthinkOrderCreateData,
     IthinkOrderCreateRequest,
     OrdersApi,
 )
 
-request = IthinkOrderCreateRequest(
-    data=IthinkOrderCreateData(
-        access_token=..., secret_key=..., shipments=[...], pickup_address_id="24"
+configuration = Configuration(host="https://my.ithinklogistics.com")
+with ApiClient(configuration) as api_client:
+    request = IthinkOrderCreateRequest(
+        data=IthinkOrderCreateData(
+            access_token=..., secret_key=..., shipments=[...], pickup_address_id="24"
+        )
     )
-)
-order = OrdersApi(api_client).orders_create(request)
+    order = OrdersApi(api_client).orders_create(request)
 ```
 
 ## Rust

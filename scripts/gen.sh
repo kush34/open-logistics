@@ -76,7 +76,7 @@ sed -i \
   -e "s|open_logistics_shiprocket|open_logistics|g" \
   -e 's|^name = .*|name = "open-logistics-sdk"|' \
   -e 's|^description = .*|description = "Open Logistics — Shiprocket, Delhivery, iThink Logistics, and Shadowfax"|' \
-  -e 's|^keywords = .*|keywords = ["logistics", "shiprocket", "delhivery", "ithink", "shadowfax", "shipping", "api-client"]|' \
+  -e 's|^keywords = .*|keywords = ["logistics", "shiprocket", "delhivery", "ithink", "shadowfax"]|' \
   "$merged_py/pyproject.toml"
 printf '\n[tool.setuptools.package-data]\nopen_logistics = ["py.typed"]\n' >> "$merged_py/pyproject.toml"
 cat > "$merged_py/README.md" <<EOF
@@ -119,7 +119,7 @@ sed -i \
   -e 's|^name = .*|name = "open-logistics"|' \
   -e "s|^authors = .*|authors = [\"${author}\"]|" \
   -e 's|^description = .*|description = "Rust client for the Open Logistics Shiprocket, Delhivery, iThink Logistics, and Shadowfax APIs."|' \
-  -e "s|^license = .*|license = \"MIT\"\nkeywords = [\"logistics\", \"shipping\", \"shiprocket\", \"delhivery\", \"ithink\", \"shadowfax\", \"api-client\"]\ncategories = [\"api-bindings\", \"web-programming::http-client\"]\nrepository = \"${repo_url}\"\nhomepage = \"${homepage}\"|" \
+  -e "s|^license = .*|license = \"MIT\"\nkeywords = [\"logistics\", \"shiprocket\", \"delhivery\", \"ithink\", \"shadowfax\"]\ncategories = [\"api-bindings\", \"web-programming::http-client\"]\nrepository = \"${repo_url}\"\nhomepage = \"${homepage}\"|" \
   "$merged/Cargo.toml"
 printf '#![allow(unused_imports)]\n#![allow(clippy::too_many_arguments)]\n\npub mod delhivery;\npub mod ithink;\npub mod shadowfax;\npub mod shiprocket;\n' > "$merged/src/lib.rs"
 cat > "$merged/README.md" <<EOF
