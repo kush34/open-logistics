@@ -20,6 +20,31 @@ from open_logistics.delhivery import (
     TrackingApi as DelhiveryTrackingApi,
     WaybillsApi as DelhiveryWaybillsApi,
 )
+from open_logistics.ithink import (
+    ApiClient as IthinkApiClient,
+    Configuration as IthinkConfiguration,
+    IthinkOrderCreateData,
+    IthinkOrderCreateRequest,
+    IthinkProduct,
+    IthinkShipmentPayload,
+    IthinkTrackingRequest,
+    IthinkTrackingRequestData,
+    OrdersApi as IthinkOrdersApi,
+    TrackingApi as IthinkTrackingApi,
+)
+from open_logistics.shadowfax import (
+    ApiClient as ShadowfaxApiClient,
+    Configuration as ShadowfaxConfiguration,
+    OrdersApi as ShadowfaxOrdersApi,
+    ServiceabilityApi as ShadowfaxServiceabilityApi,
+    ShadowfaxCreateOrderPayload,
+    ShadowfaxCustomerDetails,
+    ShadowfaxOrderInfo,
+    ShadowfaxPickupAddress,
+    ShadowfaxReturnAddress,
+    ShadowfaxSkuItem,
+    TrackingApi as ShadowfaxTrackingApi,
+)
 from open_logistics.shiprocket import (
     ApiClient as ShiprocketApiClient,
     AuthApi,
@@ -101,6 +126,25 @@ ROUTES = {
         }
     ],
     "/waybill/api/fetch/json/": "W9",
+    "/api_v3/order/add.json": {
+        "status": "success",
+        "data": {"1": {"waybill": "AWB1", "refnum": "O1", "status": "success"}},
+    },
+    "/api_v3/order/track.json": {
+        "status": "success",
+        "status_code": "200",
+        "data": {"AWB1": {"current_status": "In Transit"}},
+    },
+    "/v3/clients/orders/": {
+        "message": "Success",
+        "data": {"awb_number": "SF1", "client_order_id": "FWD-1"},
+    },
+    "/v4/clients/orders/SF1/track/": {
+        "order_details": {"awb_number": "SF1", "status": "IN_TRANSIT"}
+    },
+    "/v1/clients/serviceability/": [
+        {"code": "400001", "services": ["forward"]}
+    ],
 }
 
 
@@ -259,6 +303,139 @@ class GeneratedClientTests(unittest.TestCase):
         self.assertIn("cgm=0.5", rate_request["url"])
         self.assertIn("d_pin=110001", rate_request["url"])
         self.assertEqual(waybill_request["path"], "/waybill/api/fetch/json/")
+
+
+    def test_ithink_body_auth_and_raw_responses(self):
+        configuration = IthinkConfiguration(host=self.base)
+        with IthinkApiClient(configuration) as api_client:
+            order = IthinkOrdersApi(api_client).orders_create(
+                IthinkOrderCreateRequest(
+                    data=IthinkOrderCreateData(
+                        access_token="at",
+                        secret_key="sk",
+                        pickup_address_id="24",
+                        shipments=[
+                            IthinkShipmentPayload(
+                                order="O1",
+                                order_date="2026-01-01",
+                                total_amount=999,
+                                name="John",
+                                add="Street",
+                                pin="400001",
+                                phone="9999999999",
+                                billing_name="John",
+                                billing_add="Street",
+                                billing_pin="400001",
+                                billing_phone="9999999999",
+                                products=[
+                                    IthinkProduct(
+                                        product_name="Shoes",
+                                        product_quantity=1,
+                                        product_price=999,
+                                    )
+                                ],
+                                shipment_length=10,
+                                shipment_width=10,
+                                shipment_height=5,
+                                weight=0.5,
+                                return_address_id="24",
+                            )
+                        ],
+                    )
+                )
+            )
+            tracking = IthinkTrackingApi(api_client).tracking_fetch(
+                IthinkTrackingRequest(
+                    data=IthinkTrackingRequestData(
+                        access_token="at",
+                        secret_key="sk",
+                        awb_number_list="AWB1",
+                    )
+                )
+            )
+
+        self.assertEqual(order.data["1"]["waybill"], "AWB1")
+        self.assertEqual(tracking.status_code, "200")
+        self.assertEqual(tracking.data["AWB1"]["current_status"], "In Transit")
+
+        create_request, track_request = RecordingHandler.requests
+        self.assertEqual(create_request["path"], "/api_v3/order/add.json")
+        body = json.loads(create_request["body"])
+        self.assertEqual(body["data"]["access_token"], "at")
+        self.assertEqual(body["data"]["secret_key"], "sk")
+        self.assertEqual(body["data"]["shipments"][0]["order"], "O1")
+        self.assertEqual(track_request["path"], "/api_v3/order/track.json")
+        self.assertEqual(
+            json.loads(track_request["body"])["data"]["awb_number_list"], "AWB1"
+        )
+
+    def test_shadowfax_token_auth_and_raw_responses(self):
+        configuration = ShadowfaxConfiguration(host=self.base)
+        configuration.api_key["shadowfaxToken"] = "sf-token"
+        configuration.api_key_prefix["shadowfaxToken"] = "Token"
+
+        with ShadowfaxApiClient(configuration) as api_client:
+            order = ShadowfaxOrdersApi(api_client).orders_create(
+                ShadowfaxCreateOrderPayload(
+                    customer_details=ShadowfaxCustomerDetails(
+                        name="John",
+                        contact="9999999999",
+                        address_line_1="Street",
+                        city="Mumbai",
+                        pincode="400001",
+                    ),
+                    order_details=ShadowfaxOrderInfo(
+                        client_order_id="FWD-1",
+                        product_value=1299,
+                        payment_mode="prepaid",
+                        cod_amount=0,
+                    ),
+                    pickup_details=ShadowfaxPickupAddress(
+                        pickup_type="seller",
+                        address_line_1="Street",
+                        city="Mumbai",
+                        pincode="400001",
+                    ),
+                    return_details=ShadowfaxReturnAddress(
+                        return_type="seller",
+                        address_line_1="Street",
+                        pincode="400001",
+                    ),
+                    product_details=[
+                        ShadowfaxSkuItem(
+                            sku_name="Shoes", sku_id="SKU1", price=1299
+                        )
+                    ],
+                )
+            )
+            tracking = ShadowfaxTrackingApi(api_client).tracking_fetch("SF1")
+            serviceability = ShadowfaxServiceabilityApi(
+                api_client
+            ).serviceability_check("forward", pincodes="400001")
+
+        self.assertEqual(order.data.awb_number, "SF1")
+        self.assertEqual(tracking.order_details.awb_number, "SF1")
+        self.assertEqual(serviceability[0].code, "400001")
+
+        create_request, track_request, serviceability_request = (
+            RecordingHandler.requests
+        )
+        self.assertEqual(create_request["path"], "/v3/clients/orders/")
+        self.assertEqual(
+            create_request["headers"]["authorization"], "Token sf-token"
+        )
+        self.assertEqual(
+            json.loads(create_request["body"])["order_details"]["client_order_id"],
+            "FWD-1",
+        )
+        self.assertEqual(
+            track_request["path"], "/v4/clients/orders/SF1/track/"
+        )
+        self.assertEqual(
+            serviceability_request["path"], "/v1/clients/serviceability/"
+        )
+        self.assertIn("service=forward", serviceability_request["url"])
+        self.assertIn("pincodes=400001", serviceability_request["url"])
 
 
 if __name__ == "__main__":

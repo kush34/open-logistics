@@ -36,7 +36,19 @@ with ApiClient(configuration) as api_client:
 ```
 
 Delhivery uses `api_key={"delhiveryToken": token}` plus
-`api_key_prefix={"delhiveryToken": "Token"}`.
+`api_key_prefix={"delhiveryToken": "Token"}`. Shadowfax uses
+`api_key={"shadowfaxToken": token}` with the same `Token` prefix.
+
+iThink has no auth header or query parameter: `access_token` and `secret_key`
+are fields on each request model. For example:
+
+```python
+from open_logistics.ithink import IthinkOrderCreateData
+
+data = IthinkOrderCreateData(
+    access_token=..., secret_key=..., shipments=[...], pickup_address_id="24"
+)
+```
 
 ## Rust
 
@@ -59,6 +71,9 @@ let order = open_logistics::shiprocket::apis::orders_api::orders_create(
 ```
 
 Delhivery sets `configuration.api_key = Some(ApiKey { prefix: Some("Token".into()), key: token })`.
+
+Shadowfax uses the same `ApiKey`. iThink takes `access_token` and `secret_key`
+as request-model fields because it authenticates in the JSON body.
 
 ## Delhivery returns raw provider payloads
 
@@ -85,3 +100,6 @@ TypeScript convenience aliases collapse:
   and `orders_edit`.
 - Delhivery `trackByWaybill`/`trackByOrderId`/`trackByWaybills` map to
   `tracking_fetch` with different query parameters.
+- iThink `trackByWaybill`/`trackByWaybills` map to `tracking_fetch`.
+- Shadowfax `trackByAwb` maps to `tracking_fetch` and `trackBulk` maps to
+  `tracking_bulk`.

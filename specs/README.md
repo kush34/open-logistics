@@ -18,7 +18,7 @@ Verify the checked-in output matches the specs (what CI runs):
 Validate the specs:
 
 ```bash
-npx -y @redocly/cli@2.73.0 lint specs/shiprocket.yaml specs/delhivery.yaml
+npx -y @redocly/cli@2.73.0 lint specs/shiprocket.yaml specs/delhivery.yaml specs/ithink.yaml specs/shadowfax.yaml
 ```
 
 ## Editing

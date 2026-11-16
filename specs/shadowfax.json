@@ -1,0 +1,1402 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Open Logistics — Shadowfax",
+    "version": "0.4.0",
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/kush34/open-logistics/blob/main/LICENSE"
+    },
+    "description": "OpenAPI description of the Shadowfax endpoints wrapped by `open-logistics`.\n\nSource of truth for generated Python and Rust clients. Operation IDs and\nschema field names are intentionally snake_case so every language exposes\nthe same names.\n\nResponses are the raw provider payloads. Shadowfax signals some failures\nwith HTTP 200 (`message: \"Failure\"`), so inspect `message`, `responseCode`,\nand `status` yourself.\n"
+  },
+  "servers": [
+    {
+      "url": "https://dale.shadowfax.in/api",
+      "description": "Production"
+    },
+    {
+      "url": "https://dale.staging.shadowfax.in/api",
+      "description": "Staging"
+    }
+  ],
+  "security": [
+    {
+      "shadowfaxToken": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Orders"
+    },
+    {
+      "name": "Shipments"
+    },
+    {
+      "name": "Tracking"
+    },
+    {
+      "name": "Serviceability"
+    },
+    {
+      "name": "Rates"
+    },
+    {
+      "name": "Waybills"
+    }
+  ],
+  "paths": {
+    "/v3/clients/orders/": {
+      "post": {
+        "operationId": "orders_create",
+        "summary": "Create a forward order",
+        "tags": [
+          "Orders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShadowfaxCreateOrderPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Order creation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxCreateOrderResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v3/clients/order_update/": {
+      "post": {
+        "operationId": "orders_update",
+        "summary": "Update an order",
+        "tags": [
+          "Orders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShadowfaxOrderUpdatePayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxOrderUpdateResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v3/clients/orders/cancel/": {
+      "post": {
+        "operationId": "orders_cancel",
+        "summary": "Cancel an order",
+        "tags": [
+          "Orders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShadowfaxCancelOrderPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cancellation result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxCancelOrderResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v4/clients/orders/{awb_number}/track/": {
+      "get": {
+        "operationId": "tracking_fetch",
+        "summary": "Track one order by AWB",
+        "tags": [
+          "Tracking"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AwbNumber"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tracking data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxTrackingResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v4/clients/bulk_track/": {
+      "post": {
+        "operationId": "tracking_bulk",
+        "summary": "Track up to 50 AWBs",
+        "tags": [
+          "Tracking"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShadowfaxBulkTrackingPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tracking data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxBulkTrackingResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/clients/serviceability/": {
+      "get": {
+        "operationId": "serviceability_check",
+        "summary": "Check pincode serviceability",
+        "tags": [
+          "Serviceability"
+        ],
+        "parameters": [
+          {
+            "name": "service",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pincodes",
+            "in": "query",
+            "description": "Comma-separated pincodes.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Serviceable pincodes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxServiceabilityResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/clients/rate_calculator/": {
+      "post": {
+        "operationId": "rates_calculate",
+        "summary": "Calculate a shipping rate",
+        "tags": [
+          "Rates"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShadowfaxRateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rate estimate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxRateResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/client/generate_label/": {
+      "post": {
+        "operationId": "shipments_label",
+        "summary": "Generate a label",
+        "tags": [
+          "Shipments"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShadowfaxLabelRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Label document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxLabelResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/clients/pod_details/": {
+      "post": {
+        "operationId": "shipments_pod",
+        "summary": "Fetch proof of delivery for up to 100 AWBs",
+        "tags": [
+          "Shipments"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShadowfaxPodRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "POD details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxPodResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v3/clients/generate_marketplace_awb/": {
+      "post": {
+        "operationId": "waybills_generate_pool",
+        "summary": "Top up the AWB pool",
+        "tags": [
+          "Waybills"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShadowfaxAwbPoolRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pool AWBs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxAwbPoolResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/clients/awb/": {
+      "post": {
+        "operationId": "waybills_request",
+        "summary": "Request always-fresh AWBs",
+        "tags": [
+          "Waybills"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShadowfaxAwbRequestPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "AWB request accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxAwbRequestResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    },
+    "/v1/clients/awb/{request_id}/": {
+      "get": {
+        "operationId": "waybills_poll",
+        "summary": "Poll an AWB request",
+        "tags": [
+          "Waybills"
+        ],
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "AWB request result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShadowfaxAwbResultResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "shadowfaxToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Send `Token <token>` in the Authorization header."
+      }
+    },
+    "parameters": {
+      "AwbNumber": {
+        "name": "awb_number",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "responses": {
+      "Error": {
+        "description": "Provider error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ShadowfaxApiErrorBody"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "FreeFormObject": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "ShadowfaxApiErrorBody": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "responseMsg": {
+            "type": "string"
+          },
+          "responseCode": {
+            "description": "Integer or numeric string; the provider sends both."
+          },
+          "errorCode": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "errors": {}
+        }
+      },
+      "ShadowfaxCustomerDetails": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "name",
+          "contact",
+          "address_line_1",
+          "city",
+          "pincode"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "address_line_1": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "pincode": {
+            "type": "string"
+          },
+          "address2": {
+            "type": "string"
+          },
+          "alternate_contact": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "string"
+          },
+          "longitude": {
+            "type": "string"
+          },
+          "location_accuracy": {
+            "type": "string",
+            "enum": [
+              "L",
+              "H",
+              "G"
+            ]
+          },
+          "location_type": {
+            "type": "string",
+            "enum": [
+              "commercial",
+              "residential"
+            ]
+          }
+        }
+      },
+      "ShadowfaxOrderInfo": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "client_order_id",
+          "product_value",
+          "payment_mode",
+          "cod_amount"
+        ],
+        "properties": {
+          "client_order_id": {
+            "type": "string"
+          },
+          "product_value": {
+            "type": "number"
+          },
+          "payment_mode": {
+            "type": "string",
+            "enum": [
+              "prepaid",
+              "cod"
+            ]
+          },
+          "cod_amount": {
+            "type": "number"
+          },
+          "awb_number": {
+            "type": "string"
+          },
+          "actual_weight": {
+            "type": "number"
+          },
+          "volumetric_weight": {
+            "type": "number"
+          },
+          "promised_delivery_date": {
+            "type": "string"
+          },
+          "total_amount": {
+            "type": "number"
+          },
+          "eway_bill": {
+            "type": "string"
+          },
+          "order_service": {
+            "type": "string"
+          },
+          "shopify_order_id": {
+            "type": "string"
+          },
+          "woocommerce_order_id": {
+            "type": "string"
+          },
+          "fulfillment_order_id": {
+            "type": "string"
+          },
+          "order_identifier": {
+            "type": "string",
+            "enum": [
+              "premium",
+              "express",
+              "regular",
+              "economy"
+            ]
+          },
+          "delivery_instructions": {
+            "$ref": "#/components/schemas/FreeFormObject"
+          }
+        }
+      },
+      "ShadowfaxPickupAddress": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "pickup_type",
+          "address_line_1",
+          "city",
+          "pincode"
+        ],
+        "properties": {
+          "pickup_type": {
+            "type": "string",
+            "enum": [
+              "seller",
+              "origin",
+              "warehouse"
+            ]
+          },
+          "address_line_1": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "pincode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "address_line_2": {
+            "type": "string"
+          },
+          "pickup_slot": {
+            "type": "string"
+          },
+          "pickup_date": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "string"
+          },
+          "longitude": {
+            "type": "string"
+          }
+        }
+      },
+      "ShadowfaxReturnAddress": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "return_type",
+          "address_line_1",
+          "pincode"
+        ],
+        "properties": {
+          "return_type": {
+            "type": "string",
+            "enum": [
+              "seller",
+              "origin"
+            ]
+          },
+          "address_line_1": {
+            "type": "string"
+          },
+          "pincode": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "contact": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "string"
+          },
+          "longitude": {
+            "type": "string"
+          }
+        }
+      },
+      "ShadowfaxSellerDetails": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "seller_name": {
+            "type": "string"
+          },
+          "seller_address": {
+            "type": "string"
+          },
+          "seller_state": {
+            "type": "string"
+          },
+          "gstin_number": {
+            "type": "string"
+          }
+        }
+      },
+      "ShadowfaxSkuTaxes": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "cgst_amount": {
+            "type": "number"
+          },
+          "sgst_amount": {
+            "type": "number"
+          },
+          "igst_amount": {
+            "type": "number"
+          },
+          "total_tax_value": {
+            "type": "number"
+          }
+        }
+      },
+      "ShadowfaxSkuAdditionalDetails": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "requires_extra_care": {
+            "type": "boolean"
+          },
+          "type_extra_care": {
+            "type": "string"
+          },
+          "product_id": {
+            "type": "string"
+          },
+          "product_weight": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "rail",
+              "air",
+              "surface"
+            ]
+          },
+          "slot_type": {
+            "type": "string",
+            "enum": [
+              "slotted",
+              "all_day"
+            ]
+          }
+        }
+      },
+      "ShadowfaxSkuItem": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "sku_name",
+          "sku_id",
+          "price"
+        ],
+        "properties": {
+          "sku_name": {
+            "type": "string"
+          },
+          "sku_id": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "category": {
+            "type": "string"
+          },
+          "hsn_code": {
+            "type": "string"
+          },
+          "invoice_no": {
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "seller_details": {
+            "$ref": "#/components/schemas/ShadowfaxSellerDetails"
+          },
+          "taxes": {
+            "$ref": "#/components/schemas/ShadowfaxSkuTaxes"
+          },
+          "additional_details": {
+            "$ref": "#/components/schemas/ShadowfaxSkuAdditionalDetails"
+          }
+        }
+      },
+      "ShadowfaxCreateOrderPayload": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "customer_details",
+          "order_details",
+          "pickup_details",
+          "return_details",
+          "product_details"
+        ],
+        "properties": {
+          "customer_details": {
+            "$ref": "#/components/schemas/ShadowfaxCustomerDetails"
+          },
+          "order_details": {
+            "$ref": "#/components/schemas/ShadowfaxOrderInfo"
+          },
+          "pickup_details": {
+            "$ref": "#/components/schemas/ShadowfaxPickupAddress"
+          },
+          "return_details": {
+            "$ref": "#/components/schemas/ShadowfaxReturnAddress"
+          },
+          "product_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShadowfaxSkuItem"
+            }
+          },
+          "order_type": {
+            "type": "string",
+            "enum": [
+              "marketplace",
+              "warehouse",
+              "d2d",
+              "hyperlocal"
+            ]
+          }
+        }
+      },
+      "ShadowfaxOrderDetails": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "client_name": {
+            "type": "string"
+          },
+          "client_order_id": {
+            "type": "string"
+          },
+          "awb_number": {
+            "type": "string"
+          },
+          "product_value": {
+            "type": "number"
+          },
+          "cod_amount": {
+            "type": "number"
+          },
+          "payment_mode": {
+            "type": "string"
+          },
+          "order_date": {
+            "type": "string"
+          },
+          "promised_delivery_date": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "status_display": {
+            "type": "string"
+          },
+          "pickup_details": {
+            "$ref": "#/components/schemas/FreeFormObject"
+          },
+          "delivery_details": {
+            "$ref": "#/components/schemas/FreeFormObject"
+          },
+          "product_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FreeFormObject"
+            }
+          },
+          "eway_bill_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "sort_code": {
+            "type": "string"
+          },
+          "invoice_date": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ShadowfaxCreateOrderResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Raw `POST /v3/clients/orders/` response.",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "awb_number": {
+            "type": "string"
+          },
+          "client_order_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "status_display": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ShadowfaxOrderDetails"
+          },
+          "errors": {}
+        }
+      },
+      "ShadowfaxStatusUpdate": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "status"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "rto",
+              "rts",
+              "reopen_ndr"
+            ]
+          }
+        }
+      },
+      "ShadowfaxOrderUpdatePayload": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "awb_number"
+        ],
+        "properties": {
+          "awb_number": {
+            "type": "string"
+          },
+          "delivery_details": {
+            "$ref": "#/components/schemas/FreeFormObject"
+          },
+          "pickup_details": {
+            "$ref": "#/components/schemas/FreeFormObject"
+          },
+          "return_details": {
+            "$ref": "#/components/schemas/FreeFormObject"
+          },
+          "order_details": {
+            "$ref": "#/components/schemas/FreeFormObject"
+          },
+          "status_update": {
+            "$ref": "#/components/schemas/ShadowfaxStatusUpdate"
+          }
+        }
+      },
+      "ShadowfaxOrderUpdateResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "responseMsg": {
+            "type": "string"
+          }
+        }
+      },
+      "ShadowfaxCancelOrderPayload": {
+        "type": "object",
+        "required": [
+          "request_id"
+        ],
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "description": "AWB number or client order ID."
+          },
+          "cancel_remarks": {
+            "type": "string"
+          }
+        }
+      },
+      "ShadowfaxCancelOrderResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "responseMsg": {
+            "type": "string"
+          },
+          "responseCode": {
+            "description": "Integer or numeric string; the provider sends both."
+          }
+        }
+      },
+      "ShadowfaxTrackingScan": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "created": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "status_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "remarks": {
+            "type": "string"
+          },
+          "awb_number": {
+            "type": "string"
+          }
+        }
+      },
+      "ShadowfaxTrackingResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "Raw `GET /v4/clients/orders/{awb_number}/track/` response.",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "order_details": {
+            "$ref": "#/components/schemas/ShadowfaxOrderDetails"
+          },
+          "tracking_details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShadowfaxTrackingScan"
+            }
+          },
+          "scans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShadowfaxTrackingScan"
+            }
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShadowfaxTrackingScan"
+            }
+          }
+        }
+      },
+      "ShadowfaxBulkTrackingPayload": {
+        "type": "object",
+        "required": [
+          "awb_numbers"
+        ],
+        "properties": {
+          "awb_numbers": {
+            "type": "array",
+            "maxItems": 50,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ShadowfaxBulkTrackingResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShadowfaxTrackingResponse"
+            }
+          }
+        }
+      },
+      "ShadowfaxServiceabilityPincode": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "code": {
+            "description": "Integer or numeric string; the provider sends both."
+          },
+          "services": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ShadowfaxServiceabilityResponse": {
+        "type": "array",
+        "description": "Raw `GET /v1/clients/serviceability/` response.",
+        "items": {
+          "$ref": "#/components/schemas/ShadowfaxServiceabilityPincode"
+        }
+      },
+      "ShadowfaxRateRequest": {
+        "type": "object",
+        "required": [
+          "origin_pincode",
+          "destination_pincode",
+          "service"
+        ],
+        "properties": {
+          "origin_pincode": {
+            "type": "string"
+          },
+          "destination_pincode": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string",
+            "enum": [
+              "forward",
+              "reverse",
+              "reverse_qc"
+            ]
+          },
+          "weight": {
+            "type": "number"
+          }
+        }
+      },
+      "ShadowfaxRateResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "zone": {
+            "type": "string"
+          },
+          "shipping_rate": {
+            "description": "Number or numeric string; the provider sends both."
+          },
+          "gst": {
+            "description": "Number or numeric string; the provider sends both."
+          }
+        }
+      },
+      "ShadowfaxLabelRequest": {
+        "type": "object",
+        "required": [
+          "awb_number"
+        ],
+        "properties": {
+          "awb_number": {
+            "type": "string"
+          },
+          "file_type": {
+            "type": "string",
+            "enum": [
+              "pdf",
+              "prn"
+            ],
+            "default": "pdf"
+          }
+        }
+      },
+      "ShadowfaxLabelData": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "label_url": {
+            "type": "string"
+          }
+        }
+      },
+      "ShadowfaxLabelResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ShadowfaxLabelData"
+          }
+        }
+      },
+      "ShadowfaxPodRequest": {
+        "type": "object",
+        "required": [
+          "awb_numbers"
+        ],
+        "properties": {
+          "awb_numbers": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ShadowfaxPodDetails": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "recipient": {
+            "type": "string"
+          },
+          "recipient_name": {
+            "type": "string"
+          },
+          "recipient_contact": {
+            "type": "string"
+          },
+          "recipient_signature": {}
+        }
+      },
+      "ShadowfaxPodResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "pod_details": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ShadowfaxPodDetails"
+            }
+          }
+        }
+      },
+      "ShadowfaxAwbPoolRequest": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          }
+        }
+      },
+      "ShadowfaxAwbPoolResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "awb_numbers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ShadowfaxAwbRequestPayload": {
+        "type": "object",
+        "properties": {
+          "awb_count": {
+            "type": "integer"
+          },
+          "request_type": {
+            "type": "string",
+            "enum": [
+              "fwd",
+              "rev"
+            ]
+          }
+        }
+      },
+      "ShadowfaxAwbRequestResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "request_id": {
+            "description": "Integer or numeric string; the provider sends both."
+          },
+          "message": {
+            "type": "string"
+          },
+          "delay_time": {
+            "description": "Number or numeric string; the provider sends both."
+          }
+        }
+      },
+      "ShadowfaxAwbResultResponse": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "awb_numbers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string"
+          },
+          "retry_flag": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

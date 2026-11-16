@@ -5,7 +5,7 @@
 ## Key facts
 
 - Providers: Shiprocket, Delhivery, iThink Logistics, and Shadowfax (India).
-- Languages: TypeScript, Python, and Rust. iThink Logistics and Shadowfax are TypeScript-only.
+- Languages: TypeScript, Python, and Rust.
 - TypeScript entry points: `OpenLogistics` (recommended, provider-agnostic) and the `Shiprocket` / `Delhivery` / `Ithink` / `Shadowfax` facades (all deprecated, kept for two more releases).
 - Provider selection: pass `provider: "shiprocket" | "delhivery" | "ithink" | "shadowfax"` to `new OpenLogistics(...)`. One instance talks to one provider; there is no registry, fallback chain, or automatic routing.
 - Resource mapping: `orders`, `shipments`, `tracking`, and `rates` exist on all providers; `courier` is Shiprocket-only; `serviceability` is provided by Delhivery, iThink, and Shadowfax; `waybills` is provided by Delhivery and Shadowfax. Resources a provider does not offer are `undefined`.
@@ -29,8 +29,8 @@
 
 - TypeScript (recommended): `npm install open-logistics`, then `new OpenLogistics({ provider: "shiprocket", email, password })`, `new OpenLogistics({ provider: "delhivery", token, clientName })`, `new OpenLogistics({ provider: "ithink", accessToken, secretKey })`, or `new OpenLogistics({ provider: "shadowfax", token })`, then call `openLogistics.orders.create(payload)`, `openLogistics.tracking.byAWB(awb)` (Shiprocket), or `openLogistics.tracking.byWaybill(waybill)` (Delhivery, iThink, Shadowfax).
 - TypeScript (direct clients): `new ShiprocketClient({ email, password })`, `new DelhiveryClient({ token, clientName })`, `new IthinkClient({ accessToken, secretKey })`, or `new ShadowfaxClient({ token })`.
-- Python: `pip install open-logistics-sdk`, then `from open_logistics.shiprocket import ApiClient, AuthApi, AuthCredentials, Configuration`.
-- Rust: `cargo add open-logistics`, then use `open_logistics::shiprocket::apis`.
+- Python: `pip install open-logistics-sdk`, then `from open_logistics.shiprocket import ApiClient, AuthApi, AuthCredentials, Configuration`. Each provider has its own module (`shiprocket`, `delhivery`, `ithink`, `shadowfax`).
+- Rust: `cargo add open-logistics`, then use `open_logistics::shiprocket::apis`. The same per-provider modules exist under `open_logistics::`.
 
 ## Documentation
 
