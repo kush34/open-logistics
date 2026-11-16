@@ -1,6 +1,6 @@
 # open-logistics
 
-Python client for the Shiprocket and Delhivery APIs.
+Python client for the Shiprocket, Delhivery, iThink Logistics, and Shadowfax APIs.
 
 ## Install
 
@@ -15,6 +15,8 @@ PyPI; the import package is `open_logistics`.
 
 - `open_logistics.shiprocket` — Shiprocket APIs and models (docs in `docs/shiprocket/`)
 - `open_logistics.delhivery` — Delhivery APIs and models (docs in `docs/delhivery/`)
+- `open_logistics.ithink` — iThink Logistics APIs and models (docs in `docs/ithink/`)
+- `open_logistics.shadowfax` — Shadowfax APIs and models (docs in `docs/shadowfax/`)
 
 ```python
 from open_logistics.shiprocket import ApiClient, AuthApi, AuthCredentials, Configuration, OrdersApi

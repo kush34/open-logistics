@@ -1,1 +1,1 @@
-"""Open Logistics — Shiprocket and Delhivery clients."""
+"""Open Logistics — Shiprocket, Delhivery, iThink Logistics, and Shadowfax clients."""

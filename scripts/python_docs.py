@@ -10,7 +10,9 @@ import sys
 from pathlib import Path
 
 package = Path(sys.argv[1])
-api_key_prefix = {"delhivery": "Token"}.get(package.name, "")
+api_key_prefix = {"delhivery": "Token", "shadowfax": "Token"}.get(
+    package.name, ""
+)
 files = [package / "README.md", *sorted(package.glob("docs/*.md"))]
 
 

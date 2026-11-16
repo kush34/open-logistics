@@ -7,7 +7,7 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 generator_version="2.42.0"
 redocly_version="2.73.0"
-providers=(shiprocket delhivery)
+providers=(shiprocket delhivery ithink shadowfax)
 version="$(node -p "require('${root}/package.json').version")"
 repo_url="https://github.com/kush34/open-logistics"
 homepage="https://open-logistics.vercel.app"
@@ -58,7 +58,7 @@ for provider in "${providers[@]}"; do
   rm -f "$work/rust/${provider}/git_push.sh" "$work/rust/${provider}/.travis.yml"
 done
 
-# Both providers ship as one distribution: open_logistics.{shiprocket,delhivery}.
+# Every provider ships as one distribution: open_logistics.{shiprocket,delhivery,ithink,shadowfax}.
 merged_py="$work/packages/python/open-logistics"
 mkdir -p "$merged_py/open_logistics" "$merged_py/docs"
 for provider in "${providers[@]}"; do
@@ -70,19 +70,19 @@ for provider in "${providers[@]}"; do
   rm -f "$merged_py/open_logistics/${provider}/py.typed"
 done
 touch "$merged_py/open_logistics/py.typed"
-printf '"""Open Logistics — Shiprocket and Delhivery clients."""\n' > "$merged_py/open_logistics/__init__.py"
+printf '"""Open Logistics — Shiprocket, Delhivery, iThink Logistics, and Shadowfax clients."""\n' > "$merged_py/open_logistics/__init__.py"
 cp "$work/py/shiprocket/pyproject.toml" "$work/py/shiprocket/setup.cfg" "$merged_py/"
 sed -i \
   -e "s|open_logistics_shiprocket|open_logistics|g" \
   -e 's|^name = .*|name = "open-logistics-sdk"|' \
-  -e 's|^description = .*|description = "Open Logistics — Shiprocket and Delhivery"|' \
-  -e 's|^keywords = .*|keywords = ["logistics", "shiprocket", "delhivery", "shipping", "api-client"]|' \
+  -e 's|^description = .*|description = "Open Logistics — Shiprocket, Delhivery, iThink Logistics, and Shadowfax"|' \
+  -e 's|^keywords = .*|keywords = ["logistics", "shiprocket", "delhivery", "ithink", "shadowfax", "shipping", "api-client"]|' \
   "$merged_py/pyproject.toml"
 printf '\n[tool.setuptools.package-data]\nopen_logistics = ["py.typed"]\n' >> "$merged_py/pyproject.toml"
 cat > "$merged_py/README.md" <<EOF
 # open-logistics
 
-Python client for the Shiprocket and Delhivery APIs.
+Python client for the Shiprocket, Delhivery, iThink Logistics, and Shadowfax APIs.
 
 ## Install
 
@@ -97,6 +97,8 @@ PyPI; the import package is \`open_logistics\`.
 
 - \`open_logistics.shiprocket\` — Shiprocket APIs and models (docs in \`docs/shiprocket/\`)
 - \`open_logistics.delhivery\` — Delhivery APIs and models (docs in \`docs/delhivery/\`)
+- \`open_logistics.ithink\` — iThink Logistics APIs and models (docs in \`docs/ithink/\`)
+- \`open_logistics.shadowfax\` — Shadowfax APIs and models (docs in \`docs/shadowfax/\`)
 
 \`\`\`python
 from open_logistics.shiprocket import ApiClient, AuthApi, AuthCredentials, Configuration, OrdersApi
@@ -109,21 +111,21 @@ with ApiClient(configuration) as api_client:
 \`\`\`
 EOF
 
-# Both providers ship as one crate: open_logistics::{shiprocket,delhivery}.
+# Every provider ships as one crate: open_logistics::{shiprocket,delhivery,ithink,shadowfax}.
 merged="$work/packages/rust/open-logistics"
 mkdir -p "$merged/src"
 cp "$work/rust/shiprocket/Cargo.toml" "$merged/Cargo.toml"
 sed -i \
   -e 's|^name = .*|name = "open-logistics"|' \
   -e "s|^authors = .*|authors = [\"${author}\"]|" \
-  -e 's|^description = .*|description = "Rust client for the Open Logistics Shiprocket and Delhivery APIs."|' \
-  -e "s|^license = .*|license = \"MIT\"\nkeywords = [\"logistics\", \"shipping\", \"shiprocket\", \"delhivery\", \"api-client\"]\ncategories = [\"api-bindings\", \"web-programming::http-client\"]\nrepository = \"${repo_url}\"\nhomepage = \"${homepage}\"|" \
+  -e 's|^description = .*|description = "Rust client for the Open Logistics Shiprocket, Delhivery, iThink Logistics, and Shadowfax APIs."|' \
+  -e "s|^license = .*|license = \"MIT\"\nkeywords = [\"logistics\", \"shipping\", \"shiprocket\", \"delhivery\", \"ithink\", \"shadowfax\", \"api-client\"]\ncategories = [\"api-bindings\", \"web-programming::http-client\"]\nrepository = \"${repo_url}\"\nhomepage = \"${homepage}\"|" \
   "$merged/Cargo.toml"
-printf '#![allow(unused_imports)]\n#![allow(clippy::too_many_arguments)]\n\npub mod delhivery;\npub mod shiprocket;\n' > "$merged/src/lib.rs"
+printf '#![allow(unused_imports)]\n#![allow(clippy::too_many_arguments)]\n\npub mod delhivery;\npub mod ithink;\npub mod shadowfax;\npub mod shiprocket;\n' > "$merged/src/lib.rs"
 cat > "$merged/README.md" <<EOF
 # open-logistics
 
-Rust client for the Shiprocket and Delhivery APIs.
+Rust client for the Shiprocket, Delhivery, iThink Logistics, and Shadowfax APIs.
 
 ## Install
 
@@ -136,8 +138,10 @@ open-logistics = "${version}"
 
 - \`open_logistics::shiprocket\` — Shiprocket APIs and models
 - \`open_logistics::delhivery\` — Delhivery APIs and models
+- \`open_logistics::ithink\` — iThink Logistics APIs and models
+- \`open_logistics::shadowfax\` — Shadowfax APIs and models
 
-Both modules expose \`apis\` and \`models\`.
+Each module exposes \`apis\` and \`models\`.
 EOF
 
 for provider in "${providers[@]}"; do

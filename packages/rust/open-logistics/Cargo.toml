@@ -2,9 +2,9 @@
 name = "open-logistics"
 version = "0.4.0"
 authors = ["Open Logistics"]
-description = "Rust client for the Open Logistics Shiprocket and Delhivery APIs."
+description = "Rust client for the Open Logistics Shiprocket, Delhivery, iThink Logistics, and Shadowfax APIs."
 license = "MIT"
-keywords = ["logistics", "shipping", "shiprocket", "delhivery", "api-client"]
+keywords = ["logistics", "shipping", "shiprocket", "delhivery", "ithink", "shadowfax", "api-client"]
 categories = ["api-bindings", "web-programming::http-client"]
 repository = "https://github.com/kush34/open-logistics"
 homepage = "https://open-logistics.vercel.app"

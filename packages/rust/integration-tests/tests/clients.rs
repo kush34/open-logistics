@@ -94,6 +94,19 @@ fn handle(mut stream: TcpStream, store: &Arc<Mutex<Vec<Record>>>) -> std::io::Re
             r#"[{"total_amount":47.2,"gross_amount":40,"zone":"C","charged_weight":0,"tax_data":{"SGST":3.6,"CGST":3.6}}]"#
         }
         "/waybill/api/fetch/json/" => r#""W9""#,
+        "/api_v3/order/add.json" => {
+            r#"{"status":"success","data":{"1":{"waybill":"AWB1","refnum":"O1","status":"success"}}}"#
+        }
+        "/api_v3/order/track.json" => {
+            r#"{"status":"success","status_code":"200","data":{"AWB1":{"current_status":"In Transit"}}}"#
+        }
+        "/v3/clients/orders/" => {
+            r#"{"message":"Success","data":{"awb_number":"SF1","client_order_id":"FWD-1"}}"#
+        }
+        "/v4/clients/orders/SF1/track/" => {
+            r#"{"order_details":{"awb_number":"SF1","status":"IN_TRANSIT"}}"#
+        }
+        "/v1/clients/serviceability/" => r#"[{"code":"400001","services":["forward"]}]"#,
         _ => "{}",
     };
 
@@ -263,4 +276,170 @@ async fn delhivery_raw_responses() {
     assert!(records
         .iter()
         .any(|record| record.url == "/waybill/api/fetch/json/"));
+}
+
+#[tokio::test]
+async fn ithink_body_auth_and_raw_responses() {
+    use open_logistics::ithink::models::*;
+    use open_logistics::ithink::apis::{orders_api as ithink_orders, tracking_api as ithink_tracking};
+
+    let (port, records) = start_server();
+    let mut configuration =
+        open_logistics::ithink::apis::configuration::Configuration::default();
+    configuration.base_path = format!("http://127.0.0.1:{port}");
+
+    let shipment = IthinkShipmentPayload::new(
+        "O1".to_string(),
+        "2026-01-01".to_string(),
+        999.0,
+        "John".to_string(),
+        "Street".to_string(),
+        "400001".to_string(),
+        "9999999999".to_string(),
+        "John".to_string(),
+        "Street".to_string(),
+        "400001".to_string(),
+        "9999999999".to_string(),
+        vec![IthinkProduct::new("Shoes".to_string(), 1, 999.0)],
+        10.0,
+        10.0,
+        5.0,
+        0.5,
+        "24".to_string(),
+    );
+    let order = ithink_orders::orders_create(
+        &configuration,
+        IthinkOrderCreateRequest::new(IthinkOrderCreateData::new(
+            "at".to_string(),
+            "sk".to_string(),
+            vec![shipment],
+            "24".to_string(),
+        )),
+    )
+    .await
+    .unwrap();
+    assert_eq!(order.data.as_ref().unwrap()["1"]["waybill"], "AWB1");
+
+    let tracking = ithink_tracking::tracking_fetch(
+        &configuration,
+        IthinkTrackingRequest::new(IthinkTrackingRequestData::new(
+            "at".to_string(),
+            "sk".to_string(),
+            "AWB1".to_string(),
+        )),
+    )
+    .await
+    .unwrap();
+    assert_eq!(
+        tracking.data.as_ref().unwrap()["AWB1"]["current_status"],
+        "In Transit"
+    );
+    assert_eq!(tracking.status_code, Some(Some("200".into())));
+
+    let records = records.lock().unwrap();
+    let create = records
+        .iter()
+        .find(|record| record.url == "/api_v3/order/add.json")
+        .unwrap();
+    assert!(create.body.contains(r#""access_token":"at""#));
+    assert!(create.body.contains(r#""secret_key":"sk""#));
+    assert!(create.body.contains(r#""order":"O1""#));
+    assert!(records
+        .iter()
+        .any(|record| record.url == "/api_v3/order/track.json"));
+}
+
+#[tokio::test]
+async fn shadowfax_token_auth_and_raw_responses() {
+    use open_logistics::shadowfax::apis::{
+        orders_api as shadowfax_orders, serviceability_api, tracking_api as shadowfax_tracking,
+    };
+    use open_logistics::shadowfax::models::shadowfax_order_info::PaymentMode;
+    use open_logistics::shadowfax::models::shadowfax_pickup_address::PickupType;
+    use open_logistics::shadowfax::models::shadowfax_return_address::ReturnType;
+    use open_logistics::shadowfax::models::*;
+
+    let (port, records) = start_server();
+    let mut configuration =
+        open_logistics::shadowfax::apis::configuration::Configuration::default();
+    configuration.base_path = format!("http://127.0.0.1:{port}");
+    configuration.api_key = Some(open_logistics::shadowfax::apis::configuration::ApiKey {
+        prefix: Some("Token".to_string()),
+        key: "sf-token".to_string(),
+    });
+
+    let payload = ShadowfaxCreateOrderPayload::new(
+        ShadowfaxCustomerDetails::new(
+            "John".to_string(),
+            "9999999999".to_string(),
+            "Street".to_string(),
+            "Mumbai".to_string(),
+            "400001".to_string(),
+        ),
+        ShadowfaxOrderInfo::new(
+            "FWD-1".to_string(),
+            1299.0,
+            PaymentMode::Prepaid,
+            0.0,
+        ),
+        ShadowfaxPickupAddress::new(
+            PickupType::Seller,
+            "Street".to_string(),
+            "Mumbai".to_string(),
+            "400001".to_string(),
+        ),
+        ShadowfaxReturnAddress::new(
+            ReturnType::Seller,
+            "Street".to_string(),
+            "400001".to_string(),
+        ),
+        vec![ShadowfaxSkuItem::new(
+            "Shoes".to_string(),
+            "SKU1".to_string(),
+            1299.0,
+        )],
+    );
+
+    let order = shadowfax_orders::orders_create(&configuration, payload)
+        .await
+        .unwrap();
+    assert_eq!(
+        order.data.as_ref().unwrap().awb_number.as_deref(),
+        Some("SF1")
+    );
+
+    let tracking = shadowfax_tracking::tracking_fetch(&configuration, "SF1")
+        .await
+        .unwrap();
+    assert_eq!(
+        tracking.order_details.as_ref().unwrap().status.as_deref(),
+        Some("IN_TRANSIT")
+    );
+
+    let serviceability =
+        serviceability_api::serviceability_check(&configuration, "forward", Some("400001"), None, None)
+            .await
+            .unwrap();
+    assert_eq!(serviceability[0].code, Some(Some("400001".into())));
+
+    let records = records.lock().unwrap();
+    let create = records
+        .iter()
+        .find(|record| record.url == "/v3/clients/orders/")
+        .unwrap();
+    assert_eq!(create.method, "POST");
+    assert!(create
+        .headers
+        .contains("authorization: token sf-token"));
+    assert!(create.body.contains(r#""client_order_id":"FWD-1""#));
+    assert!(records
+        .iter()
+        .any(|record| record.url == "/v4/clients/orders/SF1/track/"));
+
+    let serviceability = records
+        .iter()
+        .find(|record| record.url.starts_with("/v1/clients/serviceability/"))
+        .unwrap();
+    assert!(serviceability.url.contains("service=forward"));
+    assert!(serviceability.url.contains("pincodes=400001"));
 }

@@ -1,0 +1,622 @@
+openapi: 3.0.3
+info:
+  title: Open Logistics — iThink Logistics
+  version: 0.4.0
+  license:
+    name: MIT
+    url: https://github.com/kush34/open-logistics/blob/main/LICENSE
+  description: |
+    OpenAPI description of the iThink Logistics endpoints wrapped by
+    `open-logistics`.
+
+    Source of truth for generated Python and Rust clients. Operation IDs and
+    schema field names are intentionally snake_case so every language exposes
+    the same names.
+
+    iThink authenticates by putting `access_token` and `secret_key` inside the
+    `data` object of every JSON body. There is no auth header, so both fields
+    are part of each request schema; generated clients do not inject them from
+    configuration. Responses are the raw provider payloads, which also signal
+    failures with HTTP 200 and a `status`/`status_code` field.
+servers:
+  - url: https://my.ithinklogistics.com
+    description: Production
+security: []
+tags:
+  - name: Orders
+  - name: Shipments
+  - name: Tracking
+  - name: Serviceability
+  - name: Rates
+
+paths:
+  /api_v3/order/add.json:
+    post:
+      operationId: orders_create
+      summary: Create orders (up to 10 shipments)
+      tags: [Orders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IthinkOrderCreateRequest'
+      responses:
+        '200':
+          description: Order creation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IthinkOrderCreateResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /api_v3/order/cancel.json:
+    post:
+      operationId: orders_cancel
+      summary: Cancel up to 100 orders
+      tags: [Orders]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IthinkOrderCancelRequest'
+      responses:
+        '200':
+          description: Cancellation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IthinkCancelResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /api_v3/order/track.json:
+    post:
+      operationId: tracking_fetch
+      summary: Track up to 10 waybills
+      tags: [Tracking]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IthinkTrackingRequest'
+      responses:
+        '200':
+          description: Tracking data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IthinkTrackingResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /api_v3/pincode/check.json:
+    post:
+      operationId: serviceability_check
+      summary: Check pincode serviceability
+      tags: [Serviceability]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IthinkServiceabilityRequest'
+      responses:
+        '200':
+          description: Serviceability result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IthinkServiceabilityResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /api_v3/rate/check.json:
+    post:
+      operationId: rates_calculate
+      summary: Calculate courier rates
+      tags: [Rates]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IthinkRateRequest'
+      responses:
+        '200':
+          description: Rate estimates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IthinkRateResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /api_v3/shipping/label.json:
+    post:
+      operationId: shipments_label
+      summary: Generate labels for up to 100 waybills
+      tags: [Shipments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IthinkLabelRequest'
+      responses:
+        '200':
+          description: Label document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IthinkDocumentResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+  /api_v3/shipping/manifest.json:
+    post:
+      operationId: shipments_manifest
+      summary: Generate a manifest
+      tags: [Shipments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IthinkManifestRequest'
+      responses:
+        '200':
+          description: Manifest document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IthinkDocumentResponse'
+        default:
+          $ref: '#/components/responses/Error'
+
+components:
+  responses:
+    Error:
+      description: Provider error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IthinkApiErrorBody'
+
+  schemas:
+    FreeFormObject:
+      type: object
+      additionalProperties: true
+
+    IthinkApiErrorBody:
+      type: object
+      additionalProperties: true
+      properties:
+        message:
+          type: string
+        error:
+          type: string
+        detail:
+          type: string
+        html_message:
+          type: string
+        status:
+          type: string
+        status_code:
+          description: Integer or numeric string; the provider sends both.
+
+    IthinkProduct:
+      type: object
+      required: [product_name, product_quantity, product_price]
+      properties:
+        product_name:
+          type: string
+        product_sku:
+          type: string
+        product_quantity:
+          type: integer
+        product_price:
+          type: number
+        product_tax_rate:
+          type: number
+        product_hsn_code:
+          type: string
+        product_discount:
+          type: number
+        product_img_url:
+          type: string
+
+    IthinkShipmentPayload:
+      type: object
+      required:
+        - order
+        - order_date
+        - total_amount
+        - name
+        - add
+        - pin
+        - phone
+        - billing_name
+        - billing_add
+        - billing_pin
+        - billing_phone
+        - products
+        - shipment_length
+        - shipment_width
+        - shipment_height
+        - weight
+        - return_address_id
+      properties:
+        order:
+          type: string
+        waybill:
+          type: string
+        sub_order:
+          type: string
+        order_date:
+          type: string
+        total_amount:
+          type: number
+        name:
+          type: string
+        company_name:
+          type: string
+        add:
+          type: string
+        add2:
+          type: string
+        add3:
+          type: string
+        pin:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        phone:
+          type: string
+        alt_phone:
+          type: string
+        email:
+          type: string
+        is_billing_same_as_shipping:
+          type: string
+          enum: ['yes', 'no']
+        billing_name:
+          type: string
+        billing_company_name:
+          type: string
+        billing_add:
+          type: string
+        billing_add2:
+          type: string
+        billing_add3:
+          type: string
+        billing_pin:
+          type: string
+        billing_city:
+          type: string
+        billing_state:
+          type: string
+        billing_country:
+          type: string
+        billing_phone:
+          type: string
+        billing_alt_phone:
+          type: string
+        billing_email:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/IthinkProduct'
+        shipment_length:
+          type: number
+        shipment_width:
+          type: number
+        shipment_height:
+          type: number
+        weight:
+          type: number
+        shipping_charges:
+          type: number
+        giftwrap_charges:
+          type: number
+        transaction_charges:
+          type: number
+        total_discount:
+          type: number
+        first_attemp_discount:
+          type: number
+        cod_charges:
+          type: number
+        advance_amount:
+          type: number
+        cod_amount:
+          type: number
+        payment_mode:
+          type: string
+          enum: [COD, Prepaid]
+        reseller_name:
+          type: string
+        eway_bill_number:
+          type: string
+        gst_number:
+          type: string
+        what3words:
+          type: string
+        return_address_id:
+          type: string
+        api_source:
+          type: string
+        store_id:
+          type: string
+
+    IthinkOrderCreateRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: '#/components/schemas/IthinkOrderCreateData'
+
+    IthinkOrderCreateData:
+      type: object
+      required: [access_token, secret_key, shipments, pickup_address_id]
+      properties:
+        access_token:
+          type: string
+        secret_key:
+          type: string
+        shipments:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/IthinkShipmentPayload'
+        pickup_address_id:
+          type: string
+        logistics:
+          type: string
+        s_type:
+          type: string
+        order_type:
+          type: string
+          enum: [forward, reverse]
+
+    IthinkOrderCancelRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required: [access_token, secret_key, awb_numbers]
+          properties:
+            access_token:
+              type: string
+            secret_key:
+              type: string
+            awb_numbers:
+              type: string
+              description: Comma-separated waybills, up to 100.
+
+    IthinkTrackingRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required: [access_token, secret_key, awb_number_list]
+          properties:
+            access_token:
+              type: string
+            secret_key:
+              type: string
+            awb_number_list:
+              type: string
+              description: Comma-separated waybills, up to 10.
+
+    IthinkServiceabilityRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required: [access_token, secret_key, pincode]
+          properties:
+            access_token:
+              type: string
+            secret_key:
+              type: string
+            pincode:
+              type: string
+
+    IthinkRateRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required:
+            - access_token
+            - secret_key
+            - from_pincode
+            - shipping_weight_kg
+            - payment_method
+            - product_mrp
+          properties:
+            access_token:
+              type: string
+            secret_key:
+              type: string
+            from_pincode:
+              type: string
+            to_pincode:
+              type: string
+            shipping_length_cms:
+              type: number
+            shipping_width_cms:
+              type: number
+            shipping_height_cms:
+              type: number
+            shipping_weight_kg:
+              type: number
+            order_type:
+              type: string
+              enum: [forward, reverse]
+            payment_method:
+              type: string
+              enum: [prepaid, cod]
+            product_mrp:
+              type: number
+
+    IthinkLabelRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required: [access_token, secret_key, awb_numbers]
+          properties:
+            access_token:
+              type: string
+            secret_key:
+              type: string
+            awb_numbers:
+              type: string
+              description: Comma-separated waybills, up to 100.
+            page_size:
+              type: string
+              enum: [A4, A5, A6]
+              default: A4
+
+    IthinkManifestRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required: [access_token, secret_key, awb_numbers]
+          properties:
+            access_token:
+              type: string
+            secret_key:
+              type: string
+            awb_numbers:
+              type: string
+              description: Comma-separated waybills.
+
+    IthinkOrderCreateResponse:
+      type: object
+      additionalProperties: true
+      description: Raw `POST /api_v3/order/add.json` response, keyed by shipment.
+      properties:
+        status:
+          type: string
+        status_code:
+          description: Integer or numeric string; the provider sends both.
+        html_message:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FreeFormObject'
+
+    IthinkCancelResponse:
+      type: object
+      additionalProperties: true
+      description: Raw `POST /api_v3/order/cancel.json` response.
+      properties:
+        status:
+          type: string
+        status_code:
+          description: Integer or numeric string; the provider sends both.
+        html_message:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FreeFormObject'
+
+    IthinkTrackingResponse:
+      type: object
+      additionalProperties: true
+      description: Raw `POST /api_v3/order/track.json` response, keyed by AWB.
+      properties:
+        status:
+          type: string
+        status_code:
+          description: Integer or numeric string; the provider sends both.
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/FreeFormObject'
+
+    IthinkServiceabilityResponse:
+      type: object
+      additionalProperties: true
+      description: |
+        Raw `POST /api_v3/pincode/check.json` response. `data` is keyed by
+        pincode, then by courier.
+      properties:
+        status:
+          type: string
+        status_code:
+          description: Integer or numeric string; the provider sends both.
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              $ref: '#/components/schemas/FreeFormObject'
+
+    IthinkRateResponse:
+      type: object
+      additionalProperties: true
+      description: |
+        Raw `POST /api_v3/rate/check.json` response. `data` is a list of courier
+        rates, or an object keyed by courier.
+      properties:
+        status:
+          type: string
+        status_code:
+          description: Integer or numeric string; the provider sends both.
+        message:
+          type: string
+        zone:
+          type: string
+        expected_delivery_date:
+          type: string
+        data: {}
+
+    IthinkDocumentResponse:
+      type: object
+      additionalProperties: true
+      description: Raw label or manifest response.
+      properties:
+        status:
+          type: string
+        status_code:
+          description: Integer or numeric string; the provider sends both.
+        html_message:
+          type: string
+        message:
+          type: string
+        file_name:
+          type: string
+        file_url:
+          type: string
+        url:
+          type: string
+        data: {}
