@@ -169,8 +169,10 @@ println!("{:?} {:?} {:?}", order.status, order.message, order.data);
 
 The TypeScript SDK normalizes the response to `success`, `message`, `order_id`,
 `waybill`, `tracking_url`, and `shipments`. The generated clients return the raw
-payload instead: `status`, `status_code`, `message`, and `data` keyed by
-shipment. They do not raise when the provider sends `status: "error"` with HTTP
+payload instead: `status`, `status_code`, `message`, and `data` holding one
+entry per shipment, keyed positionally (`"1"`, `"2"`, ...), with the client
+order id in each entry's `refnum`. They do not raise when the provider sends
+`status: "error"` with HTTP
 200, so check `status` yourself before using a result. If iThink returns a
 waybill, you can feed it into:
 

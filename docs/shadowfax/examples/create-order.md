@@ -133,7 +133,10 @@ with ApiClient(configuration) as api_client:
 if (order.message or "").lower() == "failure":
     raise RuntimeError(f"{order.message}: {order.errors}")
 
-print(order.awb_number, order.status)
+# The AWB and status arrive inside `data`; the top-level fields mirror them
+# in some responses.
+details = order.data or order
+print(details.awb_number, details.status)
 ```
 
 ```rust [Rust]
@@ -206,16 +209,27 @@ if order.message.as_deref() == Some("Failure") {
     panic!("Shadowfax rejected the order: {:?}", order.errors);
 }
 
-println!("{:?} {:?}", order.awb_number, order.status);
+// The AWB and status arrive inside `data`; the top-level fields mirror them
+// in some responses.
+let details = order.data.as_ref();
+let awb_number = details
+    .and_then(|details| details.awb_number.as_deref())
+    .or(order.awb_number.as_deref());
+let status = details
+    .and_then(|details| details.status.as_deref())
+    .or(order.status.as_deref());
+println!("{:?} {:?}", awb_number, status);
 ```
 
 :::
 
 The TypeScript SDK normalizes the response to `success`, `message`,
 `awb_number`, `client_order_id`, `status`, `status_display`, `data`, `errors`,
-and `raw`. The generated clients return the raw payload, so they have no
+and `raw`, reading the AWB and status from `data` first and falling back to the
+top-level fields. The generated clients return the raw payload, so they have no
 `success` flag: branch on `message`/`status` as the examples do, not on the HTTP
-status. Feed the AWB into:
+status, and read the AWB from `data` (`details.awb_number`) with the top-level
+field as a fallback. Feed the AWB into:
 
 - `sdk.trackByAwb()`
 - `sdk.generateLabel()`

@@ -258,8 +258,10 @@ with ApiClient(configuration) as api_client:
     )
 
     # Forward creation reports rejections with HTTP 200; the message says which.
-    if (order.message or "").lower() != "failure" and order.awb_number:
-        tracking = TrackingApi(api_client).tracking_fetch(order.awb_number)
+    # The AWB arrives inside `data`; the top-level fields mirror it in some responses.
+    details = order.data or order
+    if (order.message or "").lower() != "failure" and details.awb_number:
+        tracking = TrackingApi(api_client).tracking_fetch(details.awb_number)
 ```
 
 ```rust [Rust]
@@ -328,7 +330,13 @@ let order = orders_api::orders_create(
 
 // Forward creation reports rejections with HTTP 200; the message says which.
 if order.message.as_deref() != Some("Failure") {
-    if let Some(awb_number) = order.awb_number.as_deref() {
+    // The AWB arrives inside `data`; the top-level fields mirror it in some responses.
+    let awb_number = order
+        .data
+        .as_ref()
+        .and_then(|data| data.awb_number.as_deref())
+        .or(order.awb_number.as_deref());
+    if let Some(awb_number) = awb_number {
         let tracking = tracking_api::tracking_fetch(&configuration, awb_number).await?;
         println!("{:?}", tracking.status);
     }
@@ -516,8 +524,9 @@ with ApiClient(configuration) as api_client:
         )
     )
 
-    # iThink returns waybills inside `data`, keyed by client order id.
-    waybill = (order.data or {}).get("ORD-001", {}).get("waybill")
+    # iThink keys the `data` entries positionally ("1", "2", ...); the client
+    # order id is in each entry's `refnum`. Single shipment: take the entry.
+    waybill = next(iter((order.data or {}).values()), {}).get("waybill")
     if waybill:
         tracking = TrackingApi(api_client).tracking_fetch(
             IthinkTrackingRequest(
@@ -576,11 +585,12 @@ let order = orders_api::orders_create(
 )
 .await?;
 
-// iThink returns waybills inside `data`, keyed by client order id.
+// iThink keys the `data` entries positionally ("1", "2", ...); the client
+// order id is in each entry's `refnum`. Single shipment: take the entry.
 let waybill = order
     .data
     .as_ref()
-    .and_then(|data| data.get("ORD-001"))
+    .and_then(|data| data.values().next())
     .and_then(|shipment| shipment.get("waybill"))
     .and_then(|waybill| waybill.as_str());
 
