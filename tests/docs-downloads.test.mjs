@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  channelStats,
+  channelDays,
   dailySeries,
+  lastCompleteDay,
   sanitizeDays,
   sanitizeStats,
   totals,
@@ -37,7 +38,7 @@ describe("download stats", () => {
         }),
       ),
     );
-    expect(await channelStats("pypi", { now })).toEqual({
+    expect(totals(await channelDays("pypi", { now }), now)).toEqual({
       lifetime: 12,
       monthly: 12,
     });
@@ -47,7 +48,7 @@ describe("download stats", () => {
     vi.stubGlobal("fetch", async () =>
       new Response(JSON.stringify({ error: "not found" })),
     );
-    await expect(channelStats("pypi", { now })).rejects.toThrow();
+    await expect(channelDays("pypi", { now })).rejects.toThrow();
   });
 
   it("drops invalid channels from a baked or cached snapshot", () => {
@@ -128,5 +129,31 @@ describe("daily series", () => {
       ]),
     ).toEqual([{ date: "2026-11-01", downloads: 2 }]);
     expect(sanitizeDays(null)).toBeNull();
+  });
+});
+
+describe("baked history", () => {
+  it("ends snapshots on the last complete day", () => {
+    expect(lastCompleteDay(now)).toBe("2026-11-12");
+  });
+
+  it("keeps a full window of complete days for the 90D chart", () => {
+    const day = (offset) =>
+      new Date(now.getTime() - offset * 864e5).toISOString().slice(0, 10);
+    // 91 rows ending today; today is incomplete, so the snapshot holds 90
+    // complete days and the 90D view needs no zero fill at its oldest edge.
+    const rows = Array.from({ length: 91 }, (_, index) => ({
+      date: day(90 - index),
+      downloads: 1,
+    }));
+    const baked = rows
+      .filter((row) => row.date <= lastCompleteDay(now))
+      .slice(-90);
+    expect(baked).toHaveLength(90);
+
+    const series = dailySeries({ npm: baked }, ["npm"], 90, now);
+    expect(series).toHaveLength(90);
+    expect(series[0]).toEqual({ date: day(90), value: 1 });
+    expect(series.at(-1)).toEqual({ date: day(1), value: 1 });
   });
 });

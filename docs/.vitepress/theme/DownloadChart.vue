@@ -1,14 +1,7 @@
 <script setup>
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import {
-  CHANNELS,
-  channelDays,
-  dailySeries,
-  sanitizeDays,
-} from "../downloads.mjs";
-
-// pypistats.org has no CORS headers, so PyPI goes through the Vercel function.
-const PYPI_URL = "/api/pypi-downloads";
+import { CHANNELS, dailySeries } from "../downloads.mjs";
+import { downloads, loadDownloads } from "./download-store.js";
 
 const PERIODS = [7, 30, 90];
 const channelLabels = {
@@ -32,11 +25,16 @@ const layout = computed(() => {
   return { w, h, pad, innerW, innerH, baseline: pad.top + innerH };
 });
 
-const series = ref({});
+const series = computed(() => {
+  const days = {};
+  for (const [channel, counts] of Object.entries(downloads.value?.channels ?? {})) {
+    days[channel] = counts.days ?? [];
+  }
+  return days;
+});
 const period = ref(30);
 const filter = ref("all");
 const hover = ref(null);
-const ready = ref(false);
 
 // A resize moves every point; a stale crosshair would sit in the wrong place.
 watch(size, () => {
@@ -148,16 +146,7 @@ function onPointerMove(event) {
   hover.value = points.value[Math.max(0, Math.min(count - 1, index))];
 }
 
-function applyBaked(channels) {
-  const baked = {};
-  for (const channel of CHANNELS) {
-    const rows = sanitizeDays(channels?.[channel]?.days);
-    if (rows) baked[channel] = rows;
-  }
-  if (Object.keys(baked).length) series.value = baked;
-}
-
-onMounted(async () => {
+onMounted(() => {
   if (plot.value) {
     const observer = new ResizeObserver(([entry]) => {
       const w = Math.max(280, Math.round(entry.contentRect.width));
@@ -167,25 +156,7 @@ onMounted(async () => {
     onUnmounted(() => observer.disconnect());
   }
 
-  try {
-    const res = await fetch("/downloads.json");
-    if (res.ok) applyBaked((await res.json())?.channels);
-  } catch {
-    // The live fetch below still has a chance.
-  }
-
-  const live = await Promise.allSettled(
-    CHANNELS.map((channel) => channelDays(channel, { pypiUrl: PYPI_URL })),
-  );
-  const merged = { ...series.value };
-  let fresh = 0;
-  live.forEach((result, index) => {
-    if (result.status !== "fulfilled") return;
-    merged[CHANNELS[index]] = result.value;
-    fresh += 1;
-  });
-  if (fresh) series.value = merged;
-  ready.value = true;
+  loadDownloads();
 });
 </script>
 
@@ -291,7 +262,7 @@ onMounted(async () => {
       {{ format(total) }} downloads in the last {{ period }} days ·
       {{ channelLabels[filter] }}
     </p>
-    <p v-else-if="ready" class="dl-chart-caption">
+    <p v-else-if="downloads" class="dl-chart-caption">
       Download history is unavailable right now.
     </p>
   </div>

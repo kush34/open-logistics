@@ -105,16 +105,15 @@ export function totals(days, now = new Date()) {
   return { lifetime, monthly };
 }
 
-// Resolves one channel's lifetime and 30-day totals, or throws so the caller
-// can fall back to the last known value.
-export async function channelStats(channel, options = {}) {
-  const now = options.now ?? new Date();
-  return totals(await channelDays(channel, { ...options, now }), now);
+// Registries report the current day while it is still filling up, so charts and
+// snapshots stop at yesterday.
+export function lastCompleteDay(now = new Date()) {
+  return iso(new Date(now.getTime() - DAY));
 }
 
 // Sums the selected channels per calendar day and returns the last `days` days
-// ending at the newest complete day (registries report today as incomplete),
-// filling gaps with zero so the line has no holes.
+// ending at the newest complete day, filling gaps with zero so the line has no
+// holes.
 export function dailySeries(series, channels, days, now = new Date()) {
   if (!Number.isSafeInteger(days) || days < 1) return [];
   const byDate = new Map();
@@ -123,7 +122,7 @@ export function dailySeries(series, channels, days, now = new Date()) {
       byDate.set(date, (byDate.get(date) ?? 0) + downloads);
     }
   }
-  const lastComplete = iso(new Date(now.getTime() - DAY));
+  const lastComplete = lastCompleteDay(now);
   const dates = [...byDate.keys()].filter((date) => date <= lastComplete).sort();
   if (!dates.length) return [];
   const end = new Date(`${dates[dates.length - 1]}T00:00:00Z`);
@@ -145,14 +144,18 @@ export function sanitizeDays(rows) {
 }
 
 // Parses a baked or cached snapshot ({ channels: { npm: {...} } }) and drops
-// anything that is not a sane pair of counts.
+// anything that is not a sane pair of counts. Daily history is optional so an
+// older totals-only snapshot still paints the counters.
 export function sanitizeStats(raw) {
   const channels = {};
   for (const channel of CHANNELS) {
     const counts = raw?.channels?.[channel];
     if (!isCount(counts?.lifetime) || !isCount(counts?.monthly)) continue;
     if (counts.monthly > counts.lifetime) continue;
-    channels[channel] = { lifetime: counts.lifetime, monthly: counts.monthly };
+    const next = { lifetime: counts.lifetime, monthly: counts.monthly };
+    const days = sanitizeDays(counts.days);
+    if (days) next.days = days;
+    channels[channel] = next;
   }
   return Object.keys(channels).length ? { channels } : null;
 }

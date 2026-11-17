@@ -4,10 +4,11 @@ import { writeFile, mkdir } from "node:fs/promises";
 import {
   CHANNELS,
   channelDays,
+  lastCompleteDay,
   totals,
 } from "../docs/.vitepress/downloads.mjs";
 
-const KEEP_DAYS = 90; // the chart's longest period
+const KEEP_DAYS = 90; // the chart's longest period; today is incomplete
 
 const results = await Promise.allSettled(
   CHANNELS.map((channel) => channelDays(channel)),
@@ -24,16 +25,16 @@ if (failed.length) {
     monthly: 0,
     channels: {},
   };
+  const lastComplete = lastCompleteDay();
   CHANNELS.forEach((channel, index) => {
     const days = results[index].value;
-    const { lifetime, monthly } = totals(days);
     stats.channels[channel] = {
-      lifetime,
-      monthly,
-      days: days.slice(-KEEP_DAYS),
+      ...totals(days),
+      // The chart drops today, so bake whole days rather than whole rows.
+      days: days.filter((day) => day.date <= lastComplete).slice(-KEEP_DAYS),
     };
-    stats.lifetime += lifetime;
-    stats.monthly += monthly;
+    stats.lifetime += stats.channels[channel].lifetime;
+    stats.monthly += stats.channels[channel].monthly;
   });
   await mkdir("docs/public", { recursive: true });
   await writeFile("docs/public/downloads.json", `${JSON.stringify(stats, null, 2)}\n`);
