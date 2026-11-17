@@ -175,3 +175,5 @@ Yes. The SDK is MIT-licensed with no paid tier. You still need your own account 
 The SDK is a thin typed wrapper over the provider APIs, so production suitability depends on your provider account, credentials, and rate limits. See [performance](/advanced/performance) and [retries](/advanced/retries) for the current behavior.
 
 <DownloadStats />
+
+<DownloadChart />

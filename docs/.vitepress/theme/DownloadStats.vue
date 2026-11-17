@@ -1,16 +1,12 @@
 <script setup>
-import { computed, onMounted, ref } from "vue";
-import { CHANNELS, channelStats, sanitizeStats } from "../downloads.mjs";
-
-const CACHE_KEY = "open-logistics:downloads";
-const CACHE_TTL = 60 * 60 * 1000; // registries publish daily; an hour is plenty
-// pypistats.org has no CORS headers, so PyPI goes through the Vercel function.
-const PYPI_URL = "/api/pypi-downloads";
+import { computed, onMounted } from "vue";
+import { CHANNELS } from "../downloads.mjs";
+import { downloads, loadDownloads } from "./download-store.js";
 
 const channelLabels = { npm: "npm", pypi: "PyPI", crates: "crates.io" };
 
 // Rendered even while empty so the hero never shifts when numbers arrive.
-const channels = ref(null);
+const channels = computed(() => downloads.value?.channels ?? null);
 
 const rows = computed(() =>
   CHANNELS.map((channel) => [channel, channels.value?.[channel] ?? null]),
@@ -28,55 +24,7 @@ const total = computed(() => {
 const format = (n) =>
   Number.isSafeInteger(n) ? n.toLocaleString("en-US") : "—";
 
-function readCache() {
-  try {
-    const cached = JSON.parse(sessionStorage.getItem(CACHE_KEY));
-    if (Date.now() - cached.at > CACHE_TTL) return null;
-    return sanitizeStats(cached);
-  } catch {
-    return null;
-  }
-}
-
-function writeCache(stats) {
-  try {
-    sessionStorage.setItem(CACHE_KEY, JSON.stringify({ at: Date.now(), ...stats }));
-  } catch {
-    // Storage can be unavailable (private mode, quota); the page still works.
-  }
-}
-
-async function loadBaked() {
-  try {
-    const res = await fetch("/downloads.json");
-    return res.ok ? sanitizeStats(await res.json()) : null;
-  } catch {
-    return null;
-  }
-}
-
-onMounted(async () => {
-  const cached = readCache();
-  channels.value = cached?.channels ?? (await loadBaked())?.channels ?? null;
-  if (cached) return;
-
-  const live = await Promise.allSettled(
-    CHANNELS.map((channel) => channelStats(channel, { pypiUrl: PYPI_URL })),
-  );
-  const merged = { ...channels.value };
-  let fresh = 0;
-  live.forEach((result, index) => {
-    if (result.status !== "fulfilled") return;
-    merged[CHANNELS[index]] = result.value;
-    fresh += 1;
-  });
-
-  // Every source failed: keep the baked snapshot (or the placeholders) and do
-  // not cache, so the next visit tries again.
-  if (!fresh) return;
-  channels.value = merged;
-  writeCache({ channels: merged });
-});
+onMounted(loadDownloads);
 </script>
 
 <template>

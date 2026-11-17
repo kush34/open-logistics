@@ -1,10 +1,17 @@
 // Writes the build-time download snapshot that DownloadStats.vue shows while the
 // live numbers load (or when a registry call fails in the browser).
 import { writeFile, mkdir } from "node:fs/promises";
-import { CHANNELS, channelStats } from "../docs/.vitepress/downloads.mjs";
+import {
+  CHANNELS,
+  channelDays,
+  lastCompleteDay,
+  totals,
+} from "../docs/.vitepress/downloads.mjs";
+
+const KEEP_DAYS = 90; // the chart's longest period; today is incomplete
 
 const results = await Promise.allSettled(
-  CHANNELS.map((channel) => channelStats(channel)),
+  CHANNELS.map((channel) => channelDays(channel)),
 );
 
 const failed = results.filter((r) => r.status === "rejected");
@@ -18,11 +25,16 @@ if (failed.length) {
     monthly: 0,
     channels: {},
   };
+  const lastComplete = lastCompleteDay();
   CHANNELS.forEach((channel, index) => {
-    const { lifetime, monthly } = results[index].value;
-    stats.channels[channel] = { lifetime, monthly };
-    stats.lifetime += lifetime;
-    stats.monthly += monthly;
+    const days = results[index].value;
+    stats.channels[channel] = {
+      ...totals(days),
+      // The chart drops today, so bake whole days rather than whole rows.
+      days: days.filter((day) => day.date <= lastComplete).slice(-KEEP_DAYS),
+    };
+    stats.lifetime += stats.channels[channel].lifetime;
+    stats.monthly += stats.channels[channel].monthly;
   });
   await mkdir("docs/public", { recursive: true });
   await writeFile("docs/public/downloads.json", `${JSON.stringify(stats, null, 2)}\n`);
