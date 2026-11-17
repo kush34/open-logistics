@@ -1,10 +1,16 @@
 // Writes the build-time download snapshot that DownloadStats.vue shows while the
 // live numbers load (or when a registry call fails in the browser).
 import { writeFile, mkdir } from "node:fs/promises";
-import { CHANNELS, channelStats } from "../docs/.vitepress/downloads.mjs";
+import {
+  CHANNELS,
+  channelDays,
+  totals,
+} from "../docs/.vitepress/downloads.mjs";
+
+const KEEP_DAYS = 90; // the chart's longest period
 
 const results = await Promise.allSettled(
-  CHANNELS.map((channel) => channelStats(channel)),
+  CHANNELS.map((channel) => channelDays(channel)),
 );
 
 const failed = results.filter((r) => r.status === "rejected");
@@ -19,8 +25,13 @@ if (failed.length) {
     channels: {},
   };
   CHANNELS.forEach((channel, index) => {
-    const { lifetime, monthly } = results[index].value;
-    stats.channels[channel] = { lifetime, monthly };
+    const days = results[index].value;
+    const { lifetime, monthly } = totals(days);
+    stats.channels[channel] = {
+      lifetime,
+      monthly,
+      days: days.slice(-KEEP_DAYS),
+    };
     stats.lifetime += lifetime;
     stats.monthly += monthly;
   });

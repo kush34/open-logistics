@@ -83,6 +83,13 @@ async function cratesDays() {
 
 const sources = { npm: npmDays, pypi: pypiDays, crates: cratesDays };
 
+// One channel's validated daily history, or throws so the caller can fall back
+// to the last known value.
+export async function channelDays(channel, options = {}) {
+  const now = options.now ?? new Date();
+  return sources[channel]({ ...options, now });
+}
+
 export function totals(days, now = new Date()) {
   // 30 calendar dates including today.
   const windowStart = iso(new Date(now.getTime() - 29 * DAY));
@@ -102,8 +109,39 @@ export function totals(days, now = new Date()) {
 // can fall back to the last known value.
 export async function channelStats(channel, options = {}) {
   const now = options.now ?? new Date();
-  const days = await sources[channel]({ ...options, now });
-  return totals(days, now);
+  return totals(await channelDays(channel, { ...options, now }), now);
+}
+
+// Sums the selected channels per calendar day and returns the last `days` days
+// ending at the newest complete day (registries report today as incomplete),
+// filling gaps with zero so the line has no holes.
+export function dailySeries(series, channels, days, now = new Date()) {
+  if (!Number.isSafeInteger(days) || days < 1) return [];
+  const byDate = new Map();
+  for (const channel of channels) {
+    for (const { date, downloads } of series?.[channel] ?? []) {
+      byDate.set(date, (byDate.get(date) ?? 0) + downloads);
+    }
+  }
+  const lastComplete = iso(new Date(now.getTime() - DAY));
+  const dates = [...byDate.keys()].filter((date) => date <= lastComplete).sort();
+  if (!dates.length) return [];
+  const end = new Date(`${dates[dates.length - 1]}T00:00:00Z`);
+  const out = [];
+  for (let i = Math.min(days, MAX_DAYS) - 1; i >= 0; i -= 1) {
+    const date = iso(new Date(end.getTime() - i * DAY));
+    out.push({ date, value: byDate.get(date) ?? 0 });
+  }
+  return out;
+}
+
+// Parses a baked or cached day list, returning null when nothing is usable.
+export function sanitizeDays(rows) {
+  try {
+    return toDays(rows);
+  } catch {
+    return null;
+  }
 }
 
 // Parses a baked or cached snapshot ({ channels: { npm: {...} } }) and drops
