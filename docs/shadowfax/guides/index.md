@@ -14,6 +14,7 @@ the SDK's resource model.
 - Order cancellation by AWB or client order ID
 - Single-AWB tracking
 - Bulk tracking (up to 50 AWBs)
+- [Forward callback verification and parsing](/advanced/tracking-webhooks)
 - Pincode serviceability
 - Rate calculator for a pincode pair
 - Label generation (PDF or PRN)
@@ -23,7 +24,7 @@ the SDK's resource model.
 ## Not implemented
 
 - OAuth2 client-credential authentication
-- Webhook registration and callback handling
+- Webhook registration
 - Escalation endpoints
 - Reverse Logistics, Exchange, Hyperlocal, and Quick Commerce
 - MPS child-shipment helpers (the parent-AWB calls still work)

@@ -51,7 +51,7 @@ B2C order creation, editing, and cancellation; tracking by waybill, order ID, or
 
 ### Does the SDK support Delhivery webhooks or NDR actions?
 
-No. Warehouse creation, NDR actions, and webhook setup are not part of the current SDK surface. See the [Delhivery guide](/delhivery/guides/) for the exact list.
+The TypeScript SDK can [verify and parse Scan Push callbacks](/advanced/tracking-webhooks) after Delhivery configures your endpoint. Warehouse creation and NDR actions are outside the [Delhivery guide’s supported operations](/delhivery/guides/).
 
 ### Do I need a Delhivery account to use the SDK?
 
