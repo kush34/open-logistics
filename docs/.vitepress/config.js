@@ -455,6 +455,7 @@ module.exports = async () => ({
                 { text: "Orders", link: "/shiprocket/guides/orders" },
                 { text: "Shipments", link: "/shiprocket/guides/shipments" },
                 { text: "Tracking", link: "/shiprocket/guides/tracking" },
+                { text: "Tracking Webhooks", link: "/advanced/tracking-webhooks" },
                 {
                   text: "Label Generation",
                   link: "/shiprocket/guides/label-generation",
@@ -527,7 +528,10 @@ module.exports = async () => ({
             },
             {
               text: "Guides",
-              items: [{ text: "Delhivery", link: "/delhivery/guides/" }],
+              items: [
+                { text: "Delhivery", link: "/delhivery/guides/" },
+                { text: "Tracking Webhooks", link: "/advanced/tracking-webhooks" },
+              ],
             },
             {
               text: "Examples",
@@ -658,7 +662,10 @@ module.exports = async () => ({
             },
             {
               text: "Guides",
-              items: [{ text: "Shadowfax", link: "/shadowfax/guides/" }],
+              items: [
+                { text: "Shadowfax", link: "/shadowfax/guides/" },
+                { text: "Tracking Webhooks", link: "/advanced/tracking-webhooks" },
+              ],
             },
             {
               text: "Examples",
@@ -710,6 +717,7 @@ module.exports = async () => ({
             { text: "Error Handling", link: "/advanced/error-handling" },
             { text: "Retries", link: "/advanced/retries" },
             { text: "Performance", link: "/advanced/performance" },
+            { text: "Tracking Webhooks", link: "/advanced/tracking-webhooks" },
           ],
         },
       ],

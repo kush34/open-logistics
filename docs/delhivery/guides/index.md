@@ -13,6 +13,7 @@ description: "Supported Delhivery B2C operations in the Open-Logistics SDK and w
 - Shipment cancellation
 - Tracking by waybill
 - Tracking by order reference
+- [Scan Push callback verification and parsing](/advanced/tracking-webhooks)
 - Pincode serviceability
 - Invoice-based shipping rate calculation
 - Packing slip / label generation
@@ -23,7 +24,6 @@ description: "Supported Delhivery B2C operations in the Open-Logistics SDK and w
 
 - Warehouse creation
 - NDR actions
-- Webhook setup
 - Automatic provider routing or fallback logic
 
 Those endpoints exist in Delhivery’s ecosystem, but they are not part of the current SDK surface because the repository does not yet model them as first-class resources.

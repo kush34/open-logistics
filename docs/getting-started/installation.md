@@ -26,7 +26,7 @@ cargo add open-logistics
 
 ## Requirements
 
-- **TypeScript**: Node.js 18 or newer is recommended because the SDK relies on the built-in `fetch` API.
+- **TypeScript**: Node.js 18 or newer is required. The root entry point uses Node's crypto module and the SDK relies on the built-in `fetch` API.
 - **Python**: Python 3.11 or newer.
 - **Rust**: Rust 2021 edition; TLS is enabled by default via `native-tls`.
 

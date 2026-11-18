@@ -107,6 +107,8 @@
 ### Concepts and advanced behavior
 
 - [Architecture](https://open-logistics.vercel.app/concepts/architecture): provider facades, resource modules, clients, and shared types.
+- [Tracking Webhooks](https://open-logistics.vercel.app/advanced/tracking-webhooks): verify and parse Shiprocket, Delhivery Scan Push, and Shadowfax Forward callbacks with the TypeScript SDK.
+  `parseTrackingWebhook(provider, { headers, rawBody }, config)` returns `{ ok: true, event }` or `{ ok: false, reason: "unauthorized" | "invalid_payload" }`; invalid token or header configuration throws TypeError. It requires Node.js and Fetch-style headers. Shared secrets do not prevent replay.
 - [Normalization](https://open-logistics.vercel.app/concepts/normalization): what the SDK normalizes and what stays raw.
 - [Error model](https://open-logistics.vercel.app/concepts/error-model): error classes, fields, and status codes.
 - [Providers](https://open-logistics.vercel.app/concepts/providers): why there is no runtime provider registry.

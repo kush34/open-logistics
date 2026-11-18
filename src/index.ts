@@ -15,3 +15,11 @@ export * from "./ithink/types/index.js";
 export { Shadowfax } from "./shadowfax/index.js";
 export { ShadowfaxClient, ShadowfaxAPIError } from "./shadowfax/index.js";
 export * from "./shadowfax/types/index.js";
+export {
+  parseTrackingWebhook,
+  type TrackingWebhookConfig,
+  type TrackingWebhookEvent,
+  type TrackingWebhookProvider,
+  type TrackingWebhookRequest,
+  type TrackingWebhookResult,
+} from "./webhooks.js";

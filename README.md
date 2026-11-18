@@ -80,10 +80,17 @@ const shipment = await shadowfax.orders.create({ ... });
 Shadowfax forward order creation returns HTTP 200 for rejections, so check
 `shipment.success` rather than relying on the status code.
 
+## Tracking webhooks
+
+Use `parseTrackingWebhook` to verify and parse Shiprocket, Delhivery Scan Push,
+and Shadowfax Forward callbacks in a Node.js endpoint. See the
+[tracking webhook guide](https://open-logistics.vercel.app/advanced/tracking-webhooks) for setup and examples.
+
 ## Public surface
 
 | Export                                    | Description                              |
 | ----------------------------------------- | ---------------------------------------- |
+| `parseTrackingWebhook`                    | Verify and parse an inbound tracking callback |
 | `OpenLogistics`                           | Provider-agnostic client; `provider` selects the vendor |
 | `ShiprocketClient`                        | Shiprocket client API (auth + direct methods) |
 | `DelhiveryClient`                         | Delhivery B2C client API (direct methods)     |

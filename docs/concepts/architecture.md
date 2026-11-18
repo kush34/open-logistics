@@ -64,5 +64,4 @@ Delhivery.orders.create()
 
 - Multi-vendor provider registry
 - Routing strategies such as cheapest, fastest, preferred, or fallback
-- Webhook helpers
 - Cross-provider normalization
